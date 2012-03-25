@@ -39,6 +39,10 @@ public class Pintor {
 	private double[] medias;
 	private int generacionActual;
 	private String titulo;
+	private DataSeries dataSeries;
+	private LegendProperties legendProperties;
+	private ChartProperties chartProperties;
+	private AxisProperties axisProperties;
 	
 	private Logger log;
 	public Pintor(){
@@ -93,7 +97,7 @@ public class Pintor {
 
 		
 
-		DataSeries dataSeries = new DataSeries(xAxisLabels, xAxisTitle,
+		dataSeries = new DataSeries(xAxisLabels, xAxisTitle,
 				yAxisTitle, titulo);
 		
 		Paint[] paints = TestDataGenerator.getRandomPaints(3);
@@ -111,9 +115,9 @@ public class Pintor {
 				legendLabels, paints, ChartType.LINE, lineChartProperties);	
 		dataSeries.addIAxisPlotDataSet(axisChartDataSet);
 		
-
-		ChartProperties chartProperties = new ChartProperties();
-		AxisProperties axisProperties = new AxisProperties();
+		
+		chartProperties = new ChartProperties();
+		axisProperties = new AxisProperties();
 		ChartStroke xAxisGridLines= new ChartStroke(new BasicStroke(0.5f, BasicStroke.CAP_ROUND,
 				BasicStroke.JOIN_ROUND, 5f, new float[] { 5f, 10f, 10f, 10f }, 4f), Color.red );
 
@@ -126,9 +130,9 @@ public class Pintor {
 		axisProperties.getYAxisProperties().setGridLineChartStroke( yAxisGridLines );
 		axisProperties.getYAxisProperties().setShowGridLines( AxisTypeProperties.GRID_LINES_ONLY_WITH_LABELS );
 
-		LegendProperties legendProperties = new LegendProperties();		
+		legendProperties = new LegendProperties();		
 		AxisChart axisChart = new AxisChart(dataSeries, chartProperties,
-				axisProperties, legendProperties, 590, 440);
+				axisProperties, legendProperties, 590, 430);
 		
 		return axisChart;
 	}
@@ -147,5 +151,17 @@ public class Pintor {
 			generaciones[i] = "" + i;
 		}
 		return generaciones;
+	}
+	
+	public void actualizar(Graphics2D graphics){
+		try{		
+			axisChart.setGraphics2D(graphics);
+		axisChart.render();
+		
+		}catch(PropertyException e){
+			log.severe(e.getMessage());
+		} catch (ChartDataException e) {
+			log.severe(e.getMessage());
+		}
 	}
 }

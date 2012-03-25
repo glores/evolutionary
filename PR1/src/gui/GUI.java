@@ -1,6 +1,7 @@
 package gui;
 
 import java.awt.Cursor;
+import java.awt.Dialog;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Graphics2D;
@@ -15,7 +16,9 @@ import java.util.logging.Logger;
 
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JCheckBoxMenuItem;
+import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
@@ -23,6 +26,7 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
 import javax.swing.JProgressBar;
 import javax.swing.JRadioButtonMenuItem;
 import javax.swing.JSplitPane;
@@ -46,7 +50,7 @@ import controlador.Pintor;
  *         Clase que implementa la interfaz gráfica de usuario
  */
 
-public class GUI extends JFrame implements ActionListener, Observer{
+public class GUI extends JFrame implements ActionListener, Observer {
 
 	private static final long serialVersionUID = 1L;
 
@@ -60,6 +64,10 @@ public class GUI extends JFrame implements ActionListener, Observer{
 	private JTextField maxIt;
 	private JTextField probCruce;
 	private JTextField probMut;
+	private JTextField probCruceIntInc;
+	private JCheckBox intervaloProbCruce;
+	private JTextField probCruceIntA;
+	private JTextField probCruceIntB;
 	private JButton btnOk, btnActualizar;
 	private Pintor pintor;
 
@@ -128,6 +136,7 @@ public class GUI extends JFrame implements ActionListener, Observer{
 		parametroPoblacion(panelParams);
 		parametroMaximoIteraciones(panelParams);
 		parametroProbabilidadCruce(panelParams);
+		parametroIntervaloProbCruce(panelParams);
 		parametroProbabilidadMutacion(panelParams);
 		parametroTolerancia(panelParams);
 		crearBoton(panelParams);
@@ -244,10 +253,56 @@ public class GUI extends JFrame implements ActionListener, Observer{
 		panelTamPob.add(tamPob);
 	}
 
+	private void parametroIntervaloProbCruce(JPanel panelParams) {
+		parametroIntervaloProbCruce_a(panelParams);
+		parametroIntervaloProbCruce_b(panelParams);
+	}
+
+	private void parametroIntervaloProbCruce_a(JPanel panelParams) {
+		JPanel panelIntervalo = new JPanel();
+		panelParams.add(panelIntervalo);
+		panelIntervalo.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
+
+		JLabel lblIntervalo = new JLabel("Intervalo");
+		panelIntervalo.add(lblIntervalo);
+		intervaloProbCruce = new JCheckBox();
+		panelIntervalo.add(intervaloProbCruce);		
+		JLabel lblIntervaloIncremento = new JLabel("Incremento");
+
+		panelIntervalo.add(lblIntervaloIncremento);
+		probCruceIntInc = new JTextField();
+		probCruceIntInc.setColumns(4);
+		probCruceIntInc.setText(Double
+				.toString(ParametrosAlgoritmo.PARAMS_INT_PROBCRUCE_INC));
+		panelIntervalo.add(probCruceIntInc);
+	}
+
+	private void parametroIntervaloProbCruce_b(JPanel panelParams) {
+		JPanel panelIntervalo = new JPanel();
+		panelParams.add(panelIntervalo);
+		panelIntervalo.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
+
+		JLabel lblIntervaloDesde = new JLabel("Desde");
+		panelIntervalo.add(lblIntervaloDesde);
+		probCruceIntA = new JTextField();
+		probCruceIntA.setColumns(4);
+		probCruceIntA.setText(Double
+				.toString(ParametrosAlgoritmo.PARAMS_INT_PROBCRUCE_A));
+
+		panelIntervalo.add(probCruceIntA);
+		JLabel lblIntervaloHasta = new JLabel("Hasta");
+		probCruceIntB = new JTextField();
+		probCruceIntB.setColumns(4);
+		probCruceIntB.setText(Double
+				.toString(ParametrosAlgoritmo.PARAMS_INT_PROBCRUCE_B));
+		panelIntervalo.add(lblIntervaloHasta);
+		panelIntervalo.add(probCruceIntB);
+	}
+
 	private JPanel crearPanelParams() {
 		JPanel panelParams = new JPanel();
 		panelParams.setPreferredSize(new Dimension(300, 500));
-		GridLayout gl_panelParams = new GridLayout(6, 1);
+		GridLayout gl_panelParams = new GridLayout(8, 1);
 		gl_panelParams.setVgap(10);
 		gl_panelParams.setHgap(10);
 		panelParams.setLayout(gl_panelParams);
@@ -441,7 +496,8 @@ public class GUI extends JFrame implements ActionListener, Observer{
 	private void actualizar() {
 		// Si ya se ha ejecutado alguna vez, actualiza el panel de gráficos
 		if (ejecucion)
-			pintor.dibujarGrafica((Graphics2D) panelGraficos.getGraphics());
+			// pintor.dibujarGrafica((Graphics2D) panelGraficos.getGraphics());
+			pintor.actualizar((Graphics2D) panelGraficos.getGraphics());
 	}
 
 	private ParametrosAlgoritmo componerParametros() {
@@ -457,12 +513,7 @@ public class GUI extends JFrame implements ActionListener, Observer{
 		params.setElitismo(chckbxmntmElitismo.isSelected());
 		if (!params.setLimIteraciones(maxIt.getText())) {
 			mensaje += "Número máximo de iteraciones no válido.\n";
-		} else {
-			barraProgreso.setMinimum(0);
-			barraProgreso.setMaximum(Integer.parseInt(maxIt.getText()));
-			barraProgreso.setValue(0);
-			barraProgreso.setStringPainted(true);
-		}
+		} 
 
 		if (!params.setProbabilidadCruce(probCruce.getText())) {
 			mensaje += "Probabilidad de cruce no válida.\n";
@@ -480,6 +531,22 @@ public class GUI extends JFrame implements ActionListener, Observer{
 					"Introduzca un tamaño de élite (%): ", DOUBLE);
 			params.setTamElite(porcentajeElite);
 		}
+		if(intervaloProbCruce.isSelected()){
+			
+			if (!params.setIntProbCruce_a(probCruceIntA.getText())) {
+				mensaje += "Estremo izquierdo del intervalo no válido.\n";
+			}
+			if (!params.setIntProbCruce_b(probCruceIntB.getText())) {
+				mensaje += "Estremo derecho del intervalo no válido.\n";
+			}
+			if (!params.setIntProbCruce_inc(probCruceIntInc.getText())) {
+				mensaje += "Incremento del intervalo no válido.\n";
+			}
+			if(!params.setIntProbCruce_habilitado(true)){
+				mensaje += "Revise los ajustes del intervalo. (¿ a<b ?)\n";
+			}
+		}
+		
 		params.setTamTorneo(tamTorneo);
 		params.setN(n);
 		params.setGeneradorPoblaciones(ModoGenerador.ALEATORIO);
@@ -538,6 +605,10 @@ public class GUI extends JFrame implements ActionListener, Observer{
 		String evento = (String) arg1;
 		AGenetico algoritmo = (AGenetico) arg0;
 		if (evento.equals("inicial")) {
+			barraProgreso.setMinimum(0);
+			barraProgreso.setMaximum(algoritmo.getNumIteraciones());
+			barraProgreso.setValue(0);
+			barraProgreso.setStringPainted(true);
 			pintor.iniciar(algoritmo.getNumIteraciones());
 			pintor.addMejorGlobal(algoritmo.getMejorAptitud());
 			pintor.addMejor(algoritmo.getMejorGeneracion());
