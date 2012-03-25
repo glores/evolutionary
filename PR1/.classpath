@@ -6,5 +6,6 @@
 	<classpathentry kind="lib" path="lib/jCharts-0.7.5.jar"/>
 	<classpathentry kind="lib" path="lib/synthetica.jar"/>
 	<classpathentry kind="lib" path="lib/syntheticaBlackEye.jar"/>
+	<classpathentry kind="lib" path="lib/syntheticaOrangeMetallic.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

@@ -24,7 +24,11 @@ import controlador.Controlador;
  */
 
 public class Main {
+	private static final String  MAIN_LANDF="de.javasoft.plaf.synthetica.SyntheticaOrangeMetallicLookAndFeel";
+	//private static final String  MAIN_LANDF="de.javasoft.plaf.synthetica.SyntheticaStandardLookAndFeel";
+	//private static final String  MAIN_LANDF="de.javasoft.plaf.synthetica.SyntheticaBlackEyeLookAndFeel";
 	public static void main(String[] args) {
+		
 		// configuracion de formato de salida de los logs
 		Logger log = Logger.getLogger("");
 		for (Handler h : log.getHandlers())
@@ -37,7 +41,7 @@ public class Main {
 		controlador.setAGenetico(algoritmo);
 		
 		try {
-			UIManager.setLookAndFeel("de.javasoft.plaf.synthetica.SyntheticaBlackEyeLookAndFeel");
+			UIManager.setLookAndFeel(MAIN_LANDF);
 			GUI gui = new GUI();
 			algoritmo.addObserver(gui);
 		} catch (ClassNotFoundException e) {
