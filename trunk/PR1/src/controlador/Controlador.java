@@ -19,8 +19,11 @@ import logica.esqueleto.algoritmos.AGenetico;
 public class Controlador {
 	private AGenetico aGenetico;
 	private static Controlador controlador;
-	private static Pintor pintor;
+	private static PintorBase pintor;
 	private boolean modoIterativo;
+	private int numIteraciones;
+	private int iteracionActual;
+	
 
 	public static Controlador getInstance() {
 		if (controlador == null) {
@@ -44,10 +47,17 @@ public class Controlador {
 	}
 
 	public void inicia(ParametrosAlgoritmo parametros) {
+		
 		if (parametros.getIntProbCruce_habilitado()) {
 			modoIterativo = true;
+			
+			pintor=new PintorIterativo();			
 			modoIntervaloProbCruce(parametros);
 		} else {
+			modoIterativo=false;
+			pintor=new Pintor();
+			((Pintor)pintor).setTamGeneraciones(parametros.getLimIteraciones());
+			pintor.iniciar();
 			aGenetico.setCruzador(parametros.getCruzador());
 			aGenetico.setEvaluador(parametros.getProblema().getEvaluador());
 			aGenetico.setGeneradorPoblaciones(parametros
@@ -76,19 +86,29 @@ public class Controlador {
 		aGenetico.setProbCruce(parametros.getProbabilidadCruce());
 
 		// Bucle incrementando la probabilidad.
-		double probCruceActual = parametros.getIntProbCruce_a();
-		double incremento = parametros.getIntProbCruce_inc();
+		double probCruceActual = parametros.getIntProbCruce_a();		
+		double incremento = parametros.getIntProbCruce_inc();		
+		numIteraciones=(int)((parametros.getIntProbCruce_b()-probCruceActual)/incremento);
+		iteracionActual=0;
+		
+		((PintorIterativo)pintor).setTamIteraciones(numIteraciones);
+		((PintorIterativo)pintor).setTamGeneraciones(parametros.getLimIteraciones());
+		pintor.iniciar();
+		
 		Logger log = Logger.getLogger("CP");
 		log.warning("Modo iterativo. Intervalo sobre Probabilidad de cruce: Desde "
 				+ probCruceActual + " hasta "
 				+ parametros.getIntProbCruce_b()
 				+ " con un incremento de " + incremento);
-		while (probCruceActual < parametros.getIntProbCruce_b()) {
-			log.warning("Nueva iteracion. Probabilidad de cruce: "+probCruceActual);
+		
+		while(iteracionActual<numIteraciones){
+			log.warning("Nueva iteracion.["+iteracionActual+"] Probabilidad de cruce: "+probCruceActual);
 			aGenetico.setProbCruce(probCruceActual);
 			aGenetico.run();
-			probCruceActual += incremento;
+			probCruceActual+=incremento;
+			iteracionActual++;
 		}
+		
 
 	}
 
@@ -96,8 +116,20 @@ public class Controlador {
 		pintor.dibujarGrafica(graphics);
 	}
 
-	public Pintor getPintor() {
+	public PintorBase getPintor() {
 		return pintor;
 	}
 
+	public boolean esModoIterativo(){
+		return modoIterativo;
+	}
+	
+	public boolean esUltimaIteracion(){
+		return iteracionActual==numIteraciones-1;
+	}
+	
+	public int getNumIteraciones(){
+		return numIteraciones;
+	}
+	
 }
