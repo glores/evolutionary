@@ -28,8 +28,11 @@ public class ParametrosAlgoritmo {
 	public final static int PARAMS_TAMPOBLACION = 100;
 	public final static int PARAMS_LIMITERACIONES = 20;
 	public final static double PARAMS_PROBCRUCE = 0.5;
+	public final static double PARAMS_INT_PROBCRUCE_A = 0.0;
+	public final static double PARAMS_INT_PROBCRUCE_B = 0.5;
+	public final static double PARAMS_INT_PROBCRUCE_INC = 0.1;
 	public final static double PARAMS_PROBMUTACION = 0.1;
-	public final static double PARAMS_TOLERANCIA = 0.00001;
+	public final static double PARAMS_TOLERANCIA = 0.00001;	
 	public final static boolean PARAMS_ELITISMO = Boolean.FALSE; 
 	public final static int PARAMS_TAMELITE = 0;
 	public final static ModoSeleccionador PARAMS_SELECCIONADOR = ModoSeleccionador.RULETA;
@@ -102,8 +105,12 @@ public class ParametrosAlgoritmo {
 	private int tamTorneo;
 
 	Logger log;
-
-	// TODO variar un parámetro en un rango
+	
+	private double intProbCruce_a;
+	private double intProbCruce_b;
+	private double intProbCruce_inc;
+	private boolean intProbCruce_habilitado;
+	
 
 	/**
 	 * Constructora por defecto. Establece los parámetros por defecto.
@@ -479,6 +486,78 @@ public class ParametrosAlgoritmo {
 			return false;
 		}
 	}
+
+	
+	public double getIntProbCruce_a() {
+		return intProbCruce_a;
+	}
+
+	public void setIntProbCruce_a(double tam) {
+		this.intProbCruce_a = tam;
+	}
+
+	public boolean setIntProbCruce_a(String tam) {
+		try {
+			this.intProbCruce_a = Double.parseDouble(tam);
+			return true;
+		} catch (NumberFormatException e) {
+			log.warning("[PARAM] " + tam + " no es un real.");
+			return false;
+		}
+	}
+	public double getIntProbCruce_b() {
+		return intProbCruce_b;
+	}
+
+	public void setIntProbCruce_b(double tam) {
+		this.intProbCruce_b = tam;
+	}
+
+	public boolean setIntProbCruce_b(String tam) {
+		try {
+			this.intProbCruce_b = Double.parseDouble(tam);
+			return true;
+		} catch (NumberFormatException e) {
+			log.warning("[PARAM] " + tam + " no es un real.");
+			return false;
+		}
+	}
+	public double getIntProbCruce_inc() {
+		return intProbCruce_inc;
+	}
+
+	public void setIntProbCruce_inc(double tam) {
+		this.intProbCruce_inc = tam;
+	}
+
+	public boolean setIntProbCruce_inc(String tam) {
+		try {
+			this.intProbCruce_inc = Double.parseDouble(tam);
+			return true;
+		} catch (NumberFormatException e) {
+			log.warning("[PARAM] " + tam + " no es un real.");
+			return false;
+		}
+	}
+	public boolean getIntProbCruce_habilitado() {
+		return intProbCruce_habilitado;
+	}
+
+	public boolean setIntProbCruce_habilitado(boolean hab) {
+		if(hab){
+			if(this.intProbCruce_a<this.intProbCruce_b){
+				this.intProbCruce_habilitado=true;
+				return true;
+			}else{
+				return false;
+			}
+		}else{
+			this.intProbCruce_habilitado = false;
+			return true;
+		}
+		
+	}
+
 	
 	
 	public String toString(){
