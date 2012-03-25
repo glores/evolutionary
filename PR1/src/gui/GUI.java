@@ -1,7 +1,6 @@
 package gui;
 
 import java.awt.Cursor;
-import java.awt.Dialog;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Graphics2D;
@@ -18,7 +17,6 @@ import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JCheckBoxMenuItem;
-import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
@@ -26,7 +24,6 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JPopupMenu;
 import javax.swing.JProgressBar;
 import javax.swing.JRadioButtonMenuItem;
 import javax.swing.JSplitPane;
@@ -39,7 +36,8 @@ import parametros.ModoSeleccionador;
 import parametros.ParametrosAlgoritmo;
 import parametros.Problema;
 import controlador.Controlador;
-import controlador.Pintor;
+import controlador.PintorBase;
+import controlador.PintorIterativo;
 
 /**
  * Práctica 1 de Programación Evolutiva
@@ -69,7 +67,7 @@ public class GUI extends JFrame implements ActionListener, Observer {
 	private JTextField probCruceIntA;
 	private JTextField probCruceIntB;
 	private JButton btnOk, btnActualizar;
-	private Pintor pintor;
+	private PintorBase pintor;
 
 	private ButtonGroup grupo;
 	private JCheckBoxMenuItem chckbxmntmElitismo;
@@ -97,6 +95,7 @@ public class GUI extends JFrame implements ActionListener, Observer {
 			if (params != null) {
 				log.info("[GUI] Parametros correctos");
 				log.info(params.toString());
+				panelGraficos.removeAll();
 				Controlador.getInstance().inicia(params);
 
 			}
@@ -124,7 +123,8 @@ public class GUI extends JFrame implements ActionListener, Observer {
 		contentPane.setDividerSize(1);
 		setTitle("Algoritmo Gen\u00E9tico");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 900, 500);
+		setBounds(100, 100, 900, 650);
+
 		log.fine("[GUI] Creando menu...");
 		// Menu
 		JMenuBar menuBar = creaBarraMenu();
@@ -149,13 +149,16 @@ public class GUI extends JFrame implements ActionListener, Observer {
 		contentPane.setRightComponent(panelGraficos);
 		setContentPane(contentPane);
 		log.fine("[GUI] Inicialización terminada");
+		this.pack();
 		this.setVisible(true);
-		this.setResizable(true);
+		this.setResizable(false);
 		pintor = Controlador.getInstance().getPintor();
 	}
 
 	private JPanel crearPanelGraficos() {
 		JPanel panelGraficos = new JPanel();
+		panelGraficos.setPreferredSize(new Dimension(590, 430));
+
 		return panelGraficos;
 
 	}
@@ -174,6 +177,7 @@ public class GUI extends JFrame implements ActionListener, Observer {
 		panel.add(btnActualizar);
 
 		panelBoton.add(panel);
+
 		barraProgreso = new JProgressBar();
 		panelBoton.add(barraProgreso);
 		panelBoton.setDividerSize(0);
@@ -266,7 +270,7 @@ public class GUI extends JFrame implements ActionListener, Observer {
 		JLabel lblIntervalo = new JLabel("Intervalo");
 		panelIntervalo.add(lblIntervalo);
 		intervaloProbCruce = new JCheckBox();
-		panelIntervalo.add(intervaloProbCruce);		
+		panelIntervalo.add(intervaloProbCruce);
 		JLabel lblIntervaloIncremento = new JLabel("Incremento");
 
 		panelIntervalo.add(lblIntervaloIncremento);
@@ -513,7 +517,7 @@ public class GUI extends JFrame implements ActionListener, Observer {
 		params.setElitismo(chckbxmntmElitismo.isSelected());
 		if (!params.setLimIteraciones(maxIt.getText())) {
 			mensaje += "Número máximo de iteraciones no válido.\n";
-		} 
+		}
 
 		if (!params.setProbabilidadCruce(probCruce.getText())) {
 			mensaje += "Probabilidad de cruce no válida.\n";
@@ -531,8 +535,8 @@ public class GUI extends JFrame implements ActionListener, Observer {
 					"Introduzca un tamaño de élite (%): ", DOUBLE);
 			params.setTamElite(porcentajeElite);
 		}
-		if(intervaloProbCruce.isSelected()){
-			
+		if (intervaloProbCruce.isSelected()) {
+
 			if (!params.setIntProbCruce_a(probCruceIntA.getText())) {
 				mensaje += "Estremo izquierdo del intervalo no válido.\n";
 			}
@@ -542,11 +546,11 @@ public class GUI extends JFrame implements ActionListener, Observer {
 			if (!params.setIntProbCruce_inc(probCruceIntInc.getText())) {
 				mensaje += "Incremento del intervalo no válido.\n";
 			}
-			if(!params.setIntProbCruce_habilitado(true)){
+			if (!params.setIntProbCruce_habilitado(true)) {
 				mensaje += "Revise los ajustes del intervalo. (¿ a<b ?)\n";
 			}
 		}
-		
+
 		params.setTamTorneo(tamTorneo);
 		params.setN(n);
 		params.setGeneradorPoblaciones(ModoGenerador.ALEATORIO);
@@ -602,6 +606,7 @@ public class GUI extends JFrame implements ActionListener, Observer {
 
 	@Override
 	public void update(Observable arg0, Object arg1) {
+		pintor = Controlador.getInstance().getPintor();
 		String evento = (String) arg1;
 		AGenetico algoritmo = (AGenetico) arg0;
 		if (evento.equals("inicial")) {
@@ -609,7 +614,6 @@ public class GUI extends JFrame implements ActionListener, Observer {
 			barraProgreso.setMaximum(algoritmo.getNumIteraciones());
 			barraProgreso.setValue(0);
 			barraProgreso.setStringPainted(true);
-			pintor.iniciar(algoritmo.getNumIteraciones());
 			pintor.addMejorGlobal(algoritmo.getMejorAptitud());
 			pintor.addMejor(algoritmo.getMejorGeneracion());
 			pintor.addMedia(algoritmo.getMedia());
@@ -622,12 +626,24 @@ public class GUI extends JFrame implements ActionListener, Observer {
 			barraProgreso.setValue(barraProgreso.getValue() + 1);
 		} else if (evento.equals("fin")) {
 			ejecucion = true;
-			pintor.setTitulo(algoritmo.getSolucion() + " Cruces: "
-					+ algoritmo.getNumCruzados() + " Mutaciones: "
-					+ algoritmo.getNumMutados());
-			pintor.dibujarGrafica((Graphics2D) panelGraficos.getGraphics());
-			btnOk.setEnabled(true);
 			barraProgreso.setValue(barraProgreso.getMaximum());
+			if (Controlador.getInstance().esModoIterativo()) {
+				if (!Controlador.getInstance().esUltimaIteracion()) {
+					((PintorIterativo) pintor).siguienteIteracion();
+				} else {
+					pintor.setTitulo("Iterativo");
+					pintor.dibujarGrafica((Graphics2D) panelGraficos
+							.getGraphics());
+					btnOk.setEnabled(true);
+				}
+			} else {
+				pintor.setTitulo(algoritmo.getSolucion() + " Cruces: "
+						+ algoritmo.getNumCruzados() + " Mutaciones: "
+						+ algoritmo.getNumMutados());
+				pintor.dibujarGrafica((Graphics2D) panelGraficos.getGraphics());
+				btnOk.setEnabled(true);
+			}
+
 		}
 
 	}

@@ -2,7 +2,6 @@ package controlador;
 import java.awt.BasicStroke;
 
 import java.awt.Color;
-import java.awt.Graphics2D;
 import java.awt.Paint;
 import java.awt.Shape;
 import java.awt.Stroke;
@@ -17,8 +16,6 @@ import org.jCharts.properties.AxisTypeProperties;
 import org.jCharts.properties.ChartProperties;
 import org.jCharts.properties.LegendProperties;
 import org.jCharts.properties.LineChartProperties;
-import org.jCharts.properties.PointChartProperties;
-import org.jCharts.properties.PropertyException;
 import org.jCharts.properties.util.ChartStroke;
 import org.jCharts.test.TestDataGenerator;
 import org.jCharts.types.ChartType;
@@ -32,23 +29,20 @@ import org.jCharts.types.ChartType;
  * Clase que se encarga de la representación de datos mediante gráficos
  */
 
-public class Pintor {
-	private AxisChart axisChart;
+public class Pintor extends PintorBase {
 	private double[] mejores;
 	private double[] mejoresGlobales;
 	private double[] medias;
-	private int generacionActual;
-	private String titulo;
-	private DataSeries dataSeries;
-	private LegendProperties legendProperties;
-	private ChartProperties chartProperties;
-	private AxisProperties axisProperties;
+	private int tamGeneraciones;
 	
-	private Logger log;
 	public Pintor(){
 		
 	}
-	public void iniciar(int tamGeneraciones){
+	
+	public void setTamGeneraciones(int tamGeneraciones){
+		this.tamGeneraciones=tamGeneraciones;
+	}
+	public void iniciar(){
 		log = Logger.getLogger("CP");
 		mejores = new double[tamGeneraciones];
 		mejoresGlobales = new double[tamGeneraciones];
@@ -59,22 +53,7 @@ public class Pintor {
 	}
 	
 
-	public void dibujarGrafica(Graphics2D graphics) {
-		try {			
-			axisChart = crearGraficoLineas();
-			axisChart.setGraphics2D(graphics);
-			axisChart.render();
-		} catch (ChartDataException e) {
-			log.severe(e.getMessage());
-		} catch (PropertyException e) {
-			log.severe(e.getMessage());
-		}
-
-	}
-	public void siguienteGeneracion() {
-		generacionActual++;
-	}
-
+	
 	public void addMejor(double valor) {
 		mejores[generacionActual] = valor;
 	}
@@ -85,10 +64,8 @@ public class Pintor {
 		mejoresGlobales[generacionActual] = valor;
 	}
 	
-	public void setTitulo(String titulo ) {
-		this.titulo=titulo;
-	}
-	private AxisChart crearGraficoLineas() throws ChartDataException {
+	
+	protected AxisChart crearGraficoLineas() throws ChartDataException {
 		String[] xAxisLabels = cargarEtiquetasX();
 		double[][] data = cargarValoresY();
 		String[] legendLabels = { "El mejor", "Media", "Mejor global" };
@@ -107,7 +84,7 @@ public class Pintor {
 						BasicStroke.JOIN_ROUND, 5f, new float[] { 5f, 5f, 10f, 5f }, 4f) ,
 				LineChartProperties.DEFAULT_LINE_STROKE};
 		Shape[] shapes = {null,
-				PointChartProperties.SHAPE_CIRCLE,
+				null,
 				null};
 		LineChartProperties lineChartProperties = new LineChartProperties(
 				strokes, shapes);			
@@ -151,17 +128,7 @@ public class Pintor {
 			generaciones[i] = "" + i;
 		}
 		return generaciones;
-	}
+	}	
 	
-	public void actualizar(Graphics2D graphics){
-		try{		
-			axisChart.setGraphics2D(graphics);
-		axisChart.render();
-		
-		}catch(PropertyException e){
-			log.severe(e.getMessage());
-		} catch (ChartDataException e) {
-			log.severe(e.getMessage());
-		}
-	}
+	
 }
