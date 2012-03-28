@@ -1,4 +1,4 @@
-package logica.esqueleto.algoritmos.abtractas;
+package logica.esqueleto.abtractas;
 
 import logica.esqueleto.datos.Cromosoma;
 

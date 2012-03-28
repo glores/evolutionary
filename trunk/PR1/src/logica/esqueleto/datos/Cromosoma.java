@@ -66,7 +66,6 @@ public class Cromosoma {
 	 */
 	public void setTodo(Cromosoma sustituto) {
 		this.setAptitud(sustituto.getAptitud());
-		this.setCadena(sustituto.getCadena());
 		this.setNumBits(sustituto.getNumBits());
 		this.setTamsGen(sustituto.getTamsGen());
 		this.setProbabilidad(sustituto.getProbabilidad());

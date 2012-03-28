@@ -1,6 +1,6 @@
 package gui;
 
-import logica.esqueleto.algoritmos.AGenetico;
+import logica.AGenetico;
 
 /**
  * Práctica 1 de Programación Evolutiva

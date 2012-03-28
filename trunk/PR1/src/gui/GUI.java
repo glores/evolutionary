@@ -30,7 +30,7 @@ import javax.swing.JSplitPane;
 import javax.swing.JTextField;
 import javax.swing.SwingWorker;
 
-import logica.esqueleto.algoritmos.AGenetico;
+import logica.AGenetico;
 import parametros.ModoGenerador;
 import parametros.ModoSeleccionador;
 import parametros.ParametrosAlgoritmo;

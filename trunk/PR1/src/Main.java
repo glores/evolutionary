@@ -11,7 +11,7 @@ import java.util.logging.SimpleFormatter;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
-import logica.esqueleto.algoritmos.AGenetico;
+import logica.AGenetico;
 import controlador.Controlador;
 
 /**

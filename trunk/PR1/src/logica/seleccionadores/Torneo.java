@@ -3,10 +3,10 @@ package logica.seleccionadores;
 import java.util.ArrayList;
 import java.util.Collections;
 
-import logica.esqueleto.algoritmos.abtractas.Seleccionador;
+import logica.esqueleto.abtractas.Seleccionador;
 import logica.esqueleto.datos.Cromosoma;
 import util.Aleatorio;
-import util.CromosomaSort;
+import util.CromosomaDescendantSort;
 
 /**
  * Práctica 1 de Programación Evolutiva
@@ -35,7 +35,7 @@ public class Torneo extends Seleccionador{
 				indices[i] = new Integer(Aleatorio.entero(tamPoblacion));
 				selTorneo.add(poblacion.get(indices[i]));
 			}
-			Collections.sort(selTorneo, new CromosomaSort());
+			Collections.sort(selTorneo, new CromosomaDescendantSort());
 			
 			int j = 0; boolean encontrado = false;
 			while (!encontrado && j < indices.length){

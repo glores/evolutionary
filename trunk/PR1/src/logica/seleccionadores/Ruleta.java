@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 import util.Aleatorio;
 
-import logica.esqueleto.algoritmos.abtractas.Seleccionador;
+import logica.esqueleto.abtractas.Seleccionador;
 import logica.esqueleto.datos.Cromosoma;
 
 /**

@@ -2,7 +2,7 @@ package problemas;
 
 import problemas.evaluadores.EvaluadorFunc3;
 import logica.alelos.AleloDouble;
-import logica.esqueleto.algoritmos.abtractas.Funcion;
+import logica.esqueleto.abtractas.Funcion;
 import logica.esqueleto.datos.ConjuntoAlelos;
 
 /**

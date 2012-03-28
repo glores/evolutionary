@@ -2,7 +2,7 @@ package logica.cruzadores;
 
 import java.util.BitSet;
 
-import logica.esqueleto.algoritmos.abtractas.Cruzador;
+import logica.esqueleto.abtractas.Cruzador;
 import logica.esqueleto.datos.Cromosoma;
 
 /**
@@ -37,7 +37,9 @@ public class CruzadorSimple extends Cruzador{
 
 		Cromosoma[] nuevos = new Cromosoma[2];
 		nuevos[0] = new Cromosoma(cad1, c1.getNumBits());
+		nuevos[0].setTodo(c1);
 		nuevos[1] = new Cromosoma(cad2, c1.getNumBits());
+		nuevos[1].setTodo(c2);
 		return nuevos;
 	}
 
