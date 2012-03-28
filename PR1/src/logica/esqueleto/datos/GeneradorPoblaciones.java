@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.BitSet;
 import java.util.logging.Logger;
 
+import logica.esqueleto.abtractas.Evaluador;
+
 import util.Aleatorio;
 
 
@@ -35,7 +37,7 @@ public class GeneradorPoblaciones {
 		
 	}
 
-	public ArrayList<Cromosoma> generar(int tamPoblacion) {
+	public ArrayList<Cromosoma> generar(int tamPoblacion, Evaluador evaluador) {
 		ArrayList<Cromosoma> nuevaPoblacion = new ArrayList<Cromosoma>(tamPoblacion);
 		for (int j = 0; j < tamPoblacion; j++) {
 			BitSet cadena = new BitSet(tamCromosoma);
@@ -46,6 +48,7 @@ public class GeneradorPoblaciones {
 			}
 			Cromosoma individuo = new Cromosoma(cadena, tamCromosoma);			
 			individuo.setTamsGen(tamsGen);
+			evaluador.evaluar(individuo);
 			//TODO: meterle la info de las longitudes de cada gen para ordenarlos
 			log.info("Generado: "+alelos.imprime(individuo));
 			nuevaPoblacion.add(individuo);

@@ -2,7 +2,7 @@ package logica.alelos;
 
 import java.util.BitSet;
 
-import logica.esqueleto.algoritmos.abtractas.Alelo;
+import logica.esqueleto.abtractas.Alelo;
 
 /**
  * Práctica 1 de Programación Evolutiva

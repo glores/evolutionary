@@ -1,4 +1,4 @@
-package logica.esqueleto.algoritmos.abtractas;
+package logica.esqueleto.abtractas;
 
 import java.util.ArrayList;
 
@@ -61,7 +61,36 @@ public abstract class Evaluador {
 	public Evaluador(ConjuntoAlelos al) {
 		this.alelos = al;
 	}
+	
+	/**
+	 * Evalua el cromosoma dado por parámetro
+	 * 
+	 * @param cromosoma
+	 */
+	public void evaluar(Cromosoma c) {
+		fitness(c);
 
+		if (maximizar)
+			maximizarLocal(c, -1);
+		else
+			minimizarLocal(c, -1);
+
+	}
+
+	public void inicioEvaluacionLocal() {
+		mejorLocal = null;
+		sumAptitud = 0;
+		probAcumulada = 0;
+		mediaPoblacion = 0;
+		posMejor = -1;
+	}
+
+	public void inicioEvaluacionGlobal() {
+		sumAptitud = 0;
+		probAcumulada = 0;
+		mediaPoblacion = 0;
+	}
+	
 	/**
 	 * Evalua la población y devuelve la posición del mejor Cromosoma
 	 * 
@@ -71,16 +100,11 @@ public abstract class Evaluador {
 	 */
 	public int evaluar(ArrayList<Cromosoma> poblacion) {
 		Cromosoma c;
-		inicioEvaluacion();
+		inicioEvaluacionGlobal();
 		for (int i = 0; i < poblacion.size(); i++) {
 			c = poblacion.get(i);
-			fitness(c);
 			double valor = c.getAptitud();
 			this.sumAptitud += valor;
-			if (maximizar)
-				maximizarLocal(c, i);
-			else
-				minimizarLocal(c, i);
 		}
 		actualizarDatosGlobales(poblacion);
 
@@ -106,6 +130,15 @@ public abstract class Evaluador {
 	
 	public Cromosoma getMejorGlobal(){
 		return mejorGlobal;
+	}
+	
+	/**
+	 * Devuelve cierto si es una función de maximización
+	 * Necesario para la élite.
+	 * @return
+	 */
+	public boolean isMaximizar() {
+		return maximizar;
 	}
 
 	private void maximizarLocal(Cromosoma c, int i) {
@@ -155,14 +188,6 @@ public abstract class Evaluador {
 				return Double.POSITIVE_INFINITY;
 			}
 		}
-	}
-	
-	private void inicioEvaluacion() {
-		mejorLocal=null;
-		sumAptitud = 0;
-		probAcumulada = 0;
-		mediaPoblacion = 0;
-		posMejor = -1;
 	}
 
 	private void actualizarDatosGlobales(ArrayList<Cromosoma> poblacion) {

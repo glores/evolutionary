@@ -4,7 +4,7 @@ import java.util.logging.Logger;
 
 import problemas.*;
 import logica.cruzadores.*;
-import logica.esqueleto.algoritmos.abtractas.*;
+import logica.esqueleto.abtractas.*;
 import logica.esqueleto.datos.*;
 import logica.mutadores.*;
 import logica.seleccionadores.*;
@@ -25,7 +25,7 @@ import logica.seleccionadores.*;
 
 public class ParametrosAlgoritmo {
 	//Parámetros por defecto
-	public final static int PARAMS_TAMPOBLACION = 100;
+	public final static int PARAMS_TAMPOBLACION = 8;
 	public final static int PARAMS_LIMITERACIONES = 20;
 	public final static double PARAMS_PROBCRUCE = 0.5;
 	public final static double PARAMS_INT_PROBCRUCE_A = 0.0;

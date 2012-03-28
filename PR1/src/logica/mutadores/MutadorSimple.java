@@ -1,7 +1,7 @@
 package logica.mutadores;
 
 import util.Aleatorio;
-import logica.esqueleto.algoritmos.abtractas.Mutador;
+import logica.esqueleto.abtractas.Mutador;
 import logica.esqueleto.datos.Cromosoma;
 
 /**
@@ -16,18 +16,20 @@ import logica.esqueleto.datos.Cromosoma;
 public class MutadorSimple extends Mutador{
 
 	@Override
-	public boolean muta(Cromosoma c, double probMut) {
+	public Cromosoma muta(Cromosoma c, double probMut) {
 		double prob;
 		boolean mutado = false;
+		Cromosoma aux = (Cromosoma) c.clone();
 		
 		for (int i = 0; i < c.getNumBits(); i++){
 			prob = Aleatorio.doble();
 			if (prob < probMut){
-				c.getCadena().flip(i);
+				aux.getCadena().flip(i);
 				mutado = true;
 			}
 		}
-		return mutado;
+		if (mutado) return aux;
+		else return null;
 	}
 
 }

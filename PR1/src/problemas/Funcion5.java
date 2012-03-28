@@ -1,6 +1,6 @@
 package problemas;
 
-import logica.esqueleto.algoritmos.abtractas.FuncionParametrizada;
+import logica.esqueleto.abtractas.FuncionParametrizada;
 import problemas.evaluadores.EvaluadorFunc5;
 
 /**

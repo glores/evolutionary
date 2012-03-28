@@ -13,7 +13,7 @@ import logica.esqueleto.datos.Cromosoma;
  * Clase encargada de la ordenación de los individuos de la población de mayor a menor aptitud.
  */
 
-public class CromosomaSort implements Comparator<Cromosoma> {
+public class CromosomaDescendantSort implements Comparator<Cromosoma> {
 	@Override
 	public int compare(Cromosoma c1, Cromosoma c2) {
 		// Ordenación descendente

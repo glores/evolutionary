@@ -4,7 +4,7 @@ import java.awt.Graphics2D;
 import java.util.logging.Logger;
 
 import parametros.ParametrosAlgoritmo;
-import logica.esqueleto.algoritmos.AGenetico;
+import logica.AGenetico;
 
 /**
  * Práctica 1 de Programación Evolutiva

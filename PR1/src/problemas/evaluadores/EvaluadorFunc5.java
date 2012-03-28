@@ -5,7 +5,7 @@ import java.util.logging.Logger;
 
 
 import logica.alelos.AleloDouble;
-import logica.esqueleto.algoritmos.abtractas.Evaluador;
+import logica.esqueleto.abtractas.Evaluador;
 import logica.esqueleto.datos.ConjuntoAlelos;
 import logica.esqueleto.datos.Cromosoma;
 

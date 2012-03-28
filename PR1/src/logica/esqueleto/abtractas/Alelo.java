@@ -1,4 +1,4 @@
-package logica.esqueleto.algoritmos.abtractas;
+package logica.esqueleto.abtractas;
 
 import java.util.BitSet;
 

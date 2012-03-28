@@ -1,4 +1,4 @@
-package logica.esqueleto.algoritmos.abtractas;
+package logica.esqueleto.abtractas;
 
 import logica.esqueleto.datos.Cromosoma;
 
@@ -12,5 +12,5 @@ import logica.esqueleto.datos.Cromosoma;
  */
 
 public abstract class Mutador {
-	public abstract boolean muta(Cromosoma c, double probMutacion);
+	public abstract Cromosoma muta(Cromosoma c, double probMutacion);
 }
