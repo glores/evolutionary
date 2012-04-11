@@ -125,7 +125,7 @@ public class AGenetico extends Observable {
 	private void inicializa() {
 		seleccionados = new ArrayList<Integer>();
 		// Inicializamos los parámetros de evaluación
-		evaluador.inicioEvaluacionLocal();
+		evaluador.inicioEvaluacionGlobal();
 		// Generamos la población inicial
 		poblacion = generadorPoblaciones.generar(tamPoblacion, evaluador);
 

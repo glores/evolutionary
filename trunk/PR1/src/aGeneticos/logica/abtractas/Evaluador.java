@@ -47,10 +47,7 @@ public abstract class Evaluador {
 	 * Media de la población (local)
 	 */
 	protected double mediaPoblacion = 0;
-	/**
-	 * Posición del mejor (local)
-	 */
-	protected int posMejor = -1;
+	
 	
 	/**
 	 * Función de fitness. Se debe implementar en la clase derivada. 
@@ -70,26 +67,17 @@ public abstract class Evaluador {
 	 */
 	public void evaluar(Cromosoma c) {
 		fitness(c);
-
-		if (maximizar)
-			maximizarLocal(c, -1);
-		else
-			minimizarLocal(c, -1);
-
 	}
 
 	public void inicioEvaluacionLocal() {
-		mejorLocal = null;
 		sumAptitud = 0;
 		probAcumulada = 0;
 		mediaPoblacion = 0;
-		posMejor = -1;
+		mejorLocal = null;
 	}
 
 	public void inicioEvaluacionGlobal() {
-		sumAptitud = 0;
-		probAcumulada = 0;
-		mediaPoblacion = 0;
+		mejorGlobal=null;
 	}
 	
 	/**
@@ -99,17 +87,19 @@ public abstract class Evaluador {
 	 *            Población
 	 * @return Si se proclama como el cromosoma con mejor aptitud
 	 */
-	public int evaluar(ArrayList<Cromosoma> poblacion) {
+	public void evaluar(ArrayList<Cromosoma> poblacion) {
 		Cromosoma c;
-		inicioEvaluacionGlobal();
+		inicioEvaluacionLocal();
 		for (int i = 0; i < poblacion.size(); i++) {
 			c = poblacion.get(i);
 			double valor = c.getAptitud();
 			this.sumAptitud += valor;
-		}
+			if (maximizar)
+				maximizarLocal(c);
+			else
+				minimizarLocal(c);
+		}		
 		actualizarDatosGlobales(poblacion);
-
-		return posMejor;
 	}
 
 
@@ -117,9 +107,6 @@ public abstract class Evaluador {
 		return mediaPoblacion;
 	}
 
-	public int getPosMejor() {
-		return posMejor;
-	}
 
 	public ConjuntoAlelos getAlelos() {
 		return alelos;
@@ -142,29 +129,27 @@ public abstract class Evaluador {
 		return maximizar;
 	}
 
-	private void maximizarLocal(Cromosoma c, int i) {
+	private void maximizarLocal(Cromosoma c) {
 		if (c.getAptitud() > getMejorAptitudLocal()) {
 			mejorLocal = (Cromosoma) c.clone();
-			posMejor = i;
 		}
 	}
 
-	private void minimizarLocal(Cromosoma c, int i) {
+	private void minimizarLocal(Cromosoma c) {
 		if (c.getAptitud() < getMejorAptitudLocal()) {
 			mejorLocal = (Cromosoma) c.clone();
-			posMejor = i;
 		}
 	}
 	private void maximizarGlobal() {
 		if (getMejorAptitudLocal() > getMejorAptitudGlobal()) {
-			mejorGlobal =  mejorLocal;
+			mejorGlobal =  (Cromosoma) mejorLocal.clone();
 
 		}
 	}
 
 	private void minimizarGlobal() {
 		if (getMejorAptitudLocal() < getMejorAptitudGlobal()) {
-			mejorGlobal =  mejorLocal;
+			mejorGlobal = (Cromosoma) mejorLocal.clone();
 		}
 	}
 	

@@ -6,6 +6,7 @@ import java.util.Collections;
 import aGeneticos.logica.abtractas.Seleccionador;
 import aGeneticos.logica.poblacion.Cromosoma;
 import aGeneticos.util.Aleatorio;
+import aGeneticos.util.CromosomaAscendantSort;
 import aGeneticos.util.CromosomaDescendantSort;
 
 
@@ -15,14 +16,16 @@ import aGeneticos.util.CromosomaDescendantSort;
  * @author Gloria Esther Pozuelo Fernández
  * @author Sergio Barja Valdés
  *
- * Clase encargada de la selección de la población que posteriormente pasarán a reproducirse, mediante el método de torneo.
+ * Clase encargada de la selección de la población que posteriormente pasarán a reproducirse, mediante el método de torneo probabilista.
  */
 
-public class Torneo extends Seleccionador{
+public class TorneoProbabilista extends Seleccionador{
 	private int tamTorneo;
+	private double prob;
 	
-	public Torneo(int tam) {
+	public TorneoProbabilista(int tam, double probabilidad) {
 		this.tamTorneo = tam;
+		prob = probabilidad;
 	}
 
 	@Override
@@ -36,7 +39,13 @@ public class Torneo extends Seleccionador{
 				indices[i] = new Integer(Aleatorio.entero(tamPoblacion));
 				selTorneo.add(poblacion.get(indices[i]));
 			}
-			Collections.sort(selTorneo, new CromosomaDescendantSort());
+			
+			// Dependiendo de una probabilidad generada se coge al mayor o al menor del torneo
+			double probabilidad = Aleatorio.doble();
+			if (probabilidad > prob){
+				Collections.sort(selTorneo, new CromosomaDescendantSort());
+			}
+			else Collections.sort(selTorneo, new CromosomaAscendantSort());
 			
 			int j = 0; boolean encontrado = false;
 			while (!encontrado && j < indices.length){

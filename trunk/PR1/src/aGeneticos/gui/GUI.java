@@ -1,6 +1,7 @@
 package aGeneticos.gui;
 
 
+import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
@@ -14,10 +15,13 @@ import java.util.Observer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javax.swing.BorderFactory;
+import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JCheckBoxMenuItem;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
@@ -26,15 +30,20 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
+import javax.swing.JRadioButton;
 import javax.swing.JRadioButtonMenuItem;
 import javax.swing.JSplitPane;
+import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
 import javax.swing.SwingWorker;
+import javax.swing.border.Border;
 
 import aGeneticos.controlador.Controlador;
 import aGeneticos.controlador.PintorBase;
 import aGeneticos.controlador.PintorIterativo;
+import aGeneticos.gui.parametros.ModoCruzador;
 import aGeneticos.gui.parametros.ModoGenerador;
+import aGeneticos.gui.parametros.ModoMutador;
 import aGeneticos.gui.parametros.ModoSeleccionador;
 import aGeneticos.gui.parametros.ParametrosAlgoritmo;
 import aGeneticos.gui.parametros.Problema;
@@ -57,8 +66,9 @@ public class GUI extends JFrame implements ActionListener, Observer {
 	private final static int INT = 0;
 	private final static int DOUBLE = 1;
 
-	private JSplitPane contentPane;
+	private JSplitPane panelPrincipal;
 	private JPanel panelGraficos;
+	private JPanel panelDatos;
 	private JTextField tolerancia;
 	private JTextField tamPob;
 	private JTextField maxIt;
@@ -71,20 +81,22 @@ public class GUI extends JFrame implements ActionListener, Observer {
 	private JButton btnOk, btnActualizar;
 	private PintorBase pintor;
 
-	private ButtonGroup grupo;
 	private JCheckBoxMenuItem chckbxmntmElitismo;
 
-	private JRadioButtonMenuItem menuSelecciones[];
+	private JRadioButton[] selecciones, cruzadores, mutadores;
 	private JRadioButtonMenuItem menuFunciones[];
 	private JProgressBar barraProgreso;
 
 	private Logger log;
 
 	private int n;
-	private int tamTorneo;
 	private boolean ejecucion = false;
 
 	private Task task;
+
+	private JTextField textFieldTamTorneo;
+
+	private JComboBox comboProbTorneo;
 
 	class Task extends SwingWorker<Void, Void> {
 		/*
@@ -121,8 +133,9 @@ public class GUI extends JFrame implements ActionListener, Observer {
 	public GUI() {
 		log = Logger.getLogger("CP");
 		log.fine("[GUI] Inicialización de GUI...");
-		contentPane = new JSplitPane();
-		contentPane.setDividerSize(1);
+		JTabbedPane contentPane = new JTabbedPane();
+		panelPrincipal = new JSplitPane();
+		panelPrincipal.setDividerSize(1);
 		setTitle("Algoritmo Gen\u00E9tico");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 900, 650);
@@ -147,14 +160,140 @@ public class GUI extends JFrame implements ActionListener, Observer {
 		// Panel de gráficos
 		panelGraficos = crearPanelGraficos();
 		log.fine("[GUI] Creado");
-		contentPane.setLeftComponent(panelParams);
-		contentPane.setRightComponent(panelGraficos);
+		panelPrincipal.setLeftComponent(panelParams);
+		panelPrincipal.setRightComponent(panelGraficos);
+		
+		crearPanelDatos();
+		contentPane.addTab("Principal", panelPrincipal);
+		contentPane.addTab("Datos", panelDatos);
 		setContentPane(contentPane);
 		log.fine("[GUI] Inicialización terminada");
 		this.pack();
 		this.setVisible(true);
 		this.setResizable(false);
 		pintor = Controlador.getInstance().getPintor();
+	}
+
+	private void crearPanelDatos() {
+		panelDatos = new JPanel();
+		BoxLayout box = new BoxLayout(panelDatos, BoxLayout.Y_AXIS);
+		panelDatos.setLayout(box);
+		
+		/* Panel de seleccionadores */	
+		panelDatos.add(creaPanelSeleccion());
+		
+		/* Panel de cruces */	
+		panelDatos.add(creaPanelCruces());
+		
+		/* Panel de mutadores */	
+		panelDatos.add(creaPanelMutadores());
+	}
+	
+	private JPanel creaPanelMutadores() {
+		JPanel panelMutadores = new JPanel(new GridLayout(1, 3));
+
+		// set border and layout
+		Border emptyBorder = BorderFactory.createEmptyBorder(0, 5, 0, 5);
+		Border lineBorder = BorderFactory.createLineBorder(Color.BLACK);
+		Border titleBorder = BorderFactory.createTitledBorder(lineBorder,
+				"Mutadores");
+		Border compoundBorder = BorderFactory.createCompoundBorder(titleBorder,
+				emptyBorder);
+		panelMutadores.setBorder(compoundBorder);
+		
+		ButtonGroup grupo = new ButtonGroup();
+		ModoMutador[] mutador = ModoMutador.values();
+		mutadores = new JRadioButton[mutador.length];
+		int i = 0;
+		for (ModoMutador p : mutador) {
+			mutadores[i] = new JRadioButton(ParametrosAlgoritmo.getTextoMutador((p)));
+			mutadores[i].addActionListener(this);
+			grupo.add(mutadores[i]);
+			panelMutadores.add(mutadores[i]);
+			if (p == ParametrosAlgoritmo.PARAMS_MUTADOR) {
+				mutadores[i].setSelected(true);
+			}
+			i++;
+		}
+		
+		return panelMutadores;
+	}
+
+	private JPanel creaPanelCruces() {
+		JPanel panelCruces = new JPanel(new GridLayout(1, 3));
+
+		// set border and layout
+		Border emptyBorder = BorderFactory.createEmptyBorder(0, 5, 0, 5);
+		Border lineBorder = BorderFactory.createLineBorder(Color.BLACK);
+		Border titleBorder = BorderFactory.createTitledBorder(lineBorder,
+				"Mutadores");
+		Border compoundBorder = BorderFactory.createCompoundBorder(titleBorder,
+				emptyBorder);
+		panelCruces.setBorder(compoundBorder);
+		
+		ButtonGroup grupo = new ButtonGroup();
+		ModoCruzador[] cruces = ModoCruzador.values();
+		cruzadores = new JRadioButton[cruces.length];
+		int i = 0;
+		for (ModoCruzador p : cruces) {
+			cruzadores[i] = new JRadioButton(ParametrosAlgoritmo.getTextoCruzador((p)));
+			cruzadores[i].addActionListener(this);
+			grupo.add(cruzadores[i]);
+			panelCruces.add(cruzadores[i]);
+			if (p == ParametrosAlgoritmo.PARAMS_CRUZADOR) {
+				cruzadores[i].setSelected(true);
+			}
+			i++;
+		}
+		
+		return panelCruces;
+	}
+
+	private JPanel creaPanelSeleccion() {
+		JPanel panelSeleccionadores = new JPanel(new GridLayout(2, 3));
+
+		// set border and layout
+		Border emptyBorder = BorderFactory.createEmptyBorder(0, 5, 0, 5);
+		Border lineBorder = BorderFactory.createLineBorder(Color.BLACK);
+		Border titleBorder = BorderFactory.createTitledBorder(lineBorder,
+				"Seleccionadores");
+		Border compoundBorder = BorderFactory.createCompoundBorder(titleBorder,
+				emptyBorder);
+		panelSeleccionadores.setBorder(compoundBorder);
+		
+		ButtonGroup grupo = new ButtonGroup();
+		ModoSeleccionador[] seleccionadores = ModoSeleccionador.values();
+		selecciones = new JRadioButton[seleccionadores.length];
+		int i = 0;
+		for (ModoSeleccionador p : seleccionadores) {
+			selecciones[i] = new JRadioButton(ParametrosAlgoritmo.getTextoSeleccionador((p)));
+			selecciones[i].addActionListener(this);
+			grupo.add(selecciones[i]);
+			panelSeleccionadores.add(selecciones[i]);
+			if (p == ParametrosAlgoritmo.PARAMS_SELECCIONADOR) {
+				selecciones[i].setSelected(true);
+			}
+			i++;
+		}
+		// Combo para el torneo probabilista
+		String[] valores = {"0.5","0.6","0.7","0.8","0.9","1.0"};
+		comboProbTorneo = new JComboBox(valores);	
+		comboProbTorneo.setEnabled(false);
+		JPanel panelCombo = new JPanel();
+		panelCombo.add(new JLabel("Probabilidad Torneo Probabilista "));
+		panelCombo.add(comboProbTorneo);
+		panelSeleccionadores.add(panelCombo);
+		
+		// TextField para el tamaño de torneo
+		textFieldTamTorneo = new JTextField(10);
+		textFieldTamTorneo.setText("3");
+		textFieldTamTorneo.setEnabled(false);
+		JPanel panelTextField = new JPanel();
+		panelTextField.add(new JLabel("Tamaño de torneo "));
+		panelTextField.add(textFieldTamTorneo);
+		panelSeleccionadores.add(panelTextField);
+		
+		return panelSeleccionadores;
 	}
 
 	private JPanel crearPanelGraficos() {
@@ -324,8 +463,6 @@ public class GUI extends JFrame implements ActionListener, Observer {
 		mntmSalir.addActionListener(this);
 		mnArchivo.add(mntmSalir);
 
-		menuBar.add(creaMenuSeleccion());
-
 		menuBar.add(creaMenuFunciones());
 
 		menuBar.add(creaMenuOpciones());
@@ -382,33 +519,11 @@ public class GUI extends JFrame implements ActionListener, Observer {
 
 		item = new JRadioButtonMenuItem(Level.SEVERE.toString());
 		item.addActionListener(this);
+		item.setSelected(true);
 		opcionesLog.add(item);
 
 		menuLogger.add(item);
-		menuLogger.getItem(0).setSelected(true);
 		return menuLogger;
-	}
-
-	private JMenu creaMenuSeleccion() {
-		JMenu mnSeleccion = new JMenu("Selecci\u00F3n");
-		grupo = new ButtonGroup();
-		ModoSeleccionador[] seleccionadores = ModoSeleccionador.values();
-		menuSelecciones = new JRadioButtonMenuItem[seleccionadores.length];
-		int i = 0;
-		for (ModoSeleccionador p : seleccionadores) {
-			menuSelecciones[i] = new JRadioButtonMenuItem(
-					ParametrosAlgoritmo.getTextoSeleccionador((p)));
-			grupo.add(menuSelecciones[i]);
-			mnSeleccion.add(menuSelecciones[i]);
-			if (p == ParametrosAlgoritmo.PARAMS_SELECCIONADOR) {
-				menuSelecciones[i].setSelected(true);
-			}
-			i++;
-		}
-		menuSelecciones[ModoSeleccionador.TORNEO.ordinal()]
-				.addActionListener(this);
-		return mnSeleccion;
-
 	}
 
 	private JMenu creaMenuFunciones() {
@@ -468,13 +583,28 @@ public class GUI extends JFrame implements ActionListener, Observer {
 			actualizar();
 		} else if (e.getActionCommand().equals(
 				ParametrosAlgoritmo.getTextoProblema(Problema.FUNCION_5))) {
-			n = (int) setParametroExtra("Introduzca un valor para n: ", INT);
-		} else if (e.getActionCommand().equals(
-				ParametrosAlgoritmo
-						.getTextoSeleccionador(ModoSeleccionador.TORNEO))) {
-			tamTorneo = (int) setParametroExtra(
-					"Introduzca un tamaño de torneo: ", INT);
-		} else if (e.getActionCommand().equals(Level.FINEST.toString())) {
+			n = (int) setParametroExtra("Introduzca un valor para n: ", INT);			
+		} else if (e.getActionCommand().equals(ParametrosAlgoritmo.getTextoSeleccionador(ModoSeleccionador.TORNEO_DET))) {
+			textFieldTamTorneo.setEnabled(true);
+			comboProbTorneo.setEnabled(false);
+		} else if (e.getActionCommand().equals(ParametrosAlgoritmo.getTextoSeleccionador(ModoSeleccionador.TORNEO_PROB))) {
+			textFieldTamTorneo.setEnabled(true);
+			comboProbTorneo.setEnabled(true);
+		} else if (e.getActionCommand().equals(ParametrosAlgoritmo.getTextoSeleccionador(ModoSeleccionador.RULETA))) {
+			textFieldTamTorneo.setEnabled(false);
+			comboProbTorneo.setEnabled(false);
+		} else {
+			actionEventLog(e);
+		}
+
+	}
+
+	/**
+	 * Función que realiza el evento correspondiente a la opción de log seleccionada
+	 * @param e
+	 */
+	private void actionEventLog(ActionEvent e) {
+		if (e.getActionCommand().equals(Level.FINEST.toString())) {
 			log.setLevel(Level.FINEST);
 			System.out.println(log.getLevel());
 		} else if (e.getActionCommand().equals(Level.FINER.toString())) {
@@ -496,7 +626,6 @@ public class GUI extends JFrame implements ActionListener, Observer {
 			log.setLevel(Level.SEVERE);
 			System.out.println(log.getLevel());
 		}
-
 	}
 
 	private void actualizar() {
@@ -509,7 +638,10 @@ public class GUI extends JFrame implements ActionListener, Observer {
 	private ParametrosAlgoritmo componerParametros() {
 		String mensaje = "";
 		ModoSeleccionador modoSelec = modoSeleccionador();
+		ModoCruzador modoCruzador = modoCruzador();
+		ModoMutador modoMutador = modoMutador();
 		Problema problema = problema();
+		
 		// Configurar los parámetros a utilizar
 		ParametrosAlgoritmo params = new ParametrosAlgoritmo();
 
@@ -553,7 +685,14 @@ public class GUI extends JFrame implements ActionListener, Observer {
 			}
 		}
 
-		params.setTamTorneo(tamTorneo);
+		if (textFieldTamTorneo.isEnabled()){
+			if (!params.setTamTorneo(textFieldTamTorneo.getText())){
+				mensaje += "Tamaño de torneo no válido. \n";
+			}
+		}
+		if (comboProbTorneo.isEnabled())
+			params.setProbTorneoProbabilista((String)comboProbTorneo.getSelectedItem());
+		
 		params.setN(n);
 		params.setGeneradorPoblaciones(ModoGenerador.ALEATORIO);
 		params.setProblema(problema);
@@ -562,13 +701,9 @@ public class GUI extends JFrame implements ActionListener, Observer {
 		if (!params.setTamPoblacion(tamPob.getText())) {
 			mensaje += "Tamaño de población no válido.\n";
 		}
-
-		// Estos no están en la GUI todavía pero los dejo ya aquí
-		/*
-		 * params.setCruzador(cruzador);
-		 * 
-		 * params.setMutador(mutador);
-		 */
+		
+		params.setCruzador(modoCruzador);
+		params.setMutador(modoMutador);
 
 		if (!mensaje.equals("")) {
 			JOptionPane.showMessageDialog(this,
@@ -585,13 +720,37 @@ public class GUI extends JFrame implements ActionListener, Observer {
 	private ModoSeleccionador modoSeleccionador() {
 		boolean encontrado = false;
 		int i = 0;
-		while (!encontrado && i < menuSelecciones.length) {
-			encontrado = menuSelecciones[i].isSelected();
+		while (!encontrado && i < selecciones.length) {
+			encontrado = selecciones[i].isSelected();
 			if (!encontrado) {
 				i++;
 			}
 		}
 		return ModoSeleccionador.values()[i];
+	}
+	
+	private ModoCruzador modoCruzador() {
+		boolean encontrado = false;
+		int i = 0;
+		while (!encontrado && i < cruzadores.length) {
+			encontrado = cruzadores[i].isSelected();
+			if (!encontrado) {
+				i++;
+			}
+		}
+		return ModoCruzador.values()[i];
+	}
+	
+	private ModoMutador modoMutador() {
+		boolean encontrado = false;
+		int i = 0;
+		while (!encontrado && i < mutadores.length) {
+			encontrado = mutadores[i].isSelected();
+			if (!encontrado) {
+				i++;
+			}
+		}
+		return ModoMutador.values()[i];
 	}
 
 	private Problema problema() {
