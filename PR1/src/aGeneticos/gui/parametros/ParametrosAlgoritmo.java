@@ -104,6 +104,7 @@ public class ParametrosAlgoritmo {
 	 * Parámetro para la selección por torneo
 	 */
 	private int tamTorneo;
+	private double probTorneoProbabilista;
 
 	Logger log;
 	
@@ -151,8 +152,11 @@ public class ParametrosAlgoritmo {
 		case RULETA:
 			resultado = "Ruleta";
 			break;
-		case TORNEO:
-			resultado = "Torneo";
+		case TORNEO_DET:
+			resultado = "Torneo Determinista";
+			break;
+		case TORNEO_PROB:
+			resultado = "Torneo Probabilista";
 			break;
 		default:
 			resultado = "";
@@ -172,8 +176,11 @@ public class ParametrosAlgoritmo {
 		case RULETA:
 			resultado = new Ruleta();
 			break;
-		case TORNEO:
-			resultado = new Torneo(tamTorneo);
+		case TORNEO_DET:
+			resultado = new TorneoDeterminista(tamTorneo);
+			break;
+		case TORNEO_PROB:
+			resultado = new TorneoProbabilista(tamTorneo, probTorneoProbabilista);
 			break;
 		default:
 			resultado = null;
@@ -333,6 +340,8 @@ public class ParametrosAlgoritmo {
 		}
 		return resultado;
 	}
+	
+	/*----------- Tamaño de la población ------------------*/
 
 	public int getTamPoblacion() {
 		return tamPoblacion;
@@ -352,6 +361,7 @@ public class ParametrosAlgoritmo {
 		}
 	}
 	
+	/*----------- Generaciones de la población ------------------*/
 
 	public int getLimIteraciones() {
 		return limIteraciones;
@@ -370,6 +380,8 @@ public class ParametrosAlgoritmo {
 			return false;
 		}
 	}
+	
+	/*----------- Probabilidad Cruce ------------------*/
 
 	public double getProbabilidadCruce() {
 		return probabilidadCruce;
@@ -388,6 +400,8 @@ public class ParametrosAlgoritmo {
 			return false;
 		}
 	}
+	
+	/*----------- Probabilidad de mutación ------------------*/
 
 	public double getProbabilidadMutacion() {
 		return probabilidadMutacion;
@@ -407,6 +421,8 @@ public class ParametrosAlgoritmo {
 			return false;
 		}
 	}
+	
+	/*----------- Tolerancia ------------------*/
 
 	public double getTolerancia() {
 		return tolerancia;
@@ -425,6 +441,8 @@ public class ParametrosAlgoritmo {
 			return false;
 		}
 	}
+	
+	/*----------- ELITISMO ------------------*/
 
 	public boolean conElitismo() {
 		return elitismo;
@@ -452,6 +470,8 @@ public class ParametrosAlgoritmo {
 		}
 	}
 	
+
+	
 	public int getN() {
 		return n;
 	}
@@ -469,6 +489,8 @@ public class ParametrosAlgoritmo {
 			return false;
 		}
 	}
+	
+	/*----------- Tamaño para el torneo ------------------*/
 	
 	public int getTamTorneo() {
 		return tamTorneo;
@@ -558,6 +580,28 @@ public class ParametrosAlgoritmo {
 		}
 		
 	}
+	
+	/*----------- Probabilidad para el torneo probabilista ------------------*/
+	
+	public double getProbTorneoProbabilista() {
+		return probTorneoProbabilista;
+	}
+
+	public void setProbTorneoProbabilista(double prob) {
+		this.probTorneoProbabilista = prob;
+	}
+
+	public boolean setProbTorneoProbabilista(String prob) {
+		try {
+			this.probTorneoProbabilista = Double.parseDouble(prob);
+			return true;
+		} catch (NumberFormatException e) {
+			log.warning("[PARAM] " + prob + " no es un entero.");
+			return false;
+		}
+	}
+	
+	
 
 	
 	
