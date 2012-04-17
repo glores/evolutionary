@@ -1,9 +1,5 @@
 package aGeneticos;
 
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
 import java.text.DecimalFormat;
 import java.util.logging.ConsoleHandler;
 import java.util.logging.Handler;
@@ -18,8 +14,6 @@ import javax.swing.UnsupportedLookAndFeelException;
 import aGeneticos.controlador.Controlador;
 import aGeneticos.gui.GUI;
 import aGeneticos.logica.AGenetico;
-import aGeneticos.logica.alumnos.Alumno;
-import aGeneticos.logica.alumnos.ListaAlumnos;
 
 
 /**
@@ -47,7 +41,6 @@ public class Main {
 		Controlador controlador = Controlador.getInstance();
 		final AGenetico algoritmo = new AGenetico();
 		controlador.setAGenetico(algoritmo);
-		ListaAlumnos listaAlumnos = cargarDatos("archivos/3.txt");
 		
 		try {
 			UIManager.setLookAndFeel(MAIN_LANDF);
@@ -91,50 +84,5 @@ public class Main {
 		log.setLevel(Level.ALL);
 		return log;
 	}
-	
-	/**
-	 * Cargamos los datos de los alumnos desde un fichero
-	 * @param file Nombre del fichero
-	 * @return Devuelve la lista de alumnos
-	 */
-	private static ListaAlumnos cargarDatos(String file){
-		Logger log = Logger.getLogger("CP");
-		int numAlumnos, numRestricciones, id, odia;
-		double nota;
-		ListaAlumnos lista = new ListaAlumnos();
-		try {
-			BufferedReader bf = new BufferedReader(new FileReader(file));
-			// Leemos la primera linea que contiene el número de alumnos y el número de restricciones
-			String line =  bf.readLine();
-			numAlumnos = Integer.parseInt(line.split(" ")[0]);
-			numRestricciones = Integer.parseInt(line.split(" ")[1]);
 
-			// Leemos los alumnos y sus notas
-			int i = 0; 
-			while ((line = bf.readLine()) != null && i < numAlumnos) {
-				id = Integer.parseInt(line.split(" ")[0]);
-				nota = Double.parseDouble(line.split(" ")[1]);
-				lista.addAlumno(new Alumno(id, nota));
-				System.out.println(line);
-				i++;
-			}
-			
-			// Leemos las incompatibilidades de cada alumno
-			i = 0; 
-			while ((line = bf.readLine()) != null && i < numRestricciones) {
-				id = Integer.parseInt(line.split(" ")[0]);
-				odia = Integer.parseInt(line.split(" ")[1]);
-				lista.addIncompatibleAlumno(id, odia);
-				System.out.println(line);
-				i++;
-			}
-			
-			bf.close();
-		}catch (FileNotFoundException e) {
-			log.severe(e.getMessage());
-		} catch (IOException e) {
-			log.severe(e.getMessage());
-		} 
-		return lista;
-	}
 }

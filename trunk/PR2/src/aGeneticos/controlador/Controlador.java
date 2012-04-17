@@ -71,6 +71,7 @@ public class Controlador {
 			aGenetico.setProbMutacion(parametros.getProbabilidadMutacion());
 			aGenetico.setSeleccionador(parametros.getSeleccionador());
 			aGenetico.setTamElite(parametros.getTamElite());
+			aGenetico.setListaAlumnos(parametros.getPath());
 			aGenetico.run();
 		}
 	}

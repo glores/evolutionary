@@ -10,5 +10,5 @@ package aGeneticos.gui.parametros;
  */
 
 public enum Problema {
-	FUNCION_1, FUNCION_2, FUNCION_3, FUNCION_4, FUNCION_5
+	FUNCION_1
 }

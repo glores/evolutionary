@@ -1,5 +1,9 @@
 package aGeneticos.logica;
 
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Iterator;
@@ -13,6 +17,8 @@ import aGeneticos.logica.abtractas.Evaluador;
 import aGeneticos.logica.abtractas.Mutador;
 import aGeneticos.logica.abtractas.Seleccionador;
 import aGeneticos.logica.alelos.ConjuntoAlelos;
+import aGeneticos.logica.alumnos.Alumno;
+import aGeneticos.logica.alumnos.ListaAlumnos;
 import aGeneticos.logica.poblacion.Cromosoma;
 import aGeneticos.logica.poblacion.GeneradorPoblaciones;
 import aGeneticos.util.Aleatorio;
@@ -49,6 +55,8 @@ public class AGenetico extends Observable {
 
 	private int numCruzados;
 	private int numMutados;
+	
+	private ListaAlumnos listaAlumnos;
 
 	private Logger log;
 
@@ -245,12 +253,60 @@ public class AGenetico extends Observable {
 		evaluador.evaluar(poblacion);
 
 	}
+	
+	
+	/**
+	 * Cargamos los datos de los alumnos desde un fichero
+	 * @param file Nombre del fichero
+	 * @return Devuelve la lista de alumnos
+	 */
+	private static ListaAlumnos cargarDatos(String file){
+		Logger log = Logger.getLogger("CP");
+		int numAlumnos, numRestricciones, id, odia;
+		double nota;
+		ListaAlumnos lista = new ListaAlumnos();
+		try {
+			BufferedReader bf = new BufferedReader(new FileReader(file));
+			// Leemos la primera linea que contiene el número de alumnos y el número de restricciones
+			String line =  bf.readLine();
+			numAlumnos = Integer.parseInt(line.split(" ")[0]);
+			numRestricciones = Integer.parseInt(line.split(" ")[1]);
 
+			// Leemos los alumnos y sus notas
+			int i = 0; 
+			while ((line = bf.readLine()) != null && i < numAlumnos) {
+				id = Integer.parseInt(line.split(" ")[0]);
+				nota = Double.parseDouble(line.split(" ")[1]);
+				lista.addAlumno(new Alumno(id, nota));
+				System.out.println(line);
+				i++;
+			}
+			
+			// Leemos las incompatibilidades de cada alumno
+			i = 0; 
+			while ((line = bf.readLine()) != null && i < numRestricciones) {
+				id = Integer.parseInt(line.split(" ")[0]);
+				odia = Integer.parseInt(line.split(" ")[1]);
+				lista.addIncompatibleAlumno(id, odia);
+				System.out.println(line);
+				i++;
+			}
+			
+			bf.close();
+		}catch (FileNotFoundException e) {
+			log.severe(e.getMessage());
+		} catch (IOException e) {
+			log.severe(e.getMessage());
+		} 
+		return lista;
+	}
+
+
+	/*------------------- GETTERS --------------------------------*/
+	
 	public ArrayList<Cromosoma> getPoblacion() {
 		return poblacion;
 	}
-
-	/*------------------- GETTERS --------------------------------*/
 
 	public int getGeneracion() {
 		return numgeneracion;
@@ -333,6 +389,10 @@ public class AGenetico extends Observable {
 
 	public void setEvaluador(Evaluador evaluador) {
 		this.evaluador = evaluador;
+	}
+	
+	public void setListaAlumnos(String path){
+		listaAlumnos = cargarDatos(path);
 	}
 
 }

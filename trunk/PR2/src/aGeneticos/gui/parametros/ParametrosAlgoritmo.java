@@ -105,6 +105,7 @@ public class ParametrosAlgoritmo {
 	 */
 	private int tamTorneo;
 	private double probTorneoProbabilista;
+	private int tamGrupo;
 
 	Logger log;
 	
@@ -112,6 +113,7 @@ public class ParametrosAlgoritmo {
 	private double intProbCruce_b;
 	private double intProbCruce_inc;
 	private boolean intProbCruce_habilitado;
+	private String path;
 	
 
 	/**
@@ -259,18 +261,18 @@ public class ParametrosAlgoritmo {
 		case FUNCION_1:
 			resultado = "Función 1";
 			break;
-		case FUNCION_2:
-			resultado = "Función 2";
-			break;
-		case FUNCION_3:
-			resultado = "Función 3";
-			break;
-		case FUNCION_4:
-			resultado = "Función 4";
-			break;
-		case FUNCION_5:
-			resultado = "Función 5";
-			break;
+//		case FUNCION_2:
+//			resultado = "Función 2";
+//			break;
+//		case FUNCION_3:
+//			resultado = "Función 3";
+//			break;
+//		case FUNCION_4:
+//			resultado = "Función 4";
+//			break;
+//		case FUNCION_5:
+//			resultado = "Función 5";
+//			break;
 		default:
 			resultado = "";
 			break;
@@ -284,18 +286,18 @@ public class ParametrosAlgoritmo {
 		case FUNCION_1:
 			resultado = new Funcion1();
 			break;
-		case FUNCION_2:
-			resultado = new Funcion2();
-			break;
-		case FUNCION_3:
-			resultado = new Funcion3();
-			break;
-		case FUNCION_4:
-			resultado = new Funcion4();
-			break;
-		case FUNCION_5:
-			resultado = new Funcion5(n);
-			break;
+//		case FUNCION_2:
+//			resultado = new Funcion2();
+//			break;
+//		case FUNCION_3:
+//			resultado = new Funcion3();
+//			break;
+//		case FUNCION_4:
+//			resultado = new Funcion4();
+//			break;
+//		case FUNCION_5:
+//			resultado = new Funcion5(n);
+//			break;
 		default:
 			resultado = null;
 			break;
@@ -596,11 +598,40 @@ public class ParametrosAlgoritmo {
 			this.probTorneoProbabilista = Double.parseDouble(prob);
 			return true;
 		} catch (NumberFormatException e) {
-			log.warning("[PARAM] " + prob + " no es un entero.");
+			log.warning("[PARAM] " + prob + " no es un real.");
 			return false;
 		}
 	}
 	
+	/*-------------- Tamaño grupo alumnos -----------------------------------*/
+	
+	public double getTamGrupo() {
+		return tamGrupo;
+	}
+
+	public void setTamGrupo(int tam) {
+		this.tamGrupo = tam;
+	}
+
+	public boolean setTamGrupo(String tam) {
+		try {
+			this.tamGrupo = Integer.parseInt(tam);
+			return true;
+		} catch (NumberFormatException e) {
+			log.warning("[PARAM] " + tam + " no es un entero.");
+			return false;
+		}
+	}
+	
+	/*-------------- Ruta del archivo lista alumnos -----------------------------------*/
+	
+	public String getPath() {
+		return path;
+	}
+
+	public void setPath(String path) {
+		this.path = path;
+	}
 	
 
 	
