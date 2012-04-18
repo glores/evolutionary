@@ -47,13 +47,17 @@ public class Alumno {
 	public ArrayList<Integer> getIdImcompatibles() {
 		return idImcompatibles;
 	}
+	
+	public int getNumIncompatibles(){
+		return idImcompatibles.size();
+	}
 
 	public void setIdImcompatibles(ArrayList<Integer> idImcompatibles) {
 		this.idImcompatibles = idImcompatibles;
 	}
 	
 	public String toString(){
-		return "ID: " + id +
+		return "\n ID: " + id +
 				"\n Nota: " + nota +
 				"\n Incompatibles: " + idImcompatibles.toString();
 	}

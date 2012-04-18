@@ -21,13 +21,13 @@ public class MutadorSimple extends Mutador{
 		boolean mutado = false;
 		Cromosoma aux = (Cromosoma) c.clone();
 		
-		for (int i = 0; i < c.getNumBits(); i++){
-			prob = Aleatorio.doble();
-			if (prob < probMut){
-				aux.getCadena().flip(i);
-				mutado = true;
-			}
-		}
+//		for (int i = 0; i < c.getNumBits(); i++){
+//			prob = Aleatorio.doble();
+//			if (prob < probMut){
+//				aux.getCadena().flip(i);
+//				mutado = true;
+//			}
+//		}
 		if (mutado) return aux;
 		else return null;
 	}

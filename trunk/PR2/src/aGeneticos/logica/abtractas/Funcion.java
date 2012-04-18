@@ -1,6 +1,5 @@
 package aGeneticos.logica.abtractas;
 
-import aGeneticos.logica.alelos.ConjuntoAlelos;
 
 /**
  * Práctica 1 de Programación Evolutiva
@@ -12,23 +11,17 @@ import aGeneticos.logica.alelos.ConjuntoAlelos;
  */
 
 public abstract class Funcion {
-	protected ConjuntoAlelos alelos;
 	protected Evaluador evaluador;	
 	
 	
 	public Funcion(){
-		alelos = null;
 		evaluador = null;
 	}
 	
-	
-	public ConjuntoAlelos getAlelos(){
-		return alelos;
-	}
 	public Evaluador getEvaluador(){
 		return evaluador;
 	}
 		
 	
-	public abstract void preparar(double tolerancia);
+	public abstract void preparar();
 }

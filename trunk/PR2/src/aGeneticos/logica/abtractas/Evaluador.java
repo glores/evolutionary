@@ -2,7 +2,7 @@ package aGeneticos.logica.abtractas;
 
 import java.util.ArrayList;
 
-import aGeneticos.logica.alelos.ConjuntoAlelos;
+import aGeneticos.logica.alumnos.ListaAlumnos;
 import aGeneticos.logica.poblacion.Cromosoma;
 
 
@@ -18,10 +18,7 @@ import aGeneticos.logica.poblacion.Cromosoma;
  */
 
 public abstract class Evaluador {
-	/**
-	 * Alelos del evaluador. Se construyen en las clases derivadas
-	 */
-	protected ConjuntoAlelos alelos;
+	protected ListaAlumnos lista;
 	/**
 	 * Indica si se maximiza o minimiza la función de aptitud. 
 	 * Se inicializa en la clase derivada
@@ -56,9 +53,8 @@ public abstract class Evaluador {
 	 */
 	public abstract void fitness(Cromosoma c);
 
-	public Evaluador(ConjuntoAlelos al) {
-		this.alelos = al;
-	}
+	public Evaluador(){}
+
 	
 	/**
 	 * Evalua el cromosoma dado por parámetro
@@ -77,7 +73,7 @@ public abstract class Evaluador {
 	}
 
 	public void inicioEvaluacionGlobal() {
-		mejorGlobal=null;
+		mejorGlobal = null;
 	}
 	
 	/**
@@ -107,11 +103,6 @@ public abstract class Evaluador {
 		return mediaPoblacion;
 	}
 
-
-	public ConjuntoAlelos getAlelos() {
-		return alelos;
-	}
-	
 	public Cromosoma getMejorLocal(){
 		return mejorLocal;		
 	}
@@ -193,7 +184,13 @@ public abstract class Evaluador {
 			minimizarGlobal();
 		}
 	}
+
+	public int getTamGrupo() {
+		return lista.getTamGrupo();
+	}
 	
-
-
+	public void setListaAlumnos(ListaAlumnos lista){
+		this.lista = lista;
+	}
+	
 }
