@@ -27,9 +27,10 @@ import aGeneticos.gui.parametros.Problema;
 
 public class PanelDatos extends JPanel implements ActionListener {
 	private static final long serialVersionUID = 1L;
+	private static final String DEFAULT = "No hay archivo cargado";
 	private JFileChooser fileChooser;
 	private JButton botonCargar;
-	private JTextField labelNombreFichero, tamGrupo, textFieldTamTorneo;
+	private JTextField labelNombreFichero, tamGrupo, textFieldTamTorneo, alpha;
 	private JRadioButton[] selecciones, cruzadores, mutadores, problemas;
 	private JComboBox comboProbTorneo;
 
@@ -68,7 +69,7 @@ public class PanelDatos extends JPanel implements ActionListener {
 		botonCargar.addActionListener(this);
 		paneles[0].add(botonCargar);
 
-		labelNombreFichero = new JTextField("No hay archivo cargado");
+		labelNombreFichero = new JTextField(DEFAULT);
 		labelNombreFichero.setHorizontalAlignment(JTextField.CENTER);
 		paneles[0].add(labelNombreFichero);
 
@@ -82,6 +83,8 @@ public class PanelDatos extends JPanel implements ActionListener {
 		ButtonGroup grupo = new ButtonGroup();
 		Problema[] problema = Problema.values();
 		problemas = new JRadioButton[problema.length];
+		alpha = new JTextField(10);
+		alpha.setText("0.2");
 		int i = 0;
 		for (Problema p : problema) {
 			problemas[i] = new JRadioButton(
@@ -89,6 +92,9 @@ public class PanelDatos extends JPanel implements ActionListener {
 			problemas[i].addActionListener(this);
 			grupo.add(problemas[i]);
 			paneles[2].add(problemas[i]);
+			if (p == Problema.FUNCION_1){
+				paneles[2].add(alpha);
+			}
 			if (p == ParametrosAlgoritmo.PARAMS_PROBLEMA) {
 				problemas[i].setSelected(true);
 			}
@@ -136,7 +142,7 @@ public class PanelDatos extends JPanel implements ActionListener {
 		Border emptyBorder = BorderFactory.createEmptyBorder(0, 5, 0, 5);
 		Border lineBorder = BorderFactory.createLineBorder(Color.BLACK);
 		Border titleBorder = BorderFactory.createTitledBorder(lineBorder,
-				"Mutadores");
+				"Cruces");
 		Border compoundBorder = BorderFactory.createCompoundBorder(titleBorder,
 				emptyBorder);
 		panelCruces.setBorder(compoundBorder);
@@ -222,8 +228,16 @@ public class PanelDatos extends JPanel implements ActionListener {
 		return tamGrupo.getText();
 	}
 	
+
+	public String getAlpha() {
+		return alpha.getText();
+	}
+	
 	public String getPath(){
-		return labelNombreFichero.getText();
+		if (labelNombreFichero.getText().equals(DEFAULT)){
+			return null;
+		}
+		else return labelNombreFichero.getText();
 	}
 	
 	public String getProbTorneo(){
@@ -309,6 +323,8 @@ public class PanelDatos extends JPanel implements ActionListener {
 						.getTextoSeleccionador(ModoSeleccionador.RULETA))) {
 			textFieldTamTorneo.setEnabled(false);
 			comboProbTorneo.setEnabled(false);
+		} else if (e.getActionCommand().equals(ParametrosAlgoritmo.getTextoProblema(Problema.FUNCION_1))){
+			alpha.setEnabled(true);
 		}
 	}
 

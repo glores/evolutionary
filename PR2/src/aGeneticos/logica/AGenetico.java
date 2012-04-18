@@ -16,7 +16,6 @@ import aGeneticos.logica.abtractas.Cruzador;
 import aGeneticos.logica.abtractas.Evaluador;
 import aGeneticos.logica.abtractas.Mutador;
 import aGeneticos.logica.abtractas.Seleccionador;
-import aGeneticos.logica.alelos.ConjuntoAlelos;
 import aGeneticos.logica.alumnos.Alumno;
 import aGeneticos.logica.alumnos.ListaAlumnos;
 import aGeneticos.logica.poblacion.Cromosoma;
@@ -64,7 +63,7 @@ public class AGenetico extends Observable {
 	}
 
 	public AGenetico(Seleccionador selec, Mutador mut, Cruzador cruz,
-			Evaluador eval, ConjuntoAlelos alelos) {
+			Evaluador eval) {
 		this.seleccionador = selec;
 		this.mutador = mut;
 		this.cruzador = cruz;
@@ -135,7 +134,7 @@ public class AGenetico extends Observable {
 		// Inicializamos los parámetros de evaluación
 		evaluador.inicioEvaluacionGlobal();
 		// Generamos la población inicial
-		poblacion = generadorPoblaciones.generar(tamPoblacion, evaluador);
+		poblacion = generadorPoblaciones.generar(listaAlumnos, evaluador);
 
 		if (tamElite > 0)
 			elite();
@@ -332,9 +331,9 @@ public class AGenetico extends Observable {
 		return evaluador.getMejorLocal().getAptitud();
 	}
 
-	public String getSolucion() {
-		return this.evaluador.getAlelos().imprime(evaluador.getMejorGlobal());
-	}
+//	public String getSolucion() {
+//		return this.evaluador.getAlelos().imprime(evaluador.getMejorGlobal());
+//	}
 
 	public int getNumMutados() {
 		return numMutados;
@@ -391,8 +390,9 @@ public class AGenetico extends Observable {
 		this.evaluador = evaluador;
 	}
 	
-	public void setListaAlumnos(String path){
+	public void setListaAlumnos(String path, int tamGrupo){
 		listaAlumnos = cargarDatos(path);
+		listaAlumnos.setTamGrupo(tamGrupo);
 	}
 
 }

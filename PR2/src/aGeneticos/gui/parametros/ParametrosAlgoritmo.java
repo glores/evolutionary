@@ -2,12 +2,17 @@ package aGeneticos.gui.parametros;
 
 import java.util.logging.Logger;
 
-import aGeneticos.logica.abtractas.*;
-import aGeneticos.logica.cruzadores.*;
-import aGeneticos.logica.mutadores.*;
-import aGeneticos.logica.poblacion.*;
-import aGeneticos.logica.problemas.*;
-import aGeneticos.logica.seleccionadores.*;
+import aGeneticos.logica.abtractas.Cruzador;
+import aGeneticos.logica.abtractas.Funcion;
+import aGeneticos.logica.abtractas.Mutador;
+import aGeneticos.logica.abtractas.Seleccionador;
+import aGeneticos.logica.cruzadores.CruzadorSimple;
+import aGeneticos.logica.mutadores.MutadorSimple;
+import aGeneticos.logica.poblacion.GeneradorPoblaciones;
+import aGeneticos.logica.problemas.FuncionAlumnos;
+import aGeneticos.logica.seleccionadores.Ruleta;
+import aGeneticos.logica.seleccionadores.TorneoDeterminista;
+import aGeneticos.logica.seleccionadores.TorneoProbabilista;
 
 
 /**
@@ -26,14 +31,13 @@ import aGeneticos.logica.seleccionadores.*;
 
 public class ParametrosAlgoritmo {
 	//Parámetros por defecto
-	public final static int PARAMS_TAMPOBLACION = 8;
-	public final static int PARAMS_LIMITERACIONES = 20;
+	public final static int PARAMS_TAMPOBLACION = 2;
+	public final static int PARAMS_LIMITERACIONES = 2;
 	public final static double PARAMS_PROBCRUCE = 0.5;
 	public final static double PARAMS_INT_PROBCRUCE_A = 0.0;
 	public final static double PARAMS_INT_PROBCRUCE_B = 0.5;
 	public final static double PARAMS_INT_PROBCRUCE_INC = 0.1;
 	public final static double PARAMS_PROBMUTACION = 0.1;
-	public final static double PARAMS_TOLERANCIA = 0.00001;	
 	public final static boolean PARAMS_ELITISMO = Boolean.FALSE; 
 	public final static int PARAMS_TAMELITE = 0;
 	public final static ModoSeleccionador PARAMS_SELECCIONADOR = ModoSeleccionador.RULETA;
@@ -73,10 +77,6 @@ public class ParametrosAlgoritmo {
 	 * Probabilidad de mutación de un bit.
 	 */
 	private double probabilidadMutacion;
-	/**
-	 * Tolerancia.
-	 */
-	private double tolerancia;
 
 	// Parte opcional, parámetros del algoritmo
 	/**
@@ -96,9 +96,9 @@ public class ParametrosAlgoritmo {
 	 */
 	ModoGenerador generador;
 	/**
-	 * Parámetro para la función 5
+	 * Parámetro para la función de evaluación
 	 */
-	private int n;
+	private double alpha;
 	
 	/**
 	 * Parámetro para la selección por torneo
@@ -125,7 +125,6 @@ public class ParametrosAlgoritmo {
 		setLimIteraciones(PARAMS_LIMITERACIONES);
 		setProbabilidadCruce(PARAMS_PROBCRUCE);
 		setProbabilidadMutacion(PARAMS_PROBMUTACION);
-		setTolerancia(PARAMS_TOLERANCIA);
 		setElitismo(PARAMS_ELITISMO);
 		setTamElite(PARAMS_TAMELITE);
 		
@@ -134,7 +133,7 @@ public class ParametrosAlgoritmo {
 		setMutador(PARAMS_MUTADOR);
 		setGeneradorPoblaciones(PARAMS_GENERADOR);
 		setProblema(PARAMS_PROBLEMA);
-		setN(PARAMS_N);
+		setAlpha(PARAMS_N);
 		}
 	
 
@@ -284,26 +283,14 @@ public class ParametrosAlgoritmo {
 		Funcion resultado;
 		switch (problema) {
 		case FUNCION_1:
-			resultado = new Funcion1();
+			resultado = new FuncionAlumnos(alpha);
 			break;
-//		case FUNCION_2:
-//			resultado = new Funcion2();
-//			break;
-//		case FUNCION_3:
-//			resultado = new Funcion3();
-//			break;
-//		case FUNCION_4:
-//			resultado = new Funcion4();
-//			break;
-//		case FUNCION_5:
-//			resultado = new Funcion5(n);
-//			break;
 		default:
 			resultado = null;
 			break;
 		}
 		if(resultado!=null){
-			resultado.preparar(tolerancia);
+			resultado.preparar();
 		}
 		return resultado;
 	}
@@ -334,7 +321,7 @@ public class ParametrosAlgoritmo {
 		GeneradorPoblaciones resultado;
 		switch (generador) {
 		case ALEATORIO:
-			resultado = new GeneradorPoblaciones(getProblema().getAlelos());
+			resultado = new GeneradorPoblaciones();
 			break;
 		default:
 			resultado = null;
@@ -424,26 +411,6 @@ public class ParametrosAlgoritmo {
 		}
 	}
 	
-	/*----------- Tolerancia ------------------*/
-
-	public double getTolerancia() {
-		return tolerancia;
-	}
-
-	public void setTolerancia(double tolerancia) {
-		this.tolerancia = tolerancia;
-	}
-
-	public boolean setTolerancia(String tolerancia) {
-		try {
-			this.tolerancia = Double.parseDouble(tolerancia);
-			return true;
-		} catch (NumberFormatException e) {
-			log.warning("[PARAM] " + tolerancia + " no es un real.");
-			return false;
-		}
-	}
-	
 	/*----------- ELITISMO ------------------*/
 
 	public boolean conElitismo() {
@@ -474,17 +441,17 @@ public class ParametrosAlgoritmo {
 	
 
 	
-	public int getN() {
-		return n;
+	public double getAlpha() {
+		return alpha;
 	}
 
-	public void setN(int n) {
-		this.n = n;
+	public void setAlpha(double n) {
+		this.alpha = n;
 	}
 
-	public boolean setN(String n) {
+	public boolean setAlpha(String n) {
 		try {
-			this.n = Integer.parseInt(n);
+			this.alpha = Double.parseDouble(n);
 			return true;
 		} catch (NumberFormatException e) {
 			log.warning("[PARAM] " + n + " no es un entero.");
@@ -605,7 +572,7 @@ public class ParametrosAlgoritmo {
 	
 	/*-------------- Tamaño grupo alumnos -----------------------------------*/
 	
-	public double getTamGrupo() {
+	public int getTamGrupo() {
 		return tamGrupo;
 	}
 
@@ -642,7 +609,6 @@ public class ParametrosAlgoritmo {
 		mensaje+="limIteraciones: "+limIteraciones+", ";
 		mensaje+="probabilidadCruce: "+probabilidadCruce+", ";
 		mensaje+="probabilidadMutacion: "+probabilidadMutacion+", ";
-		mensaje+="tolerancia: "+tolerancia+", ";
 		mensaje+="elitismo: "+elitismo+", ";
 		mensaje+="tamElite: "+tamElite+", ";
 		mensaje+="modoSeleccionador: "+modoSeleccionador+", ";

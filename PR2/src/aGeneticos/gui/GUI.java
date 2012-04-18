@@ -79,7 +79,6 @@ public class GUI extends JFrame implements ActionListener, Observer {
 
 	private Logger log;
 
-	private int n;
 	private boolean ejecucion = false;
 
 	private Task task;
@@ -124,7 +123,6 @@ public class GUI extends JFrame implements ActionListener, Observer {
 		panelPrincipal.setDividerSize(1);
 		setTitle("Algoritmo Gen\u00E9tico");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 900, 650);
 
 		log.fine("[GUI] Creando menu...");
 		// Menu
@@ -139,7 +137,6 @@ public class GUI extends JFrame implements ActionListener, Observer {
 		parametroProbabilidadCruce(panelParams);
 		parametroIntervaloProbCruce(panelParams);
 		parametroProbabilidadMutacion(panelParams);
-		parametroTolerancia(panelParams);
 		crearBoton(panelParams);
 		log.fine("[GUI] Creado");
 		log.fine("[GUI] Creando panel de graficos...");
@@ -163,7 +160,7 @@ public class GUI extends JFrame implements ActionListener, Observer {
 
 	private JPanel crearPanelGraficos() {
 		JPanel panelGraficos = new JPanel();
-		panelGraficos.setPreferredSize(new Dimension(590, 430));
+		panelGraficos.setPreferredSize(new Dimension(590, 400));
 
 		return panelGraficos;
 
@@ -189,19 +186,6 @@ public class GUI extends JFrame implements ActionListener, Observer {
 		panelBoton.setDividerSize(0);
 	}
 
-	private void parametroTolerancia(JPanel panelParams) {
-		JPanel panelTol = new JPanel();
-		panelParams.add(panelTol);
-		panelTol.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
-
-		JLabel lblTamaoPoblacin = new JLabel("Tolerancia");
-		panelTol.add(lblTamaoPoblacin);
-		tolerancia = new JTextField();
-		panelTol.add(tolerancia);
-		tolerancia.setColumns(10);
-		tolerancia.setText(Double
-				.toString(ParametrosAlgoritmo.PARAMS_TOLERANCIA));
-	}
 
 	private void parametroProbabilidadMutacion(JPanel panelParams) {
 		JPanel panelProbMut = new JPanel();
@@ -312,7 +296,7 @@ public class GUI extends JFrame implements ActionListener, Observer {
 	private JPanel crearPanelParams() {
 		JPanel panelParams = new JPanel();
 		panelParams.setPreferredSize(new Dimension(300, 500));
-		GridLayout gl_panelParams = new GridLayout(8, 1);
+		GridLayout gl_panelParams = new GridLayout(7, 1);
 		gl_panelParams.setVgap(10);
 		gl_panelParams.setHgap(10);
 		panelParams.setLayout(gl_panelParams);
@@ -474,9 +458,6 @@ public class GUI extends JFrame implements ActionListener, Observer {
 		// Configurar los parámetros a utilizar
 		ParametrosAlgoritmo params = new ParametrosAlgoritmo();
 
-		if (!params.setTolerancia(tolerancia.getText())) {
-			mensaje += "Tolerancia no válida.\n";
-		}
 		params.setElitismo(chckbxmntmElitismo.isSelected());
 		if (!params.setLimIteraciones(maxIt.getText())) {
 			mensaje += "Número máximo de iteraciones no válido.\n";
@@ -528,9 +509,14 @@ public class GUI extends JFrame implements ActionListener, Observer {
 			mensaje += "Tamaño de grupo no válido. \n";
 		}
 		
-		params.setPath(panelDatos.getPath());
+		if (panelDatos.getPath() == null){
+			mensaje += "No ha seleccionado archivo";
+		}
+		else params.setPath(panelDatos.getPath());
 		
-		params.setN(n);
+		if (!params.setAlpha(panelDatos.getAlpha())){
+			mensaje += "Alpha no válido. \n";
+		}
 		params.setGeneradorPoblaciones(ModoGenerador.ALEATORIO);
 		params.setProblema(problema);
 
@@ -589,11 +575,11 @@ public class GUI extends JFrame implements ActionListener, Observer {
 					btnOk.setEnabled(true);
 				}
 			} else {
-				pintor.setTitulo(algoritmo.getSolucion() + " Cruces: "
-						+ algoritmo.getNumCruzados() + " Mutaciones: "
-						+ algoritmo.getNumMutados());
-				pintor.dibujarGrafica((Graphics2D) panelGraficos.getGraphics());
-				btnOk.setEnabled(true);
+//				pintor.setTitulo(algoritmo.getSolucion() + " Cruces: "
+//						+ algoritmo.getNumCruzados() + " Mutaciones: "
+//						+ algoritmo.getNumMutados());
+//				pintor.dibujarGrafica((Graphics2D) panelGraficos.getGraphics());
+//				btnOk.setEnabled(true);
 			}
 
 		}
