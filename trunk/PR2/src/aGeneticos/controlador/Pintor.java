@@ -44,10 +44,10 @@ public class Pintor extends PintorBase {
 	}
 	public void iniciar(){
 		log = Logger.getLogger("CP");
-		mejores = new double[tamGeneraciones];
-		mejoresGlobales = new double[tamGeneraciones];
+		mejores = new double[tamGeneraciones + 1];
+		mejoresGlobales = new double[tamGeneraciones + 1];
 		
-		medias = new double[tamGeneraciones];
+		medias = new double[tamGeneraciones + 1];
 		generacionActual = 0;
 		titulo = "";
 	}

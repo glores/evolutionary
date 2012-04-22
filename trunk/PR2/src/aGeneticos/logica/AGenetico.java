@@ -100,7 +100,7 @@ public class AGenetico extends Observable {
 			log.info("reproduccion");
 			reproduccion();
 			log.info("mutacion");
-			mutacion();
+//			mutacion();
 			log.info("evaluación");
 			if (tamElite > 0) {
 				log.info("Añadimos a la élite");
@@ -134,7 +134,7 @@ public class AGenetico extends Observable {
 		// Inicializamos los parámetros de evaluación
 		evaluador.inicioEvaluacionGlobal();
 		// Generamos la población inicial
-		poblacion = generadorPoblaciones.generar(listaAlumnos, evaluador);
+		poblacion = generadorPoblaciones.generar(tamPoblacion, listaAlumnos, evaluador);
 
 		if (tamElite > 0)
 			elite();
@@ -193,11 +193,12 @@ public class AGenetico extends Observable {
 				selec.add(this.seleccionados.get(i));
 			}
 		}
-		numCruzados += selec.size();
 		// Si no es impar se elimina el último
 		if (selec.size() % 2 == 1) {
 			selec.remove(selec.size() - 1);
 		}
+		numCruzados = selec.size();
+		Logger.getLogger("CP").info("NUM CRUZADOS: " + numCruzados);
 
 		// Seleccionamos un punto al azar para el cruce
 		Cromosoma[] cruzados;
@@ -244,7 +245,7 @@ public class AGenetico extends Observable {
 	}
 
 	private boolean terminado() {
-		return numgeneracion == numMaxGen - 1;
+		return numgeneracion == numMaxGen;
 	}
 
 	private void evaluarPoblacion() {

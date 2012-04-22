@@ -31,8 +31,8 @@ import aGeneticos.logica.seleccionadores.TorneoProbabilista;
 
 public class ParametrosAlgoritmo {
 	//Parámetros por defecto
-	public final static int PARAMS_TAMPOBLACION = 2;
-	public final static int PARAMS_LIMITERACIONES = 2;
+	public final static int PARAMS_TAMPOBLACION = 8;
+	public final static int PARAMS_LIMITERACIONES = 1;
 	public final static double PARAMS_PROBCRUCE = 0.5;
 	public final static double PARAMS_INT_PROBCRUCE_A = 0.0;
 	public final static double PARAMS_INT_PROBCRUCE_B = 0.5;
