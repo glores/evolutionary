@@ -197,7 +197,7 @@ public class AGenetico extends Observable {
 		if (selec.size() % 2 == 1) {
 			selec.remove(selec.size() - 1);
 		}
-		numCruzados = selec.size();
+		numCruzados += selec.size();
 		Logger.getLogger("CP").info("NUM CRUZADOS: " + numCruzados);
 
 		// Seleccionamos un punto al azar para el cruce
