@@ -3,7 +3,7 @@ package aGeneticos.logica.poblacion;
 import java.util.ArrayList;
 import java.util.List;
 
-import aGeneticos.logica.alumnos.ListaAlumnos.PosById;
+import aGeneticos.logica.alumnos.PosById;
 
 /**
  * Práctica 2 de Programación Evolutiva
@@ -96,6 +96,10 @@ public class Cromosoma {
 //		}
 //		return cadena.get(desplazamiento, tamsGen.get(gen) + desplazamiento);
 //	}
+	
+	public void delete(){
+		this.cadena.clear();
+	}
 
 	@Override
 	public String toString() {

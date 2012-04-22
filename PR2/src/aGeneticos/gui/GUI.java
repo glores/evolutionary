@@ -402,8 +402,19 @@ public class GUI extends JFrame implements ActionListener, Observer {
 		if (e.getActionCommand().equals("Salir")) {
 			System.exit(0);
 		} else if (e.getSource() == btnOk) {
+//			log.info("[GUI] Ejecutar algoritmo");
+//			ParametrosAlgoritmo params = componerParametros();
+//			if (params != null) {
+//				log.info("[GUI] Parametros correctos");
+//				log.info(params.toString());
+//				panelGraficos.removeAll();
+//				Controlador.getInstance().inicia(params);
+//
+//			}
+			
 			task = new Task();
 			task.execute();
+			
 		} else if (e.getSource() == btnActualizar) {
 			actualizar();		
 		} else {

@@ -9,41 +9,17 @@ import java.util.ArrayList;
  * @author Sergio Barja
  */
 public class ListaAlumnos {
-	private ArrayList<Alumno> alumnos;
-	private double media;
-	
-	public class PosById{
-		private int id;		/* Identificador de alumnos */
-		private int pos; 	/* Posición dentro del array de alumnos */
-		
-		public PosById(int id, int pos){
-			this.id = id;
-			this.pos = pos;
-		}
-		
-		public int getId() {
-			return id;
-		}
-		public int getPos() {
-			return pos;
-		}
-		
-		public String toString(){
-			return "\n ID: " + id +
-					"\n Pos: " + pos;
-		}
-	}
+	private static ArrayList<Alumno> alumnos;
+	private static double media;
+
 	
 	/*
 	 * Array que contiene los ids de los alumnos,
 	 * para obtener la posición en el array
 	 * de alumnos
 	 */
-	private ArrayList<PosById> posById;
-	
-
-	
-	private int tamGrupo;
+	private ArrayList<PosById> posById;	
+	private static int tamGrupo;
 	
 	public ListaAlumnos(){
 		alumnos = new ArrayList<Alumno>();
@@ -109,7 +85,7 @@ public class ListaAlumnos {
 	 * @param posById
 	 * @return
 	 */
-	public int getIncompatibles(ArrayList<PosById> posById){
+	public static int getIncompatibles(ArrayList<PosById> posById){
 		int sum = 0, id, i = 0, cont = 0;
 		while (i < getNumGrupos()){
 			// Para cada miembro del grupo se comprueba si son incompatibles entre sí
@@ -128,8 +104,8 @@ public class ListaAlumnos {
 		return sum;
 	}
 	
-	public int getNumGrupos(){
-		return (int) Math.floor(this.getSize() / tamGrupo);
+	public static int getNumGrupos(){
+		return (int) Math.floor(alumnos.size() / tamGrupo);
 	}
 	
 	public int getTamGrupo(){
@@ -145,7 +121,7 @@ public class ListaAlumnos {
 	 * @param posById
 	 * @return
 	 */
-	public double getDesequilibrio(ArrayList<PosById> posById){
+	public static double getDesequilibrio(ArrayList<PosById> posById){
 		double desequilibrio = 0; double sumGrupo = 0;
 		for (int i = 0; i < getNumGrupos(); i++){
 			sumGrupo = 0;
