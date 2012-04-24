@@ -53,8 +53,12 @@ public class CruzadorSimple extends Cruzador{
 	
 	private CodOrdinal[] lista;
 
+	/**
+	 * Sólo utiliza un punto de cruce
+	 */
 	@Override
-	public Cromosoma[] cruza(Cromosoma c1, Cromosoma c2, int puntoCruce) {
+	public Cromosoma[] cruza(Cromosoma c1, Cromosoma c2, int[] puntoCruces) {
+		int puntoCruce = puntoCruces[0];
 		lista = new CodOrdinal[c1.getCadena().size()];
 		for (int i = 0; i < c1.getCadena().size(); i++){
 			lista[i] = new CodOrdinal();

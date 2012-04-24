@@ -13,5 +13,5 @@ import aGeneticos.logica.poblacion.Cromosoma;
 
 public abstract class Cruzador {
 	
-	public abstract Cromosoma[] cruza(Cromosoma c1, Cromosoma c2, int puntoCruce);
+	public abstract Cromosoma[] cruza(Cromosoma c1, Cromosoma c2, int[] puntoCruce);
 }
