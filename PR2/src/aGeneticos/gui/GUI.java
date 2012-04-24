@@ -117,6 +117,7 @@ public class GUI extends JFrame implements ActionListener, Observer {
 	 */
 	public GUI() {
 		log = Logger.getLogger("CP");
+		
 		log.fine("[GUI] Inicialización de GUI...");
 		JTabbedPane contentPane = new JTabbedPane();
 		panelPrincipal = new JSplitPane();

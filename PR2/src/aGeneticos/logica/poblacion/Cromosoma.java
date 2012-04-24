@@ -104,9 +104,11 @@ public class Cromosoma {
 	@Override
 	public String toString() {
 		String aux = "";
+		/*
 		for (int i = 0; i < numAlumnos; i++)
 			aux = cadena.get(i).toString();
-
+*/
+		aux=cadena.toString();
 		return "\n\n Cromosoma [cadena = " + aux + ",\n  aptitud = " + aptitud
 				+ ",\n  probabilidad = " + probabilidad + ",\n  probAcumulada = "
 				+ probAcumulada + "]\n";
