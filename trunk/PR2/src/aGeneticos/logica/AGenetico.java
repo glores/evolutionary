@@ -217,7 +217,7 @@ public class AGenetico extends Observable {
 		}
 		
 		int i = 0;
-		while (selec.size() >= 2 && i < selec.size()) {
+		while (selec.size() >= 2 && i < selec.size()) {	
 			cruzados = cruzador.cruza(poblacion.get(selec.get(i)),
 					poblacion.get(selec.get(i + 1)), puntoCruce);
 			if (tamElite > 0){
@@ -290,7 +290,7 @@ public class AGenetico extends Observable {
 				id = Integer.parseInt(line.split(" ")[0]);
 				nota = Double.parseDouble(line.split(" ")[1]);
 				lista.addAlumno(new Alumno(id, nota));
-				System.out.println(line);
+				log.finest(line);
 				i++;
 			}
 			
@@ -300,7 +300,7 @@ public class AGenetico extends Observable {
 				id = Integer.parseInt(line.split(" ")[0]);
 				odia = Integer.parseInt(line.split(" ")[1]);
 				lista.addIncompatibleAlumno(id, odia);
-				System.out.println(line);
+				log.finest(line);
 				i++;
 			}
 			

@@ -81,7 +81,7 @@ public class Main {
 		   opciones: FINEST, FINER, FINE, INFO, CONFIG, WARNING, SEVERE
 		   (es posible configurar los logs individuales a niveles distintos)*/
 		log.getHandlers()[0].setLevel(Level.ALL);
-		log.setLevel(Level.ALL);
+		log.setLevel(Level.SEVERE);
 		return log;
 	}
 
