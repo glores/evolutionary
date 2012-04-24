@@ -6,6 +6,7 @@ import aGeneticos.logica.abtractas.Cruzador;
 import aGeneticos.logica.abtractas.Funcion;
 import aGeneticos.logica.abtractas.Mutador;
 import aGeneticos.logica.abtractas.Seleccionador;
+import aGeneticos.logica.cruzadores.CruzadorOX;
 import aGeneticos.logica.cruzadores.CruzadorSimple;
 import aGeneticos.logica.mutadores.MutadorSimple;
 import aGeneticos.logica.poblacion.GeneradorPoblaciones;
@@ -230,6 +231,9 @@ public class ParametrosAlgoritmo {
 		case SIMPLE:
 			resultado = "Simple";
 			break;
+		case OX:
+			resultado = "OX";
+			break;
 		default:
 			resultado = "";
 			break;
@@ -242,6 +246,9 @@ public class ParametrosAlgoritmo {
 		switch (modoCruzador) {
 		case SIMPLE:
 			resultado = new CruzadorSimple();
+			break;
+		case OX:
+			resultado = new CruzadorOX();
 			break;
 		default:
 			resultado = null;

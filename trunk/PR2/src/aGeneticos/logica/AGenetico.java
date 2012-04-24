@@ -202,8 +202,20 @@ public class AGenetico extends Observable {
 
 		// Seleccionamos un punto al azar para el cruce
 		Cromosoma[] cruzados;
-		int puntoCruce = Aleatorio.getPuntoCruce() + 1; // Para que no empiece
-														// en 0
+		/*---------- Generamos dos puntos de cruce -------------*/
+		int puntoCruce1 = Aleatorio.getPuntoCruce() + 1; // Para que no empiece en 0
+		int puntoCruce2 = Aleatorio.getPuntoCruce() + 1;
+		int puntoCruce[] = new int[2];
+		while (puntoCruce2 == puntoCruce1) puntoCruce2 = Aleatorio.getPuntoCruce() + 1;
+		if (puntoCruce1 > puntoCruce2){
+			puntoCruce[0] = puntoCruce2;
+			puntoCruce[1] = puntoCruce1;
+		}
+		else if (puntoCruce2 >= puntoCruce1){
+			puntoCruce[1] = puntoCruce2;
+			puntoCruce[0] = puntoCruce1;
+		}
+		
 		int i = 0;
 		while (selec.size() >= 2 && i < selec.size()) {
 			cruzados = cruzador.cruza(poblacion.get(selec.get(i)),
