@@ -73,7 +73,7 @@ public class ListaAlumnos {
 	}
 	
 	public void setTamGrupo(int tam){
-		this.tamGrupo = tam;
+		ListaAlumnos.tamGrupo = tam;
 	}
 	
 	public int getSize(){

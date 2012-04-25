@@ -6,11 +6,13 @@ import aGeneticos.logica.abtractas.Cruzador;
 import aGeneticos.logica.abtractas.Funcion;
 import aGeneticos.logica.abtractas.Mutador;
 import aGeneticos.logica.abtractas.Seleccionador;
-import aGeneticos.logica.cruzadores.CruzadorOX;
-import aGeneticos.logica.cruzadores.CruzadorSimple;
+import aGeneticos.logica.cruzadores.CruzadorOXEstandar;
+import aGeneticos.logica.cruzadores.CruzadorOXPosPrioritarias;
+import aGeneticos.logica.cruzadores.CruzadorOrdinal;
 import aGeneticos.logica.mutadores.MutadorSimple;
 import aGeneticos.logica.poblacion.GeneradorPoblaciones;
 import aGeneticos.logica.problemas.FuncionAlumnos;
+import aGeneticos.logica.seleccionadores.Ranking;
 import aGeneticos.logica.seleccionadores.Ruleta;
 import aGeneticos.logica.seleccionadores.TorneoDeterminista;
 import aGeneticos.logica.seleccionadores.TorneoProbabilista;
@@ -97,9 +99,9 @@ public class ParametrosAlgoritmo {
 	 */
 	ModoGenerador generador;
 	/**
-	 * Parámetro para la función de evaluación
+	 * Parámetro para la función de evaluación y para la selección por ranking
 	 */
-	private double alpha;
+	private double alpha, beta;
 	
 	/**
 	 * Parámetro para la selección por torneo
@@ -160,6 +162,9 @@ public class ParametrosAlgoritmo {
 		case TORNEO_PROB:
 			resultado = "Torneo Probabilista";
 			break;
+		case RANKING:
+			resultado = "Ranking";
+			break;
 		default:
 			resultado = "";
 			break;
@@ -183,6 +188,9 @@ public class ParametrosAlgoritmo {
 			break;
 		case TORNEO_PROB:
 			resultado = new TorneoProbabilista(tamTorneo, probTorneoProbabilista);
+			break;
+		case RANKING:
+			resultado = new Ranking(beta);
 			break;
 		default:
 			resultado = null;
@@ -229,10 +237,13 @@ public class ParametrosAlgoritmo {
 		String resultado;
 		switch (cruzador) {
 		case SIMPLE:
-			resultado = "Simple";
+			resultado = "Ordinal";
 			break;
 		case OX:
 			resultado = "OX";
+			break;
+		case VARIANTE_OX:
+			resultado = "OX posiciones prioritarias";
 			break;
 		default:
 			resultado = "";
@@ -245,10 +256,13 @@ public class ParametrosAlgoritmo {
 		Cruzador resultado;
 		switch (modoCruzador) {
 		case SIMPLE:
-			resultado = new CruzadorSimple();
+			resultado = new CruzadorOrdinal();
 			break;
 		case OX:
-			resultado = new CruzadorOX();
+			resultado = new CruzadorOXEstandar();
+			break;
+		case VARIANTE_OX:
+			resultado = new CruzadorOXPosPrioritarias();
 			break;
 		default:
 			resultado = null;
@@ -267,18 +281,6 @@ public class ParametrosAlgoritmo {
 		case FUNCION_1:
 			resultado = "Función 1";
 			break;
-//		case FUNCION_2:
-//			resultado = "Función 2";
-//			break;
-//		case FUNCION_3:
-//			resultado = "Función 3";
-//			break;
-//		case FUNCION_4:
-//			resultado = "Función 4";
-//			break;
-//		case FUNCION_5:
-//			resultado = "Función 5";
-//			break;
 		default:
 			resultado = "";
 			break;
@@ -605,6 +607,27 @@ public class ParametrosAlgoritmo {
 
 	public void setPath(String path) {
 		this.path = path;
+	}
+	
+	/*-------------- Parámetro beta para la selección por Ranking -------------------------*/
+	public double getBeta() {
+		return beta;
+	}
+
+	public void setBeta(double n) {
+		this.beta = n;
+	}
+
+	public boolean setBeta(String n) {
+		try {
+			this.beta = Double.parseDouble(n);
+			if (beta >= 1 && beta <= 2)
+				return true;
+			else return false;
+		} catch (NumberFormatException e) {
+			log.warning("[PARAM] " + n + " no es un entero.");
+			return false;
+		}
 	}
 	
 

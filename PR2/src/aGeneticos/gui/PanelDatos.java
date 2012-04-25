@@ -30,7 +30,7 @@ public class PanelDatos extends JPanel implements ActionListener {
 	private static final String DEFAULT = "No hay archivo cargado";
 	private JFileChooser fileChooser;
 	private JButton botonCargar;
-	private JTextField labelNombreFichero, tamGrupo, textFieldTamTorneo, alpha;
+	private JTextField labelNombreFichero, tamGrupo, textFieldTamTorneo, alpha, textFieldBeta;
 	private JRadioButton[] selecciones, cruzadores, mutadores, problemas;
 	private JComboBox comboProbTorneo;
 
@@ -167,7 +167,7 @@ public class PanelDatos extends JPanel implements ActionListener {
 	}
 
 	private JPanel creaPanelSeleccion() {
-		JPanel panelSeleccionadores = new JPanel(new GridLayout(2, 3));
+		JPanel panelSeleccionadores = new JPanel(new GridLayout(2, 4));
 
 		// set border and layout
 		Border emptyBorder = BorderFactory.createEmptyBorder(0, 5, 0, 5);
@@ -210,6 +210,15 @@ public class PanelDatos extends JPanel implements ActionListener {
 		panelTextField.add(new JLabel("Tamaño de torneo "));
 		panelTextField.add(textFieldTamTorneo);
 		panelSeleccionadores.add(panelTextField);
+		
+		// TextField para el parámetro beta del Ranking
+		textFieldBeta = new JTextField(10);
+		textFieldBeta.setText("1.5");
+		textFieldBeta.setEnabled(false);
+		JPanel panelBeta = new JPanel();
+		panelBeta.add(new JLabel("Parámetro Beta (1 <= Beta <= 2) "));
+		panelBeta.add(textFieldBeta);
+		panelSeleccionadores.add(panelBeta);
 
 		return panelSeleccionadores;
 	}
@@ -226,6 +235,10 @@ public class PanelDatos extends JPanel implements ActionListener {
 	
 	public String getTamGrupo(){
 		return tamGrupo.getText();
+	}
+	
+	public String getBeta(){
+		return textFieldBeta.getText();
 	}
 	
 
@@ -313,16 +326,23 @@ public class PanelDatos extends JPanel implements ActionListener {
 						.getTextoSeleccionador(ModoSeleccionador.TORNEO_DET))) {
 			textFieldTamTorneo.setEnabled(true);
 			comboProbTorneo.setEnabled(false);
+			textFieldBeta.setEnabled(false);
 		} else if (e.getActionCommand().equals(
 				ParametrosAlgoritmo
 						.getTextoSeleccionador(ModoSeleccionador.TORNEO_PROB))) {
 			textFieldTamTorneo.setEnabled(true);
 			comboProbTorneo.setEnabled(true);
+			textFieldBeta.setEnabled(false);
 		} else if (e.getActionCommand().equals(
 				ParametrosAlgoritmo
 						.getTextoSeleccionador(ModoSeleccionador.RULETA))) {
 			textFieldTamTorneo.setEnabled(false);
 			comboProbTorneo.setEnabled(false);
+			textFieldBeta.setEnabled(false);
+		} else if (e.getActionCommand().equals(ParametrosAlgoritmo.getTextoSeleccionador(ModoSeleccionador.RANKING))){
+			textFieldTamTorneo.setEnabled(false);
+			comboProbTorneo.setEnabled(false);
+			textFieldBeta.setEnabled(true);
 		} else if (e.getActionCommand().equals(ParametrosAlgoritmo.getTextoProblema(Problema.FUNCION_1))){
 			alpha.setEnabled(true);
 		}
