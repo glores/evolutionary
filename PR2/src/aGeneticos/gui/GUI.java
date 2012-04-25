@@ -593,12 +593,10 @@ public class GUI extends JFrame implements ActionListener, Observer {
 					btnOk.setEnabled(true);
 				}
 			} else {
-				// pintor.setTitulo(algoritmo.getSolucion() + " Cruces: "
-				// + algoritmo.getNumCruzados() + " Mutaciones: "
-				// + algoritmo.getNumMutados());
-				// pintor.dibujarGrafica((Graphics2D)
-				// panelGraficos.getGraphics());
-				// btnOk.setEnabled(true);
+				 pintor.setTitulo("Visión global");
+				 pintor.dibujarGrafica((Graphics2D)
+				 panelGraficos.getGraphics());
+				 btnOk.setEnabled(true);
 			}
 
 		}
