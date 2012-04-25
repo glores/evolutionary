@@ -1,7 +1,6 @@
 package aGeneticos.logica.cruzadores;
 
 import java.util.ArrayList;
-import java.util.logging.Logger;
 
 import aGeneticos.logica.abtractas.Cruzador;
 import aGeneticos.logica.alumnos.ListaAlumnos;
@@ -19,7 +18,7 @@ import aGeneticos.logica.poblacion.Cromosoma;
  *         a su codificación ordinal.
  */
 
-public class CruzadorSimple extends Cruzador {
+public class CruzadorOrdinal extends Cruzador {
 
 	private class CodOrdinal {
 		/**
@@ -57,15 +56,7 @@ public class CruzadorSimple extends Cruzador {
 	 * Sólo utiliza un punto de cruce
 	 */
 	@Override
-	public Cromosoma[] cruza(Cromosoma c1, Cromosoma c2, int[] puntoCruces) {		
-		if(c1.getCadena().size()==0){
-			Logger.getLogger("CP").severe("1 Cadena 0 en c1 ");
-			new Exception().printStackTrace();
-		}
-		if(c2.getCadena().size()==0){
-			Logger.getLogger("CP").severe("1 Cadena 0 en c2 ");
-			new Exception().printStackTrace();
-		}
+	public Cromosoma[] cruza(Cromosoma c1, Cromosoma c2, int[] puntoCruces) {	        
 		int puntoCruce = puntoCruces[0];
 		lista = new CodOrdinal[c1.getCadena().size()];
 		for (int i = 0; i < c1.getCadena().size(); i++) {
@@ -85,44 +76,16 @@ public class CruzadorSimple extends Cruzador {
 			aux1[i] = cad2[i];
 			aux2[i] = cad1[i];
 		}
-		if(c1.getCadena().size()==0){
-			Logger.getLogger("CP").severe("2 Cadena 0 en c1 "+c1.hashCode()+c1.toString());
-			new Exception().printStackTrace();
-		}
-		if(c2.getCadena().size()==0){
-			Logger.getLogger("CP").severe("2 Cadena 0 en c2 "+c2.hashCode()+c2.toString());
-			new Exception().printStackTrace();
-		}
-		Cromosoma[] nuevos = new Cromosoma[2];
-		nuevos[0] = getNuevoCromosoma(c1, aux1);
-		//A partir de aqui c1 es cadena vacía!!!!!!!
-		if(c1.getCadena().size()==0){
-			Logger.getLogger("CP").severe("3 Cadena 0 en c1 "+c1.hashCode()+c1.toString());
-			new Exception().printStackTrace();
-		}
-		if(c2.getCadena().size()==0){
-			Logger.getLogger("CP").severe("3 Cadena 0 en c2 "+c2.hashCode()+c2.toString());
-			new Exception().printStackTrace();
-		}
-		nuevos[1] = getNuevoCromosoma(c2, aux2);
-		if(c1.getCadena().size()==0){
-			Logger.getLogger("CP").severe("4 Cadena 0 en c1 "+c1.hashCode()+c1.toString());
-			new Exception().printStackTrace();
-		}
-		if(c2.getCadena().size()==0){
-			Logger.getLogger("CP").severe("4 Cadena 0 en c2 "+c2.hashCode()+c2.toString());
-			new Exception().printStackTrace();
-		}
-		return nuevos;
+        Cromosoma[] nuevos = new Cromosoma[2];
+        nuevos[0] = getNuevoCromosoma(c1, aux1);
+        nuevos[1] = getNuevoCromosoma(c2, aux2);
+		// Eliminamos los padres
+		c1.delete(); c2.delete();
+        return nuevos;
+
 	}
 
 	private Cromosoma getNuevoCromosoma(Cromosoma c, int[] aux) {
-		if(c.getCadena().size()==0){
-			Logger.getLogger("CP").severe("ESTO ES UN ERROR!! Comprueba los mensajes anteriores que salen de cruzar()");
-			Logger.getLogger("CP").severe("- Cadena 0 en c "+c.hashCode()+c.toString());
-			new Exception().printStackTrace();
-		}
-		
 		inicializaListaOrdinal();
 		ArrayList<PosById> listaAlumnos = c.getCadena();
 		ArrayList<PosById> listaRes = new ArrayList<PosById>();		
@@ -162,9 +125,6 @@ public class CruzadorSimple extends Cruzador {
 				lista[k].addTachado();
 			}
 		}		
-		c.delete();
-		Logger.getLogger("CP").fine(listaRes.toString());
-
 		return new Cromosoma(listaRes, ListaAlumnos.getDesequilibrio(listaRes),
 				ListaAlumnos.getIncompatibles(listaRes));
 	}

@@ -218,14 +218,14 @@ public class AGenetico extends Observable {
 		
 		int i = 0;
 		while (selec.size() >= 2 && i < selec.size()) {	
-			cruzados = cruzador.cruza(poblacion.get(selec.get(i)),
-					poblacion.get(selec.get(i + 1)), puntoCruce);
+			cruzados = cruzador.cruza(poblacion.get(selec.get(i)).clone(),
+					poblacion.get(selec.get(i + 1)).clone(), puntoCruce);
 			if (tamElite > 0){
 				poblacionOrdenada.remove(poblacion.get(selec.get(i)));
 				poblacionOrdenada.remove(poblacion.get(selec.get(i + 1)));
 			}
-			poblacion.set(selec.get(i), (Cromosoma)cruzados[0].clone());
-			poblacion.set(selec.get(i + 1), (Cromosoma)cruzados[1].clone());
+			poblacion.set(selec.get(i), cruzados[0]);
+			poblacion.set(selec.get(i + 1), cruzados[1]);
 			// Hay que calcular las nuevas aptitudes
 			evaluador.evaluar(poblacion.get(selec.get(i)));
 			evaluador.evaluar(poblacion.get(selec.get(i + 1)));

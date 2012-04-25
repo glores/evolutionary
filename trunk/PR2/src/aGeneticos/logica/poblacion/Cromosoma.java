@@ -115,7 +115,7 @@ public class Cromosoma {
 	}
 
 	@SuppressWarnings("unchecked")
-	public Object clone() {
+	public Cromosoma clone() {
 		Cromosoma clon = new Cromosoma(numAlumnos);
 		clon.aptitud = aptitud;
 		clon.cadena = (ArrayList<PosById>) cadena.clone();

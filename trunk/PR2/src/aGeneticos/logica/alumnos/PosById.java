@@ -18,6 +18,6 @@ public class PosById{
 	
 	public String toString(){
 		return "\n ID: " + id +
-				"\n Pos: " + pos;
+				" Pos: " + pos;
 	}
 }

@@ -1,6 +1,5 @@
 package aGeneticos.gui;
 
-
 import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
@@ -43,7 +42,6 @@ import aGeneticos.gui.parametros.ParametrosAlgoritmo;
 import aGeneticos.gui.parametros.Problema;
 import aGeneticos.logica.AGenetico;
 
-
 /**
  * Práctica 1 de Programación Evolutiva
  * 
@@ -62,7 +60,6 @@ public class GUI extends JFrame implements ActionListener, Observer {
 	private JSplitPane panelPrincipal;
 	private JPanel panelGraficos;
 	private PanelDatos panelDatos;
-	private JTextField tolerancia;
 	private JTextField tamPob;
 	private JTextField maxIt;
 	private JTextField probCruce;
@@ -117,7 +114,7 @@ public class GUI extends JFrame implements ActionListener, Observer {
 	 */
 	public GUI() {
 		log = Logger.getLogger("CP");
-		
+
 		log.fine("[GUI] Inicialización de GUI...");
 		JTabbedPane contentPane = new JTabbedPane();
 		panelPrincipal = new JSplitPane();
@@ -150,7 +147,10 @@ public class GUI extends JFrame implements ActionListener, Observer {
 		panelDatos = new PanelDatos();
 		contentPane.addTab("Principal", panelPrincipal);
 		contentPane.addTab("Datos", panelDatos);
-		
+		this.setPreferredSize(new Dimension(950,600));
+		int x = (int)(Toolkit.getDefaultToolkit().getScreenSize().width/2-this.getPreferredSize().width/2);
+		int y = (int)(Toolkit.getDefaultToolkit().getScreenSize().height/2-this.getPreferredSize().height/2);
+		setLocation(x, y);
 		setContentPane(contentPane);
 		log.fine("[GUI] Inicialización terminada");
 		this.pack();
@@ -186,7 +186,6 @@ public class GUI extends JFrame implements ActionListener, Observer {
 		panelBoton.add(barraProgreso);
 		panelBoton.setDividerSize(0);
 	}
-
 
 	private void parametroProbabilidadMutacion(JPanel panelParams) {
 		JPanel panelProbMut = new JPanel();
@@ -374,7 +373,6 @@ public class GUI extends JFrame implements ActionListener, Observer {
 		return menuLogger;
 	}
 
-
 	private double setParametroExtra(String msg, int tipo) {
 		boolean ok = false;
 		double valor = -1;
@@ -412,12 +410,12 @@ public class GUI extends JFrame implements ActionListener, Observer {
 //				Controlador.getInstance().inicia(params);
 //
 //			}
-			
-			task = new Task();
-			task.execute();
-			
+
+			 task = new Task();
+			 task.execute();
+
 		} else if (e.getSource() == btnActualizar) {
-			actualizar();		
+			actualizar();
 		} else {
 			actionEventLog(e);
 		}
@@ -425,7 +423,9 @@ public class GUI extends JFrame implements ActionListener, Observer {
 	}
 
 	/**
-	 * Función que realiza el evento correspondiente a la opción de log seleccionada
+	 * Función que realiza el evento correspondiente a la opción de log
+	 * seleccionada
+	 * 
 	 * @param e
 	 */
 	private void actionEventLog(ActionEvent e) {
@@ -466,7 +466,7 @@ public class GUI extends JFrame implements ActionListener, Observer {
 		ModoCruzador modoCruzador = panelDatos.getModoCruzador();
 		ModoMutador modoMutador = panelDatos.getModoMutador();
 		Problema problema = panelDatos.getProblema();
-		
+
 		// Configurar los parámetros a utilizar
 		ParametrosAlgoritmo params = new ParametrosAlgoritmo();
 
@@ -507,26 +507,34 @@ public class GUI extends JFrame implements ActionListener, Observer {
 			}
 		}
 
-		if (modoSelec.equals(ModoSeleccionador.TORNEO_DET)){
-			if (!params.setTamTorneo(panelDatos.getTamTorneo())){
+		if (modoSelec.equals(ModoSeleccionador.TORNEO_DET) || modoSelec.equals(ModoSeleccionador.TORNEO_PROB)) {
+			if (!params.setTamTorneo(panelDatos.getTamTorneo())) {
 				mensaje += "Tamaño de torneo no válido. \n";
 			}
 		}
-		
-		if (modoSelec.equals(ModoSeleccionador.TORNEO_PROB)){
-			params.setProbTorneoProbabilista(panelDatos.getProbTorneo());
+
+		if (modoSelec.equals(ModoSeleccionador.TORNEO_PROB)) {
+			if (!params.setProbTorneoProbabilista(panelDatos.getProbTorneo())){
+				mensaje += "Probabilidad de torneo no válido. \n";
+			}
 		}
 		
-		if (!params.setTamGrupo(panelDatos.getTamGrupo())){
+		if (modoSelec.equals(ModoSeleccionador.RANKING)){
+			if (!params.setBeta(panelDatos.getBeta())){
+				mensaje += "Parámetro Beta no válido. \n";
+			}
+		}
+
+		if (!params.setTamGrupo(panelDatos.getTamGrupo())) {
 			mensaje += "Tamaño de grupo no válido. \n";
 		}
-		
-		if (panelDatos.getPath() == null){
+
+		if (panelDatos.getPath() == null) {
 			mensaje += "No ha seleccionado archivo";
-		}
-		else params.setPath(panelDatos.getPath());
-		
-		if (!params.setAlpha(panelDatos.getAlpha())){
+		} else
+			params.setPath(panelDatos.getPath());
+
+		if (!params.setAlpha(panelDatos.getAlpha())) {
 			mensaje += "Alpha no válido. \n";
 		}
 		params.setGeneradorPoblaciones(ModoGenerador.ALEATORIO);
@@ -536,7 +544,7 @@ public class GUI extends JFrame implements ActionListener, Observer {
 		if (!params.setTamPoblacion(tamPob.getText())) {
 			mensaje += "Tamaño de población no válido.\n";
 		}
-		
+
 		params.setCruzador(modoCruzador);
 		params.setMutador(modoMutador);
 
@@ -551,8 +559,6 @@ public class GUI extends JFrame implements ActionListener, Observer {
 			return params;
 		}
 	}
-
-
 
 	@Override
 	public void update(Observable arg0, Object arg1) {
@@ -587,11 +593,12 @@ public class GUI extends JFrame implements ActionListener, Observer {
 					btnOk.setEnabled(true);
 				}
 			} else {
-//				pintor.setTitulo(algoritmo.getSolucion() + " Cruces: "
-//						+ algoritmo.getNumCruzados() + " Mutaciones: "
-//						+ algoritmo.getNumMutados());
-//				pintor.dibujarGrafica((Graphics2D) panelGraficos.getGraphics());
-//				btnOk.setEnabled(true);
+				// pintor.setTitulo(algoritmo.getSolucion() + " Cruces: "
+				// + algoritmo.getNumCruzados() + " Mutaciones: "
+				// + algoritmo.getNumMutados());
+				// pintor.dibujarGrafica((Graphics2D)
+				// panelGraficos.getGraphics());
+				// btnOk.setEnabled(true);
 			}
 
 		}
