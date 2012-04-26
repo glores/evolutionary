@@ -343,6 +343,10 @@ public class AGenetico extends Observable {
 	public double getMejorGeneracion() {
 		return evaluador.getMejorLocal().getAptitud();
 	}
+	
+	public Cromosoma getSolucion(){
+		return evaluador.getMejorLocal();
+	}
 
 //	public String getSolucion() {
 //		return this.evaluador.getAlelos().imprime(evaluador.getMejorGlobal());
@@ -356,6 +360,10 @@ public class AGenetico extends Observable {
 		return numCruzados;
 	}
 
+	public ListaAlumnos getListaAlumnos(){
+		return listaAlumnos;
+	}
+	
 	/*------------------- SETTERS --------------------------------*/
 
 	public void setPoblacion(ArrayList<Cromosoma> poblacion) {

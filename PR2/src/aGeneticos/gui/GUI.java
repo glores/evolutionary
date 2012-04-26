@@ -33,6 +33,7 @@ import javax.swing.SwingWorker;
 
 import aGeneticos.controlador.Controlador;
 import aGeneticos.controlador.PintorBase;
+import aGeneticos.controlador.PintorDistribucionAlumnos;
 import aGeneticos.controlador.PintorIterativo;
 import aGeneticos.gui.parametros.ModoCruzador;
 import aGeneticos.gui.parametros.ModoGenerador;
@@ -68,7 +69,7 @@ public class GUI extends JFrame implements ActionListener, Observer {
 	private JCheckBox intervaloProbCruce;
 	private JTextField probCruceIntA;
 	private JTextField probCruceIntB;
-	private JButton btnOk, btnActualizar;
+	private JButton btnOk, btnActualizar, btnVerSolucion;
 	private PintorBase pintor;
 
 	private JCheckBoxMenuItem chckbxmntmElitismo;
@@ -147,9 +148,11 @@ public class GUI extends JFrame implements ActionListener, Observer {
 		panelDatos = new PanelDatos();
 		contentPane.addTab("Principal", panelPrincipal);
 		contentPane.addTab("Datos", panelDatos);
-		this.setPreferredSize(new Dimension(950,600));
-		int x = (int)(Toolkit.getDefaultToolkit().getScreenSize().width/2-this.getPreferredSize().width/2);
-		int y = (int)(Toolkit.getDefaultToolkit().getScreenSize().height/2-this.getPreferredSize().height/2);
+		this.setPreferredSize(new Dimension(950, 600));
+		int x = (int) (Toolkit.getDefaultToolkit().getScreenSize().width / 2 - this
+				.getPreferredSize().width / 2);
+		int y = (int) (Toolkit.getDefaultToolkit().getScreenSize().height / 2 - this
+				.getPreferredSize().height / 2);
 		setLocation(x, y);
 		setContentPane(contentPane);
 		log.fine("[GUI] Inicialización terminada");
@@ -176,9 +179,13 @@ public class GUI extends JFrame implements ActionListener, Observer {
 		btnOk.addActionListener(this);
 		panel.add(btnOk);
 
-		btnActualizar = new JButton("Actualizar");
+		btnActualizar = new JButton("Ver resultados");
 		btnActualizar.addActionListener(this);
 		panel.add(btnActualizar);
+
+		btnVerSolucion = new JButton("Ver solución");
+		btnVerSolucion.addActionListener(this);
+		panel.add(btnVerSolucion);
 
 		panelBoton.add(panel);
 
@@ -401,21 +408,24 @@ public class GUI extends JFrame implements ActionListener, Observer {
 		if (e.getActionCommand().equals("Salir")) {
 			System.exit(0);
 		} else if (e.getSource() == btnOk) {
-//			log.info("[GUI] Ejecutar algoritmo");
-//			ParametrosAlgoritmo params = componerParametros();
-//			if (params != null) {
-//				log.info("[GUI] Parametros correctos");
-//				log.info(params.toString());
-//				panelGraficos.removeAll();
-//				Controlador.getInstance().inicia(params);
-//
-//			}
+			// log.info("[GUI] Ejecutar algoritmo");
+			// ParametrosAlgoritmo params = componerParametros();
+			// if (params != null) {
+			// log.info("[GUI] Parametros correctos");
+			// log.info(params.toString());
+			// panelGraficos.removeAll();
+			// Controlador.getInstance().inicia(params);
+			//
+			// }
 
-			 task = new Task();
-			 task.execute();
+			task = new Task();
+			task.execute();
 
 		} else if (e.getSource() == btnActualizar) {
 			actualizar();
+		}
+		if (e.getSource() == btnVerSolucion) {
+			pintarSolucion();
 		} else {
 			actionEventLog(e);
 		}
@@ -455,9 +465,23 @@ public class GUI extends JFrame implements ActionListener, Observer {
 
 	private void actualizar() {
 		// Si ya se ha ejecutado alguna vez, actualiza el panel de gráficos
-		if (ejecucion)
+		if (ejecucion) {
 			// pintor.dibujarGrafica((Graphics2D) panelGraficos.getGraphics());
+			panelGraficos.removeAll();
 			pintor.actualizar((Graphics2D) panelGraficos.getGraphics());
+		}
+	}
+
+	private void pintarSolucion() {
+		if (ejecucion) {
+			panelGraficos.removeAll();
+			AGenetico algoritmo = Controlador.getInstance().getAlgoritmo();
+			PintorDistribucionAlumnos pintorSolucion = new PintorDistribucionAlumnos();
+			pintorSolucion.iniciar(algoritmo.getListaAlumnos().getTamGrupo(),
+					algoritmo.getSolucion(), algoritmo.getListaAlumnos());
+			pintorSolucion.dibujarGrafica((Graphics2D) panelGraficos
+					.getGraphics());
+		}
 	}
 
 	private ParametrosAlgoritmo componerParametros() {
@@ -507,20 +531,21 @@ public class GUI extends JFrame implements ActionListener, Observer {
 			}
 		}
 
-		if (modoSelec.equals(ModoSeleccionador.TORNEO_DET) || modoSelec.equals(ModoSeleccionador.TORNEO_PROB)) {
+		if (modoSelec.equals(ModoSeleccionador.TORNEO_DET)
+				|| modoSelec.equals(ModoSeleccionador.TORNEO_PROB)) {
 			if (!params.setTamTorneo(panelDatos.getTamTorneo())) {
 				mensaje += "Tamaño de torneo no válido. \n";
 			}
 		}
 
 		if (modoSelec.equals(ModoSeleccionador.TORNEO_PROB)) {
-			if (!params.setProbTorneoProbabilista(panelDatos.getProbTorneo())){
+			if (!params.setProbTorneoProbabilista(panelDatos.getProbTorneo())) {
 				mensaje += "Probabilidad de torneo no válido. \n";
 			}
 		}
-		
-		if (modoSelec.equals(ModoSeleccionador.RANKING)){
-			if (!params.setBeta(panelDatos.getBeta())){
+
+		if (modoSelec.equals(ModoSeleccionador.RANKING)) {
+			if (!params.setBeta(panelDatos.getBeta())) {
 				mensaje += "Parámetro Beta no válido. \n";
 			}
 		}
@@ -583,6 +608,7 @@ public class GUI extends JFrame implements ActionListener, Observer {
 		} else if (evento.equals("fin")) {
 			ejecucion = true;
 			barraProgreso.setValue(barraProgreso.getMaximum());
+
 			if (Controlador.getInstance().esModoIterativo()) {
 				if (!Controlador.getInstance().esUltimaIteracion()) {
 					((PintorIterativo) pintor).siguienteIteracion();
@@ -593,10 +619,9 @@ public class GUI extends JFrame implements ActionListener, Observer {
 					btnOk.setEnabled(true);
 				}
 			} else {
-				 pintor.setTitulo("Visión global");
-				 pintor.dibujarGrafica((Graphics2D)
-				 panelGraficos.getGraphics());
-				 btnOk.setEnabled(true);
+				pintor.setTitulo("Visión global");
+				pintor.dibujarGrafica((Graphics2D) panelGraficos.getGraphics());
+				btnOk.setEnabled(true);
 			}
 
 		}

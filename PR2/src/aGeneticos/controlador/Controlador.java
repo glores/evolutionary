@@ -6,6 +6,7 @@ import java.util.logging.Logger;
 
 import aGeneticos.gui.parametros.ParametrosAlgoritmo;
 import aGeneticos.logica.AGenetico;
+import aGeneticos.util.Aleatorio;
 
 
 /**
@@ -134,6 +135,10 @@ public class Controlador {
 	
 	public int getNumIteraciones(){
 		return numIteraciones;
+	}
+	
+	public AGenetico getAlgoritmo(){
+		return aGenetico;
 	}
 	
 }

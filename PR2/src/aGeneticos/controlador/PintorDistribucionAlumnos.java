@@ -1,12 +1,8 @@
 
 package aGeneticos.controlador;
 
-import java.awt.BasicStroke;
-import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Paint;
-import java.awt.Shape;
-import java.awt.Stroke;
 import java.util.logging.Logger;
 
 import org.jCharts.axisChart.AxisChart;
@@ -14,12 +10,10 @@ import org.jCharts.chartData.AxisChartDataSet;
 import org.jCharts.chartData.ChartDataException;
 import org.jCharts.chartData.DataSeries;
 import org.jCharts.properties.AxisProperties;
-import org.jCharts.properties.AxisTypeProperties;
 import org.jCharts.properties.ChartProperties;
 import org.jCharts.properties.LegendProperties;
-import org.jCharts.properties.LineChartProperties;
 import org.jCharts.properties.PropertyException;
-import org.jCharts.properties.util.ChartStroke;
+import org.jCharts.properties.StackedBarChartProperties;
 import org.jCharts.test.TestDataGenerator;
 import org.jCharts.types.ChartType;
 
@@ -83,56 +77,33 @@ public class PintorDistribucionAlumnos {
     }
 
     protected AxisChart crearGraficoLineas() throws ChartDataException {
-       
-       
+    	
         String[] xAxisLabels = cargarEtiquetasX();
         double[][] data = cargarValoresY();
-        String[] legendLabels = { "El mejor", "Media", "Mejor global" };
-        String xAxisTitle = "Generaciones";
-        String yAxisTitle = "Puntos";
+        String[] legendLabels = cargarLeyendas();
+        String xAxisTitle = "Grupos";
+        String yAxisTitle = "Alumnos";
 
         dataSeries = new DataSeries(xAxisLabels, xAxisTitle, yAxisTitle, titulo);
 
-        Paint[] paints = TestDataGenerator.getRandomPaints(3);
-        Stroke[] strokes = {
-                LineChartProperties.DEFAULT_LINE_STROKE,
-                new BasicStroke(3.5f, BasicStroke.CAP_ROUND,
-                        BasicStroke.JOIN_ROUND, 5f, new float[] { 5f, 5f, 10f,
-                                5f }, 4f),
-                LineChartProperties.DEFAULT_LINE_STROKE };
-        Shape[] shapes = { null, null, null };
-        LineChartProperties lineChartProperties = new LineChartProperties(
-                strokes, shapes);
+        Paint[] paints = TestDataGenerator.getRandomPaints(tamGrupos);
+        
+        
+        StackedBarChartProperties stackedBarChartProperties= 
+                new StackedBarChartProperties();
+        
         AxisChartDataSet axisChartDataSet = new AxisChartDataSet(data,
-                legendLabels, paints, ChartType.LINE, lineChartProperties);
+                legendLabels, paints, ChartType.BAR_STACKED, stackedBarChartProperties);
         dataSeries.addIAxisPlotDataSet(axisChartDataSet);
 
         chartProperties = new ChartProperties();
         axisProperties = new AxisProperties();
-        ChartStroke xAxisGridLines = new ChartStroke(new BasicStroke(0.5f,
-                BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND, 5f, new float[] {
-                        5f, 10f, 10f, 10f }, 4f), Color.red);
-
-        axisProperties.getXAxisProperties().setGridLineChartStroke(
-                xAxisGridLines);
-        axisProperties.getXAxisProperties().setShowGridLines(
-                AxisTypeProperties.GRID_LINES_ONLY_WITH_LABELS);
-
-        ChartStroke yAxisGridLines = new ChartStroke(new BasicStroke(0.5f,
-                BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND, 5f, new float[] {
-                        5f, 10f, 10f, 10f }, 4f), Color.blue);
-
-        axisProperties.getYAxisProperties().setGridLineChartStroke(
-                yAxisGridLines);
-        axisProperties.getYAxisProperties().setShowGridLines(
-                AxisTypeProperties.GRID_LINES_ONLY_WITH_LABELS);
-
+      
         legendProperties = new LegendProperties();
         AxisChart axisChart = new AxisChart(dataSeries, chartProperties,
                 axisProperties, legendProperties, 590, 430);
 
         return axisChart;
-       
        
     }
 
@@ -142,22 +113,31 @@ public class PintorDistribucionAlumnos {
      */
     private double[][] cargarValoresY() {
         double[][] data = new double[tamGrupos][numGrupos];
-        for(int i=0;i<tamGrupos;i++){           
-            for(int j=0;j<numGrupos;j++){
-                solucion.getCadena();
-            }
-        }
-       
-       
+        int posicion=0;
+        for(int i=0;i<numGrupos;i++){        	
+        	for(int j=0;j<tamGrupos;j++){
+        		int id=solucion.getCadena().get(posicion).getId();        		
+        		data[j][i]=alumnos.getNotaAlumno(id);
+        		posicion++;
+        	}
+        }       
         return data;
     }
 
     private String[] cargarEtiquetasX() {
         String[] grupos = new String[numGrupos];
-        for (int i = 0; i < numGrupos; i++) {
-            grupos[i] = "" + i;
+        for (int i = 1; i <= numGrupos; i++) {
+            grupos[i-1] = "" + i;
         }
         return grupos;
+    }
+    
+    private String[] cargarLeyendas(){
+    	String [] leyendas=new String[tamGrupos];
+    	for (int i = 1; i <= tamGrupos; i++) {
+    		leyendas[i-1] = "Alumno " + i;
+        }
+        return leyendas;
     }
 
 }
