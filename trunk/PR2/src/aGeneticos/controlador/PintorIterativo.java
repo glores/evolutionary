@@ -51,10 +51,10 @@ public class PintorIterativo extends PintorBase {
 
 	public void iniciar() {
 		log = Logger.getLogger("CP");
-		mejores = new double[tamIteraciones][tamGeneraciones];
-		mejoresGlobales = new double[tamIteraciones][tamGeneraciones];
+		mejores = new double[tamIteraciones][tamGeneraciones+1];
+		mejoresGlobales = new double[tamIteraciones][tamGeneraciones+1];
 
-		medias = new double[tamIteraciones][tamGeneraciones];
+		medias = new double[tamIteraciones][tamGeneraciones+1];
 		generacionActual = 0;
 		iteracionActual = 0;
 		titulo = "";
