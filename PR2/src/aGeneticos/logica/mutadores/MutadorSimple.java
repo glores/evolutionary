@@ -18,10 +18,11 @@ import aGeneticos.util.Aleatorio;
 public class MutadorSimple extends Mutador{
 
 	@Override
-	public Cromosoma muta(Cromosoma c, double probMut) {
+	public Cromosoma[] muta(Cromosoma c, double probMut) {
 		double prob;
 		boolean mutado = false;
-		Cromosoma aux = (Cromosoma) c.clone();
+		Cromosoma[] aux = new Cromosoma[1];
+		aux[0] = (Cromosoma) c.clone();
 		
 		for (int i = 0; i < c.getNumBits(); i++){
 			prob = Aleatorio.doble();

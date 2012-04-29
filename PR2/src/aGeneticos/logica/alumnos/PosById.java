@@ -20,4 +20,9 @@ public class PosById{
 		return "\n ID: " + id +
 				" Pos: " + pos;
 	}
+	
+	@Override
+	public boolean equals(Object otro){
+		return this.id == ((PosById) otro).getId() && this.pos == ((PosById) otro).getPos();
+	}
 }

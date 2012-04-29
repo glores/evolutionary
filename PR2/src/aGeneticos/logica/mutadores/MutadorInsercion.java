@@ -1,10 +1,6 @@
 package aGeneticos.logica.mutadores;
 
-import java.util.ArrayList;
-
 import aGeneticos.logica.abtractas.Mutador;
-import aGeneticos.logica.alumnos.ListaAlumnos;
-import aGeneticos.logica.alumnos.PosById;
 import aGeneticos.logica.poblacion.Cromosoma;
 import aGeneticos.util.Aleatorio;
 
@@ -12,10 +8,10 @@ public class MutadorInsercion extends Mutador {
 
 	
 	@Override
-	public Cromosoma muta(Cromosoma c, double probMut) {
+	public Cromosoma[] muta(Cromosoma c, double probMut) {
 		double prob;
 
-		Cromosoma aux = null;
+		Cromosoma[] aux = null;
 		prob = Aleatorio.doble();
 		if (prob < probMut) {
 			aux = mutar(c);
@@ -25,7 +21,7 @@ public class MutadorInsercion extends Mutador {
 
 	}
 
-	private Cromosoma mutar(Cromosoma c) {		
+	private Cromosoma[] mutar(Cromosoma c) {		
 		/*
 		ArrayList<PosById> aux = new ArrayList<PosById>(c.getCadena()
 				.size());

@@ -230,16 +230,29 @@ public class AGenetico extends Observable {
 
 	private void mutacion() {
 		// Muta toda la población dependiendo de la probabilidad
-		Cromosoma mutado = null;
+		Cromosoma[] mutado = null;
+		Cromosoma mejor = null;
 		for (int i = 0; i < poblacion.size(); i++) {
 			mutado = mutador.muta(poblacion.get(i), this.probMutacion);
 
 			if (mutado != null) {
 				numMutados++;
+				if (mutado.length > 1){
+					// Se elige el mejor
+
+					for (int j = 0; j < mutado.length; j++){
+						evaluador.evaluar(mutado[j]);
+						if (j == 0) mejor = mutado[0];
+						if (mutado[j].getAptitud() > mejor.getAptitud()) mejor = mutado[j];
+					}
+					
+				}
+				else mejor = mutado[0];
+				
 				if (tamElite > 0) poblacionOrdenada.remove(poblacion.get(i));
-				poblacion.set(i, mutado);
+				poblacion.set(i, mejor);
 				evaluador.evaluar(poblacion.get(i));
-				if (tamElite > 0 ) poblacionOrdenada.put(mutado, i);
+				if (tamElite > 0 ) poblacionOrdenada.put(mejor, i);
 			}
 		}
 
