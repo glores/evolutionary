@@ -87,6 +87,7 @@ public class GUI extends JFrame implements ActionListener, Observer {
 		 */
 		@Override
 		public Void doInBackground() {
+			try{
 			log.info("[GUI] Ejecutar algoritmo");
 			ParametrosAlgoritmo params = componerParametros();
 			if (params != null) {
@@ -95,6 +96,11 @@ public class GUI extends JFrame implements ActionListener, Observer {
 				panelGraficos.removeAll();
 				Controlador.getInstance().inicia(params);
 
+			}
+			}catch(Exception e){
+				log.severe("Excepción capturada ");
+				e.printStackTrace(System.err);
+				
 			}
 			return null;
 		}

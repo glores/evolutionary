@@ -45,12 +45,6 @@ public abstract class CruzadorOX extends Cruzador {
 
 	protected abstract void intercambio(ArrayList<PosById> hijo1, ArrayList<PosById> hijo2);
 
-	private void inicializa(ArrayList<PosById> hijo, int tam) {
-		// Los rellenamos con datos inválidos
-		for (int i = 0; i < tam; i++)
-			hijo.add(posInvalida);
-	}
-
 	private void rellenarHijo(Cromosoma padre, ArrayList<PosById> hijo) {
 		int i = puntoCruce[1]; int contHijo = puntoCruce[1];
 		while (!isCompleto(hijo)) {

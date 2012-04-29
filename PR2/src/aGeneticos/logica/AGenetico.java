@@ -100,7 +100,7 @@ public class AGenetico extends Observable {
 			log.info("reproduccion");
 			reproduccion();
 			log.info("mutacion");
-//			mutacion();
+			mutacion();
 			log.info("evaluación");
 			if (tamElite > 0) {
 				log.info("Añadimos a la élite");
@@ -202,24 +202,13 @@ public class AGenetico extends Observable {
 
 		// Seleccionamos un punto al azar para el cruce
 		Cromosoma[] cruzados;
-		/*---------- Generamos dos puntos de cruce -------------*/
-		int puntoCruce1 = Aleatorio.getPuntoCruce() + 1; // Para que no empiece en 0
-		int puntoCruce2 = Aleatorio.getPuntoCruce() + 1;
-		int puntoCruce[] = new int[2];
-		while (puntoCruce2 == puntoCruce1) puntoCruce2 = Aleatorio.getPuntoCruce() + 1;
-		if (puntoCruce1 > puntoCruce2){
-			puntoCruce[0] = puntoCruce2;
-			puntoCruce[1] = puntoCruce1;
-		}
-		else if (puntoCruce2 >= puntoCruce1){
-			puntoCruce[1] = puntoCruce2;
-			puntoCruce[0] = puntoCruce1;
-		}
-		
+		/*---------- Generamos dos puntos de cruce -------------*/	
+		//Codigo llevado a Aleatorio para reutilizarlo
+		int puntosCruce[] = Aleatorio.get2PuntosCruceOrdenados();
 		int i = 0;
 		while (selec.size() >= 2 && i < selec.size()) {	
 			cruzados = cruzador.cruza(poblacion.get(selec.get(i)).clone(),
-					poblacion.get(selec.get(i + 1)).clone(), puntoCruce);
+					poblacion.get(selec.get(i + 1)).clone(), puntosCruce);
 			if (tamElite > 0){
 				poblacionOrdenada.remove(poblacion.get(selec.get(i)));
 				poblacionOrdenada.remove(poblacion.get(selec.get(i + 1)));
@@ -345,7 +334,7 @@ public class AGenetico extends Observable {
 	}
 	
 	public Cromosoma getSolucion(){
-		return evaluador.getMejorLocal();
+		return evaluador.getMejorGlobal();
 	}
 
 //	public String getSolucion() {

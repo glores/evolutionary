@@ -11,5 +11,5 @@ package aGeneticos.gui.parametros;
  */
 
 public enum ModoCruzador {
-	SIMPLE, OX, VARIANTE_OX
+	SIMPLE, OX, VARIANTE_OX, PMX
 }
