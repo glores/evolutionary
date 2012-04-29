@@ -1,6 +1,9 @@
 package aGeneticos.util;
 
+import java.util.ArrayList;
 import java.util.Random;
+
+import aGeneticos.logica.alumnos.PosById;
 
 /**
  * Práctica 1 de Programación Evolutiva
@@ -61,24 +64,53 @@ public class Aleatorio {
 		return puntoCruce;
 	}
 
-	//Da un numero aleatorio(de 1 a num) de aleatorios en un array
-	public static int[] getPuntosInsercion(int num) {
-		int tam=r.nextInt(num-1)+1;
-		
-		int[] puntos = new int[tam];
-		for (int i = 0; i < tam; i++) {
+	/**
+	 * Devuelve un array de longitud aleatoria(de 1 a num) de aleatorios (de 0 a tamCromosoma-1)
+	 * en un array
+	 * @param num Máximo de aleatorios
+	 * @return Array de aleatorios que corresponden con posiciones del cromosoma
+	 */
+	public static int[] getXPuntosInsercion(int num) {
+		int tam = r.nextInt(num - 1) + 1;
+		return getNPuntosInsercion(tam);
+	}
+
+	/**
+	 * Devuelve un array de longitud n de aleatorios (de 0 a tamCromosoma-1)
+	 * @param n
+	 * @return
+	 */
+	private static int[] getNPuntosInsercion(int n) {
+		int[] puntos = new int[n];
+		for (int i = 0; i < n; i++) {
 			puntos[i] = getPuntoCruce();
 			while (contiene(puntos, puntos[i], i)) {
 				puntos[i] = getPuntoCruce();
 			}
 		}
-
 		return puntos;
 	}
 	
+	/**
+	 * Devuelve un array de PosById aleatorios de longitud n. 
+	 * Los selecciona aleatoriamente de una lista
+	 * @param n
+	 * @param elementos
+	 * @return
+	 */
+	public static PosById[] getNElementosInsercion(int n,
+			ArrayList<PosById> elementos) {
+		PosById[] resultado = new PosById[n];
+		int[] puntos = getNPuntosInsercion(n);
+		for (int i = 0; i < puntos.length; i++) {
+			resultado[i] = elementos.get(puntos[i]);
+		}
+		return resultado;
+	}
+
 	public static String[] getPuntos(int num) {
-		int tam=r.nextInt(num-1)+1;
-		
+		int tam = r.nextInt(num - 1) + 1;
+
 		String[] puntos = new String[tam];
 		for (int i = 0; i < tam; i++) {
 			puntos[i] = Integer.toString(getPuntoCruce());
@@ -99,7 +131,7 @@ public class Aleatorio {
 		}
 		return resultado;
 	}
-	
+
 	private static boolean contiene(int[] array, int elemento, int extremo) {
 		boolean resultado = false;
 		int pos = 0;

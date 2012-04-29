@@ -109,6 +109,8 @@ public class AGenetico extends Observable {
 			}
 			evaluarPoblacion();
 			log.finest("Poblacion (" + poblacion.size() + ") " + poblacion);
+			//Sólo para depurar. Frena el algoritmo mucho!!!
+			//comprobarPoblacion();
 			this.setChanged();
 			this.notifyObservers("generacion");
 		}
@@ -416,6 +418,18 @@ public class AGenetico extends Observable {
 	public void setListaAlumnos(String path, int tamGrupo){
 		listaAlumnos = cargarDatos(path);
 		listaAlumnos.setTamGrupo(tamGrupo);
+	}
+	
+	/**
+	 * Utilizar sólo para depurar, revisa la población en busca de cadenas inválidas.
+	 * Salida por log.
+	 */
+	private void comprobarPoblacion(){		
+		for(int i=0;i<poblacion.size();i++){
+			if(!ListaAlumnos.noHayRepetidos(poblacion.get(i).getCadena())){
+				log.severe("Encontrado individuo erróneo: poblacion("+i+") : "+poblacion.get(i).toString());
+			}
+		}
 	}
 
 }

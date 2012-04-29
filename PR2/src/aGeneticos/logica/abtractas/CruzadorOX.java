@@ -16,7 +16,7 @@ import aGeneticos.logica.poblacion.Cromosoma;
  * 
  */
 public abstract class CruzadorOX extends Cruzador {
-	private static PosById posInvalida = new PosById(-2, -2);
+	private static PosById posInvalida = PosById.objetoInvalido();
 	protected Cromosoma padre1, padre2;
 	protected int[] puntoCruce;
 
