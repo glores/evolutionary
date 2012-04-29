@@ -9,6 +9,9 @@ import aGeneticos.logica.abtractas.Seleccionador;
 import aGeneticos.logica.cruzadores.CruzadorOXEstandar;
 import aGeneticos.logica.cruzadores.CruzadorOXPosPrioritarias;
 import aGeneticos.logica.cruzadores.CruzadorOrdinal;
+import aGeneticos.logica.cruzadores.CruzadorPMX;
+import aGeneticos.logica.mutadores.MutadorIntercambio;
+import aGeneticos.logica.mutadores.MutadorInversion;
 import aGeneticos.logica.mutadores.MutadorSimple;
 import aGeneticos.logica.poblacion.GeneradorPoblaciones;
 import aGeneticos.logica.problemas.FuncionAlumnos;
@@ -34,18 +37,18 @@ import aGeneticos.logica.seleccionadores.TorneoProbabilista;
 
 public class ParametrosAlgoritmo {
 	//Parámetros por defecto
-	public final static int PARAMS_TAMPOBLACION = 8;
-	public final static int PARAMS_LIMITERACIONES = 1;
-	public final static double PARAMS_PROBCRUCE = 0.5;
+	public final static int PARAMS_TAMPOBLACION = 100;
+	public final static int PARAMS_LIMITERACIONES = 30;
+	public final static double PARAMS_PROBCRUCE = 0.6;
 	public final static double PARAMS_INT_PROBCRUCE_A = 0.0;
 	public final static double PARAMS_INT_PROBCRUCE_B = 0.5;
 	public final static double PARAMS_INT_PROBCRUCE_INC = 0.1;
-	public final static double PARAMS_PROBMUTACION = 0.1;
+	public final static double PARAMS_PROBMUTACION = 0.2;
 	public final static boolean PARAMS_ELITISMO = Boolean.FALSE; 
 	public final static int PARAMS_TAMELITE = 0;
 	public final static ModoSeleccionador PARAMS_SELECCIONADOR = ModoSeleccionador.RULETA;
 	public final static ModoCruzador PARAMS_CRUZADOR = ModoCruzador.SIMPLE;
-	public final static ModoMutador PARAMS_MUTADOR = ModoMutador.SIMPLE;
+	public final static ModoMutador PARAMS_MUTADOR = ModoMutador.INVERSION;
 	public final static ModoGenerador PARAMS_GENERADOR = ModoGenerador.ALEATORIO;
 	public final static Problema PARAMS_PROBLEMA = Problema.FUNCION_1;
 	public final static int PARAMS_N = 2;
@@ -206,9 +209,18 @@ public class ParametrosAlgoritmo {
 	public static String getTextoMutador(ModoMutador mutador) {
 		String resultado;
 		switch (mutador) {
-		case SIMPLE:
-			resultado = "Simple";
+		case INVERSION:
+			resultado = "Inversión";
 			break;
+		case INTERCAMBIO:
+			resultado = "Intercambio";
+			break;
+		case INSERCION:
+			resultado = "Inserción";
+			break;
+		case HEURISTICA:
+			resultado = "Heurística";
+			break;			
 		default:
 			resultado = "";
 			break;
@@ -219,9 +231,20 @@ public class ParametrosAlgoritmo {
 	public Mutador getMutador() {
 		Mutador resultado;
 		switch (modoMutador) {
-		case SIMPLE:
-			resultado = new MutadorSimple();
+		case INVERSION:
+			resultado = new MutadorInversion();
 			break;
+			
+		case INTERCAMBIO:
+			resultado = new MutadorIntercambio();
+			break;/*
+		case INVERSION:
+			resultado = new MutadorInversion();
+			break;
+		case HEURISTICA:
+			resultado = new MutadorInversion();
+			break;
+			*/
 		default:
 			resultado = null;
 			break;
@@ -245,6 +268,9 @@ public class ParametrosAlgoritmo {
 		case VARIANTE_OX:
 			resultado = "OX posiciones prioritarias";
 			break;
+		case PMX:
+			resultado = "PMX";
+			break;
 		default:
 			resultado = "";
 			break;
@@ -263,6 +289,9 @@ public class ParametrosAlgoritmo {
 			break;
 		case VARIANTE_OX:
 			resultado = new CruzadorOXPosPrioritarias();
+			break;
+		case PMX:
+			resultado = new CruzadorPMX();
 			break;
 		default:
 			resultado = null;
