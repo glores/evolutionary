@@ -20,6 +20,6 @@ public abstract class Mutador {
 	protected void inicializa(ArrayList<PosById> hijo, int tam) {
 		// Los rellenamos con datos inválidos
 		for (int i = 0; i < tam; i++)
-			hijo.add(new PosById(-2, -2));
+			hijo.add(PosById.objetoInvalido());
 	}
 }

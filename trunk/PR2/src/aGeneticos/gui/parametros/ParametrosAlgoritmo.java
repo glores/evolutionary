@@ -11,6 +11,7 @@ import aGeneticos.logica.cruzadores.CruzadorOXPosPrioritarias;
 import aGeneticos.logica.cruzadores.CruzadorOrdinal;
 import aGeneticos.logica.cruzadores.CruzadorPMX;
 import aGeneticos.logica.mutadores.MutadorHeuristica;
+import aGeneticos.logica.mutadores.MutadorInsercion;
 import aGeneticos.logica.mutadores.MutadorIntercambio;
 import aGeneticos.logica.mutadores.MutadorInversion;
 import aGeneticos.logica.poblacion.GeneradorPoblaciones;
@@ -233,14 +234,13 @@ public class ParametrosAlgoritmo {
 		switch (modoMutador) {
 		case INVERSION:
 			resultado = new MutadorInversion();
-			break;
-			
+			break;			
 		case INTERCAMBIO:
 			resultado = new MutadorIntercambio();
-			break;/*
-		case INVERSION:
-			resultado = new MutadorInversion();
-			break;*/
+			break;
+		case INSERCION:
+			resultado = new MutadorInsercion();
+			break;
 		case HEURISTICA:
 			resultado = new MutadorHeuristica();
 			break;
