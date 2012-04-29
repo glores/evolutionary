@@ -12,10 +12,10 @@ public class MutadorIntercambio extends Mutador {
 
 	
 	@Override
-	public Cromosoma muta(Cromosoma c, double probMut) {
+	public Cromosoma[] muta(Cromosoma c, double probMut) {
 		double prob;
 
-		Cromosoma aux = null;
+		Cromosoma[] aux = null;
 		prob = Aleatorio.doble();
 		if (prob < probMut) {
 			aux = mutar(c);
@@ -25,7 +25,7 @@ public class MutadorIntercambio extends Mutador {
 
 	}
 
-	private Cromosoma mutar(Cromosoma c) {		
+	private Cromosoma[] mutar(Cromosoma c) {		
 		ArrayList<PosById> aux = new ArrayList<PosById>(c.getCadena()
 				.size());
 		inicializa(aux,c.getCadena().size());
@@ -42,9 +42,10 @@ public class MutadorIntercambio extends Mutador {
 		aux.set(a,c.getCadena().get(b));
 		aux.set(b,c.getCadena().get(a));		
 		
-		return new Cromosoma(aux, ListaAlumnos.getDesequilibrio(aux),
+		Cromosoma[] res = new Cromosoma[1];
+		res[0] = new Cromosoma(aux, ListaAlumnos.getDesequilibrio(aux),
 				ListaAlumnos.getIncompatibles(aux));
-		
+		return res;		
 		
 	}
 	

@@ -75,7 +75,31 @@ public class Aleatorio {
 
 		return puntos;
 	}
+	
+	public static String[] getPuntos(int num) {
+		int tam=r.nextInt(num-1)+1;
+		
+		String[] puntos = new String[tam];
+		for (int i = 0; i < tam; i++) {
+			puntos[i] = Integer.toString(getPuntoCruce());
+			while (contiene(puntos, puntos[i], i)) {
+				puntos[i] = Integer.toString(getPuntoCruce());
+			}
+		}
 
+		return puntos;
+	}
+
+	private static boolean contiene(String[] array, String elemento, int extremo) {
+		boolean resultado = false;
+		int pos = 0;
+		while (!resultado && pos < extremo) {
+			resultado = array[pos].equals(elemento);
+			pos++;
+		}
+		return resultado;
+	}
+	
 	private static boolean contiene(int[] array, int elemento, int extremo) {
 		boolean resultado = false;
 		int pos = 0;

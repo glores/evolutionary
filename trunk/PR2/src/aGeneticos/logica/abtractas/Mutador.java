@@ -15,7 +15,7 @@ import aGeneticos.logica.poblacion.Cromosoma;
  */
 
 public abstract class Mutador {
-	public abstract Cromosoma muta(Cromosoma c, double probMutacion);
+	public abstract Cromosoma[] muta(Cromosoma c, double probMutacion);
 	
 	protected void inicializa(ArrayList<PosById> hijo, int tam) {
 		// Los rellenamos con datos inválidos

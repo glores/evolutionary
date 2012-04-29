@@ -10,9 +10,9 @@ import aGeneticos.logica.cruzadores.CruzadorOXEstandar;
 import aGeneticos.logica.cruzadores.CruzadorOXPosPrioritarias;
 import aGeneticos.logica.cruzadores.CruzadorOrdinal;
 import aGeneticos.logica.cruzadores.CruzadorPMX;
+import aGeneticos.logica.mutadores.MutadorHeuristica;
 import aGeneticos.logica.mutadores.MutadorIntercambio;
 import aGeneticos.logica.mutadores.MutadorInversion;
-import aGeneticos.logica.mutadores.MutadorSimple;
 import aGeneticos.logica.poblacion.GeneradorPoblaciones;
 import aGeneticos.logica.problemas.FuncionAlumnos;
 import aGeneticos.logica.seleccionadores.Ranking;
@@ -240,11 +240,11 @@ public class ParametrosAlgoritmo {
 			break;/*
 		case INVERSION:
 			resultado = new MutadorInversion();
-			break;
+			break;*/
 		case HEURISTICA:
-			resultado = new MutadorInversion();
+			resultado = new MutadorHeuristica();
 			break;
-			*/
+			
 		default:
 			resultado = null;
 			break;
