@@ -18,6 +18,7 @@ import aGeneticos.logica.poblacion.GeneradorPoblaciones;
 import aGeneticos.logica.problemas.FuncionAlumnos;
 import aGeneticos.logica.seleccionadores.Ranking;
 import aGeneticos.logica.seleccionadores.Ruleta;
+import aGeneticos.logica.seleccionadores.SeleccionadorPropio;
 import aGeneticos.logica.seleccionadores.TorneoDeterminista;
 import aGeneticos.logica.seleccionadores.TorneoProbabilista;
 
@@ -169,6 +170,9 @@ public class ParametrosAlgoritmo {
 		case RANKING:
 			resultado = "Ranking";
 			break;
+		case PROPIO:
+			resultado = "Propio";
+			break;			
 		default:
 			resultado = "";
 			break;
@@ -195,6 +199,9 @@ public class ParametrosAlgoritmo {
 			break;
 		case RANKING:
 			resultado = new Ranking(beta);
+			break;
+		case PROPIO:
+			resultado = new SeleccionadorPropio(0.7,0.5);			
 			break;
 		default:
 			resultado = null;

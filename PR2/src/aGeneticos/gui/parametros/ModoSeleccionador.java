@@ -11,5 +11,5 @@ package aGeneticos.gui.parametros;
  */
 
 public enum ModoSeleccionador {
-	RULETA, TORNEO_DET, TORNEO_PROB, RANKING
+	RULETA, TORNEO_DET, TORNEO_PROB, RANKING, PROPIO
 }
