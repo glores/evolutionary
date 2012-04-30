@@ -201,7 +201,8 @@ public class ParametrosAlgoritmo {
 			resultado = new Ranking(beta);
 			break;
 		case PROPIO:
-			resultado = new SeleccionadorPropio(0.7,0.5);			
+			//TODO parametrizar el X y el maximizar cogerlo del evaluador de alguna manera...
+			resultado = new SeleccionadorPropio(0.5,false);			
 			break;
 		default:
 			resultado = null;
