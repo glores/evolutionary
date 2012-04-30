@@ -18,29 +18,40 @@ import aGeneticos.util.Aleatorio;
  */
 
 public class SeleccionadorPropio extends Seleccionador {
-	private double a;
-	private double b;
+	private double x;
+	private boolean maximizar;
 
-	public SeleccionadorPropio(double a, double b) {
-		this.a = a;
-		this.b = b;
+	public SeleccionadorPropio(double x, boolean maximizar) {
+		this.x = x;
+		this.maximizar = maximizar;
 	}
 
 	@Override
-	public ArrayList<Integer> selecciona(ArrayList<Cromosoma> poblacion,int tamPoblacion) {
-		
-		//Suponiendo que poblacion está ordenada de mejores a peores
-		int tamSeleccionados=(int) Math.floor(tamPoblacion*b);		
-		int tamMejores=(int)Math.floor(tamPoblacion*b*a);		
-		ArrayList<Integer> selecc = new ArrayList<Integer>(tamSeleccionados);		
-		/*
-		for (int i = 0; i < tamMejores; i++) {
-			selecc.add(i);
+	public ArrayList<Integer> selecciona(ArrayList<Cromosoma> poblacion,
+			int tamPoblacion) {
+		//Metemos en un array los mejores
+		ArrayList<Integer> mejores = new ArrayList<Integer>();
+		for (int i = 0; i < poblacion.size(); i++) {
+			if (maximizar) {
+				//Mejores son con probabilidad > x
+				if (poblacion.get(i).getProbAcumulada() > x) {
+					mejores.add(i);
+				}
+			} else {
+				//Mejores son con probabilidad < x
+				if (poblacion.get(i).getProbAcumulada() < x) {
+					mejores.add(i);
+				}
+			}
+		}		
+		//Ahora, con esos repetidos componemos la selección
+		ArrayList<Integer> selecc = new ArrayList<Integer>(poblacion.size());
+		int aleatorio;
+		for(int i=0;i<poblacion.size();i++){
+			aleatorio=Aleatorio.entero(mejores.size());
+			selecc.add(mejores.get(aleatorio));
 		}
-		for(int i=tamMejores;i<tamSeleccionados;i++){
-			selecc.add(i);
-		}
-		*/
+
 		return selecc;
 	}
 
