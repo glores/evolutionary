@@ -188,7 +188,7 @@ public class AGenetico extends Observable {
 		 */
 		double prob;
 		ArrayList<Integer> selec = new ArrayList<Integer>();
-		for (int i = 0; i < tamPoblacion; i++) {
+		for (int i = 0; i < this.seleccionados.size(); i++) {
 			prob = Aleatorio.doble();
 
 			if (prob < probCruce) {
