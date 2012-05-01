@@ -1,9 +1,6 @@
 package aGeneticos.logica.alumnos;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-
-import java.util.Iterator;
 
 /**
  * Clase que implementa una lista de alumnos con un array de identificador de

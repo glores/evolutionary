@@ -40,17 +40,17 @@ import aGeneticos.logica.seleccionadores.TorneoProbabilista;
 public class ParametrosAlgoritmo {
 	//Parámetros por defecto
 	public final static int PARAMS_TAMPOBLACION = 100;
-	public final static int PARAMS_LIMITERACIONES = 30;
+	public final static int PARAMS_LIMITERACIONES = 100;
 	public final static double PARAMS_PROBCRUCE = 0.6;
 	public final static double PARAMS_INT_PROBCRUCE_A = 0.0;
 	public final static double PARAMS_INT_PROBCRUCE_B = 0.5;
 	public final static double PARAMS_INT_PROBCRUCE_INC = 0.1;
-	public final static double PARAMS_PROBMUTACION = 0.2;
+	public final static double PARAMS_PROBMUTACION = 0.3;
 	public final static boolean PARAMS_ELITISMO = Boolean.FALSE; 
 	public final static int PARAMS_TAMELITE = 0;
-	public final static ModoSeleccionador PARAMS_SELECCIONADOR = ModoSeleccionador.RULETA;
-	public final static ModoCruzador PARAMS_CRUZADOR = ModoCruzador.SIMPLE;
-	public final static ModoMutador PARAMS_MUTADOR = ModoMutador.INVERSION;
+	public final static ModoSeleccionador PARAMS_SELECCIONADOR = ModoSeleccionador.TORNEO_PROB;
+	public final static ModoCruzador PARAMS_CRUZADOR = ModoCruzador.PMX;
+	public final static ModoMutador PARAMS_MUTADOR = ModoMutador.INSERCION;
 	public final static ModoGenerador PARAMS_GENERADOR = ModoGenerador.ALEATORIO;
 	public final static Problema PARAMS_PROBLEMA = Problema.FUNCION_1;
 	public final static int PARAMS_N = 2;
@@ -122,7 +122,6 @@ public class ParametrosAlgoritmo {
 	private double intProbCruce_inc;
 	private boolean intProbCruce_habilitado;
 	private String path;
-	private boolean heuristico;
 	private int numRepeticiones = -1;
 	
 
@@ -203,7 +202,7 @@ public class ParametrosAlgoritmo {
 			resultado = new Ranking(beta);
 			break;
 		case PROPIO:
-			//TODO parametrizar el X y el maximizar cogerlo del evaluador de alguna manera...
+			//TODO el maximizar cogerlo del evaluador de alguna manera...
 			resultado = new SeleccionadorPropio(paramPropio,false);			
 			break;
 		default:
@@ -706,10 +705,6 @@ public class ParametrosAlgoritmo {
 			log.warning("[PARAM] " + tam + " no es un entero.");
 			return false;
 		}
-	}
-	
-	public void setHeuristico(boolean b){
-		heuristico = b;
 	}
 	
 

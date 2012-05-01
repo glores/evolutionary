@@ -583,7 +583,6 @@ public class GUI extends JFrame implements ActionListener, Observer {
 		}
 
 		if (panelDatos.isHeuristico()){
-			params.setHeuristico(true);
 			if (!params.setNumRepeticiones(panelDatos.getTamHeuristico())){
 				mensaje += "Número de repeticiones no válido.\n";
 			}
