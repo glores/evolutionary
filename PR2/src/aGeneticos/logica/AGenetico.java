@@ -24,7 +24,6 @@ import aGeneticos.util.Aleatorio;
 import aGeneticos.util.CromosomaAscendantSort;
 import aGeneticos.util.CromosomaDescendantSort;
 
-
 /**
  * Práctica 1 de Programación Evolutiva
  * 
@@ -54,7 +53,7 @@ public class AGenetico extends Observable {
 
 	private int numCruzados;
 	private int numMutados;
-	
+
 	private ListaAlumnos listaAlumnos;
 
 	private Logger log;
@@ -71,7 +70,7 @@ public class AGenetico extends Observable {
 		this.evaluador = eval;
 		numMutados = 0;
 		numCruzados = 0;
-
+		numRepeticionesCruce = -1;
 	}
 
 	public void run() {
@@ -90,7 +89,7 @@ public class AGenetico extends Observable {
 		while (!terminado()) {
 			numgeneracion++;
 			log.info("generacion " + numgeneracion);
-			if (tamElite > 0){
+			if (tamElite > 0) {
 				log.info("Elite");
 				seleccionaMejores();
 			}
@@ -110,8 +109,8 @@ public class AGenetico extends Observable {
 			}
 			evaluarPoblacion();
 			log.finest("Poblacion (" + poblacion.size() + ") " + poblacion);
-			//Sólo para depurar. Frena el algoritmo mucho!!!
-			//comprobarPoblacion();
+			// Sólo para depurar. Frena el algoritmo mucho!!!
+			// comprobarPoblacion();
 			this.setChanged();
 			this.notifyObservers("generacion");
 		}
@@ -126,8 +125,10 @@ public class AGenetico extends Observable {
 		int i = 0;
 		while (iterator.hasNext() && i < tamElite) {
 			mejorCromosoma = iterator.next();
-			// Guardamos copias para posteriormente reemplazar parte de la población por la élite
-			elite.put((Cromosoma) mejorCromosoma, poblacionOrdenada.get(mejorCromosoma));
+			// Guardamos copias para posteriormente reemplazar parte de la
+			// población por la élite
+			elite.put((Cromosoma) mejorCromosoma,
+					poblacionOrdenada.get(mejorCromosoma));
 			i++;
 		}
 	}
@@ -137,14 +138,15 @@ public class AGenetico extends Observable {
 		// Inicializamos los parámetros de evaluación
 		evaluador.inicioEvaluacionGlobal();
 		// Generamos la población inicial
-		poblacion = generadorPoblaciones.generar(tamPoblacion, listaAlumnos, evaluador);
+		poblacion = generadorPoblaciones.generar(tamPoblacion, listaAlumnos,
+				evaluador);
 
 		if (tamElite > 0)
 			elite();
 
 		numMutados = 0;
 		numCruzados = 0;
-		numRepeticionesCruce = -1;
+
 	}
 
 	private void elite() {
@@ -156,7 +158,7 @@ public class AGenetico extends Observable {
 		else
 			comparator = new CromosomaAscendantSort();
 		poblacionOrdenada = new TreeMap<Cromosoma, Integer>(comparator);
-        elite = new TreeMap<Cromosoma, Integer>(comparator);
+		elite = new TreeMap<Cromosoma, Integer>(comparator);
 
 		// No guardamos clones
 		for (int i = 0; i < poblacion.size(); i++) {
@@ -171,10 +173,12 @@ public class AGenetico extends Observable {
 		int i = 0;
 		while (iterator.hasNext() && i < tamElite) {
 			mejorCromosoma = iterator.next();
-			posPeorCromosoma = poblacionOrdenada.get(poblacionOrdenada.lastKey());
-			poblacion.set(posPeorCromosoma, (Cromosoma) mejorCromosoma.clone());			
+			posPeorCromosoma = poblacionOrdenada.get(poblacionOrdenada
+					.lastKey());
+			poblacion.set(posPeorCromosoma, (Cromosoma) mejorCromosoma.clone());
 			poblacionOrdenada.remove(poblacionOrdenada.lastKey());
-			poblacionOrdenada.put(poblacion.get(posPeorCromosoma), posPeorCromosoma);
+			poblacionOrdenada.put(poblacion.get(posPeorCromosoma),
+					posPeorCromosoma);
 			i++;
 		}
 	}
@@ -206,14 +210,16 @@ public class AGenetico extends Observable {
 
 		// Seleccionamos un punto al azar para el cruce
 		Cromosoma[] cruzados;
-		/*---------- Generamos dos puntos de cruce -------------*/	
-		//Codigo llevado a Aleatorio para reutilizarlo
-		int puntosCruce[] = Aleatorio.get2PuntosCruceOrdenados();
+		/*---------- Generamos dos puntos de cruce -------------*/
+		// Codigo llevado a Aleatorio para reutilizarlo
+		// int puntosCruce[] = Aleatorio.get2PuntosCruceOrdenados();
+
 		int i = 0;
-		while (selec.size() >= 2 && i < selec.size()) {	
-			cruzados = cruzador.cruza(poblacion.get(selec.get(i)).clone(),
-					poblacion.get(selec.get(i + 1)).clone(), puntosCruce);
-			if (tamElite > 0){
+		while (selec.size() >= 2 && i < selec.size()) {
+
+			cruzados = resuelveCruce(selec,i);
+
+			if (tamElite > 0) {
 				poblacionOrdenada.remove(poblacion.get(selec.get(i)));
 				poblacionOrdenada.remove(poblacion.get(selec.get(i + 1)));
 			}
@@ -222,15 +228,60 @@ public class AGenetico extends Observable {
 			// Hay que calcular las nuevas aptitudes
 			evaluador.evaluar(poblacion.get(selec.get(i)));
 			evaluador.evaluar(poblacion.get(selec.get(i + 1)));
-			if (tamElite > 0){
-				poblacionOrdenada.put(poblacion.get(selec.get(i)), selec.get(i));
-				poblacionOrdenada.put(poblacion.get(selec.get(i+1)), selec.get(i+1));
+			if (tamElite > 0) {
+				poblacionOrdenada
+						.put(poblacion.get(selec.get(i)), selec.get(i));
+				poblacionOrdenada.put(poblacion.get(selec.get(i + 1)),
+						selec.get(i + 1));
 			}
 
 			i += 2;
 		}
 	}
 
+	private Cromosoma[] resuelveCruce(ArrayList<Integer> selec, int i) {
+		int[] puntosCruce;
+		int contador = 1;
+		double suma, mejorSuma;
+		Cromosoma[] mejores = null;
+		Cromosoma[] cruzados = null;
+		// Un sólo cruce
+		puntosCruce = Aleatorio.get2PuntosCruceOrdenados();
+		mejores = cruzador.cruza(poblacion.get(selec.get(i)).clone(), poblacion
+				.get(selec.get(i + 1)).clone(), puntosCruce);
+		//Evaluar...
+		evaluador.evaluar(mejores[0]);
+		evaluador.evaluar(mejores[1]);
+		// Su suma de aptitudes
+		mejorSuma = mejores[0].getAptitud() + mejores[1].getAptitud();
+		
+		// Si está activado el cruce heurístico
+		while (contador < numRepeticionesCruce) {
+			// Otros cruzados
+			puntosCruce = Aleatorio.get2PuntosCruceOrdenados();
+			cruzados = cruzador.cruza(poblacion.get(selec.get(i)).clone(),
+					poblacion.get(selec.get(i + 1)).clone(), puntosCruce);
+			//Evaluar...
+			evaluador.evaluar(cruzados[0]);
+			evaluador.evaluar(cruzados[1]);
+			// Su suma de aptitudes
+			suma = cruzados[0].getAptitud() + cruzados[1].getAptitud();
+			// Maximizar o minimizar
+			if (evaluador.isMaximizar()) {
+				if (suma > mejorSuma) {
+					mejores = cruzados;
+					mejorSuma = suma;
+				}
+			} else {
+				if (suma < mejorSuma) {
+					mejores = cruzados;
+					mejorSuma = suma;
+				}
+			}
+			contador++;
+		}
+		return mejores;
+	}
 
 	private void mutacion() {
 		// Muta toda la población dependiendo de la probabilidad
@@ -241,22 +292,26 @@ public class AGenetico extends Observable {
 
 			if (mutado != null) {
 				numMutados++;
-				if (mutado.length > 1){
+				if (mutado.length > 1) {
 					// Se elige el mejor
 
-					for (int j = 0; j < mutado.length; j++){
+					for (int j = 0; j < mutado.length; j++) {
 						evaluador.evaluar(mutado[j]);
-						if (j == 0) mejor = mutado[0];
-						if (mutado[j].getAptitud() > mejor.getAptitud()) mejor = mutado[j];
+						if (j == 0)
+							mejor = mutado[0];
+						if (mutado[j].getAptitud() > mejor.getAptitud())
+							mejor = mutado[j];
 					}
-					
-				}
-				else mejor = mutado[0];
-				
-				if (tamElite > 0) poblacionOrdenada.remove(poblacion.get(i));
+
+				} else
+					mejor = mutado[0];
+
+				if (tamElite > 0)
+					poblacionOrdenada.remove(poblacion.get(i));
 				poblacion.set(i, mejor);
 				evaluador.evaluar(poblacion.get(i));
-				if (tamElite > 0 ) poblacionOrdenada.put(mejor, i);
+				if (tamElite > 0)
+					poblacionOrdenada.put(mejor, i);
 			}
 		}
 
@@ -271,27 +326,29 @@ public class AGenetico extends Observable {
 		evaluador.evaluar(poblacion);
 
 	}
-	
-	
+
 	/**
 	 * Cargamos los datos de los alumnos desde un fichero
-	 * @param file Nombre del fichero
+	 * 
+	 * @param file
+	 *            Nombre del fichero
 	 * @return Devuelve la lista de alumnos
 	 */
-	private static ListaAlumnos cargarDatos(String file){
+	private static ListaAlumnos cargarDatos(String file) {
 		Logger log = Logger.getLogger("CP");
 		int numAlumnos, numRestricciones, id, odia;
 		double nota;
 		ListaAlumnos lista = new ListaAlumnos();
 		try {
 			BufferedReader bf = new BufferedReader(new FileReader(file));
-			// Leemos la primera linea que contiene el número de alumnos y el número de restricciones
-			String line =  bf.readLine();
+			// Leemos la primera linea que contiene el número de alumnos y el
+			// número de restricciones
+			String line = bf.readLine();
 			numAlumnos = Integer.parseInt(line.split(" ")[0]);
 			numRestricciones = Integer.parseInt(line.split(" ")[1]);
 
 			// Leemos los alumnos y sus notas
-			int i = 0; 
+			int i = 0;
 			while ((line = bf.readLine()) != null && i < numAlumnos) {
 				id = Integer.parseInt(line.split(" ")[0]);
 				nota = Double.parseDouble(line.split(" ")[1]);
@@ -299,9 +356,9 @@ public class AGenetico extends Observable {
 				log.finest(line);
 				i++;
 			}
-			
+
 			// Leemos las incompatibilidades de cada alumno
-			i = 0; 
+			i = 0;
 			while ((line = bf.readLine()) != null && i < numRestricciones) {
 				id = Integer.parseInt(line.split(" ")[0]);
 				odia = Integer.parseInt(line.split(" ")[1]);
@@ -309,19 +366,18 @@ public class AGenetico extends Observable {
 				log.finest(line);
 				i++;
 			}
-			
+
 			bf.close();
-		}catch (FileNotFoundException e) {
+		} catch (FileNotFoundException e) {
 			log.severe(e.getMessage());
 		} catch (IOException e) {
 			log.severe(e.getMessage());
-		} 
+		}
 		return lista;
 	}
 
-
 	/*------------------- GETTERS --------------------------------*/
-	
+
 	public ArrayList<Cromosoma> getPoblacion() {
 		return poblacion;
 	}
@@ -349,14 +405,14 @@ public class AGenetico extends Observable {
 	public double getMejorGeneracion() {
 		return evaluador.getMejorLocal().getAptitud();
 	}
-	
-	public Cromosoma getSolucion(){
+
+	public Cromosoma getSolucion() {
 		return evaluador.getMejorGlobal();
 	}
 
-//	public String getSolucion() {
-//		return this.evaluador.getAlelos().imprime(evaluador.getMejorGlobal());
-//	}
+	// public String getSolucion() {
+	// return this.evaluador.getAlelos().imprime(evaluador.getMejorGlobal());
+	// }
 
 	public int getNumMutados() {
 		return numMutados;
@@ -366,10 +422,10 @@ public class AGenetico extends Observable {
 		return numCruzados;
 	}
 
-	public ListaAlumnos getListaAlumnos(){
+	public ListaAlumnos getListaAlumnos() {
 		return listaAlumnos;
 	}
-	
+
 	/*------------------- SETTERS --------------------------------*/
 
 	public void setPoblacion(ArrayList<Cromosoma> poblacion) {
@@ -416,24 +472,25 @@ public class AGenetico extends Observable {
 	public void setEvaluador(Evaluador evaluador) {
 		this.evaluador = evaluador;
 	}
-	
-	public void setNumRepeticionesCruce(int num){
+
+	public void setNumRepeticionesCruce(int num) {
 		this.numRepeticionesCruce = num;
 	}
-	
-	public void setListaAlumnos(String path, int tamGrupo){
+
+	public void setListaAlumnos(String path, int tamGrupo) {
 		listaAlumnos = cargarDatos(path);
 		listaAlumnos.setTamGrupo(tamGrupo);
 	}
-	
+
 	/**
-	 * Utilizar sólo para depurar, revisa la población en busca de cadenas inválidas.
-	 * Salida por log.
+	 * Utilizar sólo para depurar, revisa la población en busca de cadenas
+	 * inválidas. Salida por log.
 	 */
-	private void comprobarPoblacion(){		
-		for(int i=0;i<poblacion.size();i++){
-			if(!ListaAlumnos.noHayRepetidos(poblacion.get(i).getCadena())){
-				log.severe("Encontrado individuo erróneo: poblacion("+i+") : "+poblacion.get(i).toString());
+	private void comprobarPoblacion() {
+		for (int i = 0; i < poblacion.size(); i++) {
+			if (!ListaAlumnos.noHayRepetidos(poblacion.get(i).getCadena())) {
+				log.severe("Encontrado individuo erróneo: poblacion(" + i
+						+ ") : " + poblacion.get(i).toString());
 			}
 		}
 	}
