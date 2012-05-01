@@ -555,6 +555,12 @@ public class GUI extends JFrame implements ActionListener, Observer {
 				mensaje += "Parámetro Beta no válido. \n";
 			}
 		}
+		
+		if (modoSelec.equals(ModoSeleccionador.PROPIO)){
+			if (!params.setParamPropio(panelDatos.getParamPropio())) {
+				mensaje += "Probabilidad seleccionador no válido. \n";
+			}
+		}
 
 		if (!params.setTamGrupo(panelDatos.getTamGrupo())) {
 			mensaje += "Tamaño de grupo no válido. \n";
@@ -576,6 +582,12 @@ public class GUI extends JFrame implements ActionListener, Observer {
 			mensaje += "Tamaño de población no válido.\n";
 		}
 
+		if (panelDatos.isHeuristico()){
+			params.setHeuristico(true);
+			if (!params.setNumRepeticiones(panelDatos.getTamHeuristico())){
+				mensaje += "Número de repeticiones no válido.\n";
+			}
+		}
 		params.setCruzador(modoCruzador);
 		params.setMutador(modoMutador);
 

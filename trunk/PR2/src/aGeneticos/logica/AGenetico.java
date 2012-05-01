@@ -58,6 +58,7 @@ public class AGenetico extends Observable {
 	private ListaAlumnos listaAlumnos;
 
 	private Logger log;
+	private int numRepeticionesCruce; // para el cruce propio heurístico;
 
 	public AGenetico() {
 	}
@@ -143,6 +144,7 @@ public class AGenetico extends Observable {
 
 		numMutados = 0;
 		numCruzados = 0;
+		numRepeticionesCruce = -1;
 	}
 
 	private void elite() {
@@ -413,6 +415,10 @@ public class AGenetico extends Observable {
 
 	public void setEvaluador(Evaluador evaluador) {
 		this.evaluador = evaluador;
+	}
+	
+	public void setNumRepeticionesCruce(int num){
+		this.numRepeticionesCruce = num;
 	}
 	
 	public void setListaAlumnos(String path, int tamGrupo){
