@@ -486,6 +486,7 @@ public class AGenetico extends Observable {
 	 * Utilizar sólo para depurar, revisa la población en busca de cadenas
 	 * inválidas. Salida por log.
 	 */
+	@SuppressWarnings("unused")
 	private void comprobarPoblacion() {
 		for (int i = 0; i < poblacion.size(); i++) {
 			if (!ListaAlumnos.noHayRepetidos(poblacion.get(i).getCadena())) {

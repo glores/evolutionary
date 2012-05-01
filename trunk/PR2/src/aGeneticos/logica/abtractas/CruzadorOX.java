@@ -19,7 +19,7 @@ public abstract class CruzadorOX extends Cruzador {
 	private static PosById posInvalida = PosById.objetoInvalido();
 	protected Cromosoma padre1, padre2;
 	protected int[] puntoCruce;
-
+	
 	@Override
 	public Cromosoma[] cruza(Cromosoma c1, Cromosoma c2, int[] puntoCruce) {
 		padre1 = c1; padre2 = c2; this.puntoCruce = puntoCruce;

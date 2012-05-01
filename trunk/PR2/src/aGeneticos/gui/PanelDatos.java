@@ -80,7 +80,7 @@ public class PanelDatos extends JPanel implements ActionListener, ItemListener {
 
 		JLabel m = new JLabel("Tamaño grupo: ");
 		tamGrupo = new JTextField(10);
-		tamGrupo.setText("2");
+		tamGrupo.setText("3");
 
 		paneles[1].add(m);
 		paneles[1].add(tamGrupo);
