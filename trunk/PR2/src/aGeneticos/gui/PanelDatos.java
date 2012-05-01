@@ -256,11 +256,11 @@ public class PanelDatos extends JPanel implements ActionListener, ItemListener {
 	}
 	
 	public boolean isHeuristico() {
-		return checkHeuristico.isEnabled();
+		return checkHeuristico.isSelected();
 	}
 	
-	public String getTamHeuristico() {
-		return textFieldHeuristico.getText();
+	public String getTamHeuristico() {	
+		return textFieldHeuristico.getText();		
 	}
 
 	public String getTamTorneo() {
