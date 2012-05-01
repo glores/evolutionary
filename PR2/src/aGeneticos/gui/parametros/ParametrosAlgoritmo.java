@@ -106,7 +106,7 @@ public class ParametrosAlgoritmo {
 	/**
 	 * Parámetro para la función de evaluación y para la selección por ranking
 	 */
-	private double alpha, beta;
+	private double alpha, beta, paramPropio;
 	
 	/**
 	 * Parámetro para la selección por torneo
@@ -122,6 +122,8 @@ public class ParametrosAlgoritmo {
 	private double intProbCruce_inc;
 	private boolean intProbCruce_habilitado;
 	private String path;
+	private boolean heuristico;
+	private int numRepeticiones = -1;
 	
 
 	/**
@@ -202,7 +204,7 @@ public class ParametrosAlgoritmo {
 			break;
 		case PROPIO:
 			//TODO parametrizar el X y el maximizar cogerlo del evaluador de alguna manera...
-			resultado = new SeleccionadorPropio(0.5,false);			
+			resultado = new SeleccionadorPropio(paramPropio,false);			
 			break;
 		default:
 			resultado = null;
@@ -662,9 +664,52 @@ public class ParametrosAlgoritmo {
 				return true;
 			else return false;
 		} catch (NumberFormatException e) {
-			log.warning("[PARAM] " + n + " no es un entero.");
+			log.warning("[PARAM] " + n + " no es un real.");
 			return false;
 		}
+	}
+	
+	/*-------------- Parámetro beta para la selección propio -------------------------*/
+	public double getParamPropio() {
+		return paramPropio;
+	}
+
+	public void setParamPropio(double param) {
+		this.paramPropio = param;
+	}
+
+	public boolean setParamPropio(String param) {
+		try {
+			this.paramPropio = Double.parseDouble(param);
+			return true;
+		} catch (NumberFormatException e) {
+			log.warning("[PARAM] " + param + " no es un real.");
+			return false;
+		}
+	}
+	
+	/*-------------- Número de repeticiones Cruce propio (heurístico) -----------------------------------*/
+	
+	public int getNumRepeticiones() {
+		return numRepeticiones;
+	}
+
+	public void setNumRepeticiones(int tam) {
+		this.numRepeticiones = tam;
+	}
+
+	public boolean setNumRepeticiones(String tam) {
+		try {
+			this.numRepeticiones = Integer.parseInt(tam);
+			return true;
+		} catch (NumberFormatException e) {
+			log.warning("[PARAM] " + tam + " no es un entero.");
+			return false;
+		}
+	}
+	
+	public void setHeuristico(boolean b){
+		heuristico = b;
 	}
 	
 

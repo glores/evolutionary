@@ -5,11 +5,14 @@ import java.awt.Component;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
@@ -25,14 +28,16 @@ import aGeneticos.gui.parametros.ModoSeleccionador;
 import aGeneticos.gui.parametros.ParametrosAlgoritmo;
 import aGeneticos.gui.parametros.Problema;
 
-public class PanelDatos extends JPanel implements ActionListener {
+public class PanelDatos extends JPanel implements ActionListener, ItemListener {
 	private static final long serialVersionUID = 1L;
 	private static final String DEFAULT = "No hay archivo cargado";
 	private JFileChooser fileChooser;
 	private JButton botonCargar;
-	private JTextField labelNombreFichero, tamGrupo, textFieldTamTorneo, alpha, textFieldBeta;
+	private JTextField labelNombreFichero, tamGrupo, textFieldTamTorneo, alpha,
+			textFieldBeta, paramPropio, textFieldHeuristico;
 	private JRadioButton[] selecciones, cruzadores, mutadores, problemas;
 	private JComboBox comboProbTorneo;
+	private JCheckBox checkHeuristico;
 
 	public PanelDatos() {
 		BoxLayout box = new BoxLayout(this, BoxLayout.Y_AXIS);
@@ -92,7 +97,7 @@ public class PanelDatos extends JPanel implements ActionListener {
 			problemas[i].addActionListener(this);
 			grupo.add(problemas[i]);
 			paneles[2].add(problemas[i]);
-			if (p == Problema.FUNCION_1){
+			if (p == Problema.FUNCION_1) {
 				paneles[2].add(alpha);
 			}
 			if (p == ParametrosAlgoritmo.PARAMS_PROBLEMA) {
@@ -136,7 +141,7 @@ public class PanelDatos extends JPanel implements ActionListener {
 	}
 
 	private JPanel creaPanelCruces() {
-		JPanel panelCruces = new JPanel(new GridLayout(1, 3));
+		JPanel panelCruces = new JPanel(new GridLayout(1, 4));
 
 		// set border and layout
 		Border emptyBorder = BorderFactory.createEmptyBorder(0, 5, 0, 5);
@@ -162,12 +167,24 @@ public class PanelDatos extends JPanel implements ActionListener {
 			}
 			i++;
 		}
+		
+		// TextField para el tamaño de torneo
+		checkHeuristico = new JCheckBox("Heurístico ");
+		checkHeuristico.setSelected(false);
+		checkHeuristico.addItemListener(this);
+		textFieldHeuristico = new JTextField(10);
+		textFieldHeuristico.setText("3");
+		textFieldHeuristico.setEnabled(false);
+		JPanel panelTextField = new JPanel();
+		panelTextField.add(checkHeuristico);
+		panelTextField.add(textFieldHeuristico);
+		panelCruces.add(panelTextField);
 
 		return panelCruces;
 	}
 
 	private JPanel creaPanelSeleccion() {
-		JPanel panelSeleccionadores = new JPanel(new GridLayout(2, 4));
+		JPanel panelSeleccionadores = new JPanel(new GridLayout(2, 5));
 
 		// set border and layout
 		Border emptyBorder = BorderFactory.createEmptyBorder(0, 5, 0, 5);
@@ -210,7 +227,7 @@ public class PanelDatos extends JPanel implements ActionListener {
 		panelTextField.add(new JLabel("Tamaño de torneo "));
 		panelTextField.add(textFieldTamTorneo);
 		panelSeleccionadores.add(panelTextField);
-		
+
 		// TextField para el parámetro beta del Ranking
 		textFieldBeta = new JTextField(10);
 		textFieldBeta.setText("1.5");
@@ -220,43 +237,63 @@ public class PanelDatos extends JPanel implements ActionListener {
 		panelBeta.add(textFieldBeta);
 		panelSeleccionadores.add(panelBeta);
 
+		// TextField para el parámetro del seleccionador propio
+		paramPropio = new JTextField(10);
+		paramPropio.setText("0.5");
+		paramPropio.setEnabled(false);
+		JPanel panelParamPropio = new JPanel();
+		panelParamPropio.add(new JLabel("Probabilidad "));
+		panelParamPropio.add(paramPropio);
+		panelSeleccionadores.add(panelParamPropio);
+
 		return panelSeleccionadores;
 	}
-	
+
 	/*------------- GETTERS Y SETTERS ------------------------------*/
-	
-	public boolean isTorneo(){
+
+	public boolean isTorneo() {
 		return textFieldTamTorneo.isEditable();
 	}
 	
-	public String getTamTorneo(){
+	public boolean isHeuristico() {
+		return checkHeuristico.isEnabled();
+	}
+	
+	public String getTamHeuristico() {
+		return textFieldHeuristico.getText();
+	}
+
+	public String getTamTorneo() {
 		return textFieldTamTorneo.getText();
 	}
-	
-	public String getTamGrupo(){
+
+	public String getTamGrupo() {
 		return tamGrupo.getText();
 	}
-	
-	public String getBeta(){
+
+	public String getBeta() {
 		return textFieldBeta.getText();
 	}
-	
+
+	public String getParamPropio() {
+		return paramPropio.getText();
+	}
 
 	public String getAlpha() {
 		return alpha.getText();
 	}
-	
-	public String getPath(){
-		if (labelNombreFichero.getText().equals(DEFAULT)){
+
+	public String getPath() {
+		if (labelNombreFichero.getText().equals(DEFAULT)) {
 			return null;
-		}
-		else return labelNombreFichero.getText();
+		} else
+			return labelNombreFichero.getText();
 	}
-	
-	public String getProbTorneo(){
+
+	public String getProbTorneo() {
 		return (String) comboProbTorneo.getSelectedItem();
 	}
-	
+
 	public ModoSeleccionador getModoSeleccionador() {
 		boolean encontrado = false;
 		int i = 0;
@@ -268,7 +305,7 @@ public class PanelDatos extends JPanel implements ActionListener {
 		}
 		return ModoSeleccionador.values()[i];
 	}
-	
+
 	public ModoCruzador getModoCruzador() {
 		boolean encontrado = false;
 		int i = 0;
@@ -280,7 +317,7 @@ public class PanelDatos extends JPanel implements ActionListener {
 		}
 		return ModoCruzador.values()[i];
 	}
-	
+
 	public ModoMutador getModoMutador() {
 		boolean encontrado = false;
 		int i = 0;
@@ -304,8 +341,15 @@ public class PanelDatos extends JPanel implements ActionListener {
 		}
 		return Problema.values()[i];
 	}
-	
+
 	/*--------------------------------------------------------------*/
+	
+	public void itemStateChanged(ItemEvent e) {
+	    if (e.getStateChange() == ItemEvent.DESELECTED) {
+	        textFieldHeuristico.setEnabled(false);
+	    } 
+	    else textFieldHeuristico.setEnabled(true);
+	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
@@ -327,23 +371,37 @@ public class PanelDatos extends JPanel implements ActionListener {
 			textFieldTamTorneo.setEnabled(true);
 			comboProbTorneo.setEnabled(false);
 			textFieldBeta.setEnabled(false);
+			paramPropio.setEnabled(false);
 		} else if (e.getActionCommand().equals(
 				ParametrosAlgoritmo
 						.getTextoSeleccionador(ModoSeleccionador.TORNEO_PROB))) {
 			textFieldTamTorneo.setEnabled(true);
 			comboProbTorneo.setEnabled(true);
 			textFieldBeta.setEnabled(false);
+			paramPropio.setEnabled(false);
 		} else if (e.getActionCommand().equals(
 				ParametrosAlgoritmo
 						.getTextoSeleccionador(ModoSeleccionador.RULETA))) {
 			textFieldTamTorneo.setEnabled(false);
 			comboProbTorneo.setEnabled(false);
 			textFieldBeta.setEnabled(false);
-		} else if (e.getActionCommand().equals(ParametrosAlgoritmo.getTextoSeleccionador(ModoSeleccionador.RANKING))){
+			paramPropio.setEnabled(false);
+		} else if (e.getActionCommand().equals(
+				ParametrosAlgoritmo
+						.getTextoSeleccionador(ModoSeleccionador.PROPIO))) {
+			textFieldTamTorneo.setEnabled(false);
+			comboProbTorneo.setEnabled(false);
+			textFieldBeta.setEnabled(false);
+			paramPropio.setEnabled(true);
+		} else if (e.getActionCommand().equals(
+				ParametrosAlgoritmo
+						.getTextoSeleccionador(ModoSeleccionador.RANKING))) {
 			textFieldTamTorneo.setEnabled(false);
 			comboProbTorneo.setEnabled(false);
 			textFieldBeta.setEnabled(true);
-		} else if (e.getActionCommand().equals(ParametrosAlgoritmo.getTextoProblema(Problema.FUNCION_1))){
+			paramPropio.setEnabled(false);
+		} else if (e.getActionCommand().equals(
+				ParametrosAlgoritmo.getTextoProblema(Problema.FUNCION_1))) {
 			alpha.setEnabled(true);
 		}
 	}
