@@ -43,39 +43,6 @@ public class Arbol<T> {
         return num;
     }
 
-    public boolean existe(T dato) {
-        return (busca(dato) != null);
-    }
-
-    public Nodo<T> busca(T dato) {
-        Nodo<T> nodoResult = null;
-
-        if(raiz != null) {
-            nodoResult = buscaAux(raiz, dato);
-        }
-
-        return nodoResult;
-    }
-
-    private Nodo<T> buscaAux(Nodo<T> nodoActual, T dato) {
-        Nodo<T> nodoResult = null;
-        int i = 0;
-
-        if (nodoActual.getDato().equals(dato)) {
-            nodoResult = nodoActual;
-        }
-
-        else if(nodoActual.tieneHijo()) {
-            i = 0;
-            while (nodoResult == null && i < nodoActual.getNumeroHijos()) {
-                nodoResult = buscaAux(nodoActual.getHijoAt(i), dato);
-                i++;
-            }
-        }
-
-        return nodoResult;
-    }
-
     public boolean isVacio() {
         return (raiz == null);
     }
@@ -184,6 +151,15 @@ public class Arbol<T> {
         return result;
     }
     
+    /**
+     * Buscar el nodo viejo de este árbol, con el hascode del objeto
+     * @param nodoNuevo El nuevo que viene de otro árbol
+     * @param nodoViejo El de este árbol
+     */
+    public void intercambia(Nodo<T> nodoNuevo, Nodo<T> nodoViejo){
+    	
+    }
+    
     public static void main(String args[]){
     	Arbol<Integer> arbol = new Arbol<Integer>();
     	Nodo<Integer> raiz = new Nodo<Integer>(1);
@@ -193,6 +169,7 @@ public class Arbol<T> {
     	raiz.addHijo(new Nodo<Integer>(3));
     	raiz.addHijo(new Nodo<Integer>(4));
     	arbol.setRaiz(raiz);
+    	System.out.print(arbol.getRaiz().getNumeroHijos());
     	System.out.print(arbol.toStringWithDepth());
     }
 }
