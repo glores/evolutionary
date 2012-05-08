@@ -71,42 +71,12 @@ public class Nodo<T> {
         return this.dato;
     }
 
-    public void setDato(T data) {
-        this.dato = data;
+    public void setDato(T dato) {
+        this.dato = dato;
     }
 
     public String toString() {
         return getDato().toString();
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-           return true;
-        }
-        if (obj == null) {
-           return false;
-        }
-        if (getClass() != obj.getClass()) {
-           return false;
-        }
-        Nodo<?> otro = (Nodo<?>) obj;
-        if (dato == null) {
-           if (otro.dato != null) {
-              return false;
-           }
-        } else if (!dato.equals(otro.dato)) {
-           return false;
-        }
-        return true;
-    }
-
-    @Override
-    public int hashCode() {
-       final int primo = 31;
-       int result = 1;
-       result = primo * result + ((dato == null) ? 0 : dato.hashCode());
-       return result;
     }
 
     public String toStringVerbose() {
