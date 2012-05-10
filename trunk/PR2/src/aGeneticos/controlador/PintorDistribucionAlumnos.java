@@ -81,23 +81,27 @@ public class PintorDistribucionAlumnos {
 
 		titulo = "Distribución con "
 				+ ListaAlumnos.getIncompatibles(solucion.getCadena())
-				+ " incompatibilidades.\n";
+				+ " incompatibilidades. Aptitud: " + this.solucion.getAptitud()
+				+ ". ";
+		if (incompatibles.size() > 0) {
+			titulo += "Lista incompatibles: ";
+		}
 		for (int i = 0; i < incompatibles.size(); i++) {
 			if (incompatibles.get(i).size() > 0) {
-				titulo += "Grupo " + (i + 1)+": ";
+				titulo += "Grupo " + (i + 1) + ": ";
 				for (int j = 0; j < incompatibles.get(i).size(); j++) {
-					titulo += incompatibles.get(i).get(j)+", ";
+					titulo += incompatibles.get(i).get(j) + ", ";
 				}
-				titulo+="; ";
+				titulo += "; ";
 			}
-		}	
-		
+		}
+
 		String[] xAxisLabels = cargarEtiquetasX(incompatibles);
 		double[][] data = cargarValoresY();
 		String[] legendLabels = cargarLeyendas();
 		String xAxisTitle = "Grupos";
 		String yAxisTitle = "Notas";
-		
+
 		dataSeries = new DataSeries(xAxisLabels, xAxisTitle, yAxisTitle, titulo);
 
 		Paint[] paints = TestDataGenerator.getRandomPaints(tamGrupos);
@@ -143,8 +147,8 @@ public class PintorDistribucionAlumnos {
 		String[] grupos = new String[numGrupos];
 		for (int i = 1; i <= numGrupos; i++) {
 			grupos[i - 1] = "" + i;
-			if(incompatibles.get(i-1).size()>0){
-				grupos[i - 1] +="*";
+			if (incompatibles.get(i - 1).size() > 0) {
+				grupos[i - 1] += "*";
 			}
 		}
 		return grupos;
