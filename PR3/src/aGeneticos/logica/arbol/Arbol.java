@@ -9,6 +9,12 @@ public class Arbol<T> {
 	public int MAX_INDEX = 0; /* Se utiliza para obtener un nodo aleatorio del árbol */
 
 	private Nodo<T> raiz;
+	
+	public Arbol(Nodo<T> raiz){
+		super();
+		profundidad = 0;
+		this.raiz = raiz;
+	}
 
 	public Arbol() {
 		super();
