@@ -1,9 +1,6 @@
 package aGeneticos.util;
 
-import java.util.ArrayList;
 import java.util.Random;
-
-import aGeneticos.logica.alumnos.PosById;
 
 /**
  * Práctica 1 de Programación Evolutiva
@@ -63,6 +60,13 @@ public class Aleatorio {
 		}
 		return puntoCruce;
 	}
+	
+	public static int[] get2PuntosCruce(){
+		int puntoCruce[] = new int[2];
+		puntoCruce[0] = Aleatorio.getPuntoCruce();
+		puntoCruce[1] = Aleatorio.getPuntoCruce();
+		return puntoCruce;
+	}
 
 	/**
 	 * Devuelve un array de longitud aleatoria(de 1 a num) de aleatorios (de 0 a tamCromosoma-1)
@@ -89,23 +93,6 @@ public class Aleatorio {
 			}
 		}
 		return puntos;
-	}
-	
-	/**
-	 * Devuelve un array de PosById aleatorios de longitud n. 
-	 * Los selecciona aleatoriamente de una lista
-	 * @param n
-	 * @param elementos
-	 * @return
-	 */
-	public static PosById[] getNElementosInsercion(int n,
-			ArrayList<PosById> elementos) {
-		PosById[] resultado = new PosById[n];
-		int[] puntos = getNPuntosInsercion(n);
-		for (int i = 0; i < puntos.length; i++) {
-			resultado[i] = elementos.get(puntos[i]);
-		}
-		return resultado;
 	}
 
 	public static String[] getPuntos(int num) {

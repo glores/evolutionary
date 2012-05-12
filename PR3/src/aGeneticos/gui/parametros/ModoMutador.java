@@ -11,5 +11,5 @@ package aGeneticos.gui.parametros;
  */
 
 public enum ModoMutador {
-	INSERCION, INTERCAMBIO, INVERSION, HEURISTICA
+	TERMINAL_SIMPLE
 }

@@ -1,13 +1,12 @@
 package aGeneticos.logica.arbol;
 
-import java.util.*;
+import java.util.logging.Logger;
+
+import aGeneticos.util.Aleatorio;
 
 public class Arbol<T> {
 	private int profundidad;
-
-	public enum Orden {
-		PRE_ORDEN, POST_ORDEN
-	}
+	public int MAX_INDEX = 0; /* Se utiliza para obtener un nodo aleatorio del árbol */
 
 	private Nodo<T> raiz;
 
@@ -52,175 +51,145 @@ public class Arbol<T> {
 		return (raiz == null);
 	}
 	
+	/**
+	 * Calcula la profundidad del árbol y además establece los índices únicos
+	 */
 	public void calculaProfundidad(){
+		// Se reinicia para recalcular la profundidad
+		MAX_INDEX = 0;
+		raiz.setIndice(MAX_INDEX);
+		MAX_INDEX++;
 		this.calculaProfundidad(raiz, 0);
 	}
 
 	private void calculaProfundidad(Nodo<T> nodo, int profundidad) {
-		for (Nodo<T> hijo : nodo.getHijos()) {
-			calculaProfundidad(hijo, profundidad + 1);
+		for (int i = 0; i < nodo.getNumeroHijos(); i++) {
+			nodo.getHijoAt(i).setIndice(MAX_INDEX);
+			MAX_INDEX++;
+			calculaProfundidad(nodo.getHijoAt(i), profundidad + 1);
 		}
 
 		if (this.profundidad < profundidad) {
 			this.profundidad = profundidad;
 		}
 	}
-
-	public List<Nodo<T>> construye(Orden ordenTrasversal) {
-		List<Nodo<T>> listaResult = null;
-
-		if (raiz != null) {
-			listaResult = construye(raiz, ordenTrasversal);
+	
+	public String toString(){
+		String ini = ""; String cadena = "";
+		return "------------- ÁRBOL ----------------\n"
+				+ this.imprimeNodo(raiz, ini, cadena);
+	}
+	
+	private String imprimeNodo(Nodo<T> nodo, String ini, String cadena){
+		cadena += nodo.toString(ini);
+		ini += "-- ";
+		for (Nodo<T> hijo: nodo.getHijos()){
+			cadena = imprimeNodo(hijo, ini, cadena);
 		}
-
-		return listaResult;
+		return cadena;
 	}
 
-	public List<Nodo<T>> construye(Nodo<T> nodo, Orden ordenTrasversal) {
-		List<Nodo<T>> result = new ArrayList<Nodo<T>>();
-
-		if (ordenTrasversal == Orden.PRE_ORDEN) {
-			construyePreorden(nodo, result);
-		}
-
-		else if (ordenTrasversal == Orden.POST_ORDEN) {
-			construyePostorden(nodo, result);
-		}
-
-		return result;
+	
+	public Nodo<T> busca(int buscado){
+		return this.busca(raiz, buscado);
 	}
 
-	private void construyePreorden(Nodo<T> nodo, List<Nodo<T>> ordenResult) {
-		ordenResult.add(nodo);
 
-		for (Nodo<T> hijo : nodo.getHijos()) {
-			construyePreorden(hijo, ordenResult);
+	private Nodo<T> busca(Nodo<T> padre, int buscado) {		
+		// Comprobamos si es el propio padre
+		if (padre.getIndice() == buscado){
+			return padre;
+		}
+		else{
+			// Si el nodo tiene hijos
+			if (padre.getNumeroHijos() > 0){
+				int cont = 0;
+				while (cont < padre.getNumeroHijos() && buscado >= padre.getHijoAt(cont).getIndice()) cont++;
+				// Buscamos por el hijo que corresponda
+				return busca(padre.getHijoAt(cont-1), buscado);
+			}
+			// Si no tiene hijos devolvemos null
+			else return null;
 		}
 	}
-
-	private void construyePostorden(Nodo<T> nodo, List<Nodo<T>> ordenResult) {
-		for (Nodo<T> hijo : nodo.getHijos()) {
-			construyePostorden(hijo, ordenResult);
-		}
-
-		ordenResult.add(nodo);
+	
+	public void setNodo(Nodo<T> nuevoNodo, int buscado){
+		this.setNodo(raiz, nuevoNodo, buscado);
 	}
-
-	public Map<Nodo<T>, Integer> construyeConProfundidad(Orden orden) {
-		Map<Nodo<T>, Integer> mapaResult = null;
-
-		if (raiz != null) {
-			mapaResult = construyeConProfundidad(raiz, orden);
+	
+	private void setNodo(Nodo<T> nodo, Nodo<T> nuevoNodo, int buscado) {	
+		Nodo<T> result = null;
+		// Comprobamos si es el propio padre
+		if (nodo.getIndice() == buscado){
+			result = nodo;
 		}
-
-		return mapaResult;
+		else{
+			// Si el nodo tiene hijos
+			if (nodo.getNumeroHijos() > 0){
+				int cont = 0;
+				while (cont < nodo.getNumeroHijos() && buscado >= nodo.getHijoAt(cont).getIndice()) cont++;
+				// Buscamos por el hijo que corresponda
+				setNodo(nodo.getHijoAt(cont-1), nuevoNodo, buscado);
+			}
+		}
+		
+		if (result != null){
+			Nodo<T> padre = result.getPadre();
+			int pos = padre.eliminaHijoByIndex(buscado);
+			if (pos != -1)
+				padre.addHijoAt(pos, nuevoNodo);
+			else{
+				Logger.getLogger("CP").warning("setNodo fallido");
+			}
+		}
+		
 	}
-
-	public Map<Nodo<T>, Integer> construyeConProfundidad(Nodo<T> nodo,
-			Orden orden) {
-		Map<Nodo<T>, Integer> ordenResult = new LinkedHashMap<Nodo<T>, Integer>();
-
-		if (orden == Orden.PRE_ORDEN) {
-			construyePreordenConProfundidad(nodo, ordenResult, 0);
-		}
-
-		else if (orden == Orden.POST_ORDEN) {
-			construyePostordenConProfundidad(nodo, ordenResult, 0);
-		}
-
-		return ordenResult;
-	}
-
-	private void construyePreordenConProfundidad(Nodo<T> nodo,
-			Map<Nodo<T>, Integer> ordenResult, int profundidad) {
-		ordenResult.put(nodo, profundidad);
-
-		for (Nodo<T> hijo : nodo.getHijos()) {
-			construyePreordenConProfundidad(hijo, ordenResult, profundidad + 1);
-		}
-
-		if (this.profundidad < profundidad) {
-			this.profundidad = profundidad;
-		}
-	}
-
-	private void construyePostordenConProfundidad(Nodo<T> nodo,
-			Map<Nodo<T>, Integer> ordenResult, int profundidad) {
-		for (Nodo<T> hijo : nodo.getHijos()) {
-			construyePostordenConProfundidad(hijo, ordenResult, profundidad + 1);
-		}
-
-		ordenResult.put(nodo, profundidad);
-		if (this.profundidad < profundidad) {
-			this.profundidad = profundidad;
-		}
-	}
-
-	public String toString() {
-		// Por defecto preorden
-		String result = "";
-
-		if (raiz != null) {
-			result = construye(Orden.PRE_ORDEN).toString();
-
-		}
-
-		return result;
-	}
-
-	public String toStringWithDepth() {
-		// Por defecto preornden
-
-		String result = "";
-
-		if (raiz != null) {
-			result = construyeConProfundidad(Orden.PRE_ORDEN).toString();
-		}
-
-		return result;
+	
+	public Arbol<T> clone(){
+		Arbol<T> clon = new Arbol<T>();
+		clon.setRaiz(raiz.cloneRaiz());
+		return clon;
 	}
 
 	/**
-	 * Buscar el nodo viejo de este árbol, con el hascode del objeto
-	 * 
-	 * @param nodoNuevo
-	 *            El nuevo que viene de otro árbol
-	 * @param nodoViejo
-	 *            El de este árbol
+	 * Ejemplo de creación de árbol y cruce.
+	 * @param args
 	 */
-	public void intercambia(Nodo<T> nodoNuevo, Nodo<T> nodoViejo) {
-
-	}
-
-	private boolean busca(Nodo<T> buscado, Nodo<T> padre) {
-		boolean encontrado = false;
-		int i = 0;
-		while (!encontrado && i < padre.getNumeroHijos()) {
-			encontrado = padre.getHijoAt(i).equals(buscado);
-			i++;
-		}
-		if (!encontrado) {
-			// Buscamos recursivamente en los hijos de estos
-			i = 0;
-			while (!encontrado && i < padre.getNumeroHijos()) {
-				encontrado = busca(buscado, padre.getHijoAt(i));
-				i++;
-			}
-		}
-		return encontrado;
-	}
-
 	public static void main(String args[]) {
 		Arbol<Integer> arbol = new Arbol<Integer>();
+		Arbol<Integer> arbol2 = new Arbol<Integer>();
+		
 		Nodo<Integer> raiz = new Nodo<Integer>(1);
 		Nodo<Integer> hijo = new Nodo<Integer>(2);
-		hijo.addHijo(new Nodo<Integer>(70));
+		hijo.addHijo(new Nodo<Integer>(3));
 		raiz.addHijo(hijo);
-		raiz.addHijo(new Nodo<Integer>(3));
 		raiz.addHijo(new Nodo<Integer>(4));
+		raiz.addHijo(new Nodo<Integer>(5));
 		arbol.setRaiz(raiz);
-		System.out.print(arbol.getRaiz().getNumeroHijos());
-		System.out.print(arbol.toStringWithDepth());
-		System.out.println(arbol.getProfundidad());
+		arbol.calculaProfundidad();
+		System.out.print(arbol.toString());
+		
+		Nodo<Integer> raiz2 = new Nodo<Integer>(6);
+		Nodo<Integer> hijo2 = new Nodo<Integer>(7);
+		hijo2.addHijo(new Nodo<Integer>(8));
+		raiz2.addHijo(hijo2);
+		raiz2.addHijo(new Nodo<Integer>(9));
+		raiz2.addHijo(new Nodo<Integer>(10));
+		arbol2.setRaiz(raiz2);
+		arbol2.calculaProfundidad();
+		System.out.print(arbol2.toString());
+		
+		int index1 = Aleatorio.entero(arbol.MAX_INDEX);
+		int index2 = Aleatorio.entero(arbol2.MAX_INDEX);
+		
+		Nodo<Integer> nodo1 = arbol.busca(index1).clone();
+		Nodo<Integer> nodo2 = arbol2.busca(index2).clone();
+		
+		arbol.setNodo(nodo2, index1);		
+		arbol2.setNodo(nodo1, index2);	
+		arbol.calculaProfundidad();
+		System.out.print(arbol.toString());
+		arbol2.calculaProfundidad();		
+		System.out.print(arbol2.toString());
 	}
 }
