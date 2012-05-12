@@ -14,7 +14,7 @@ public class EvaluadorAlumnos extends Evaluador {
 
 	@Override
 	public void fitness(Cromosoma c) {
-		double res = n* c.getDesequilibrio() + (1 - n)* c.getIncompatibles();
+		double res = n;
 		c.setAptitud(res);
 	}
 

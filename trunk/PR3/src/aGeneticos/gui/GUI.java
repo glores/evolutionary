@@ -221,7 +221,7 @@ public class GUI extends JFrame implements ActionListener, Observer {
 
 		profArbol = new JTextField();
 		profArbol.setColumns(10);
-		profArbol.setText(Double.toString(ParametrosAlgoritmo.PARAMS_PROF_ARBOL));
+		profArbol.setText(Integer.toString(ParametrosAlgoritmo.PARAMS_PROF_ARBOL));
 		panelProf.add(profArbol);
 	}
 

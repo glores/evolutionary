@@ -1,6 +1,7 @@
 package aGeneticos.logica;
 
 import java.util.ArrayList;
+
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.Observable;
@@ -37,6 +38,7 @@ public class AGenetico extends Observable {
 	private Mutador mutador;
 	private Seleccionador seleccionador;
 	private int tamPoblacion;
+	private int profArbol;
 	private int tamElite;
 	private int numMaxGen;
 	private double probCruce;
@@ -130,7 +132,7 @@ public class AGenetico extends Observable {
 		// Inicializamos los parámetros de evaluación
 		evaluador.inicioEvaluacionGlobal();
 		// Generamos la población inicial
-		poblacion = generadorPoblaciones.generar(tamPoblacion, evaluador);
+		poblacion = generadorPoblaciones.generar(tamPoblacion, profArbol, evaluador);
 
 		if (tamElite > 0)
 			elite();
@@ -403,6 +405,9 @@ public class AGenetico extends Observable {
 	}
 
 	/*------------------- SETTERS --------------------------------*/
+	public void setProfArbol(int prof) {
+		this.profArbol = prof;
+	}	
 
 	public void setPoblacion(ArrayList<Cromosoma> poblacion) {
 		this.poblacion = poblacion;

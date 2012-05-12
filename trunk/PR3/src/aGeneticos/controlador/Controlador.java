@@ -72,6 +72,7 @@ public class Controlador {
 			aGenetico.setSeleccionador(parametros.getSeleccionador());
 			aGenetico.setTamElite(parametros.getTamElite());
 			aGenetico.setNumRepeticionesCruce(parametros.getNumRepeticiones());
+			aGenetico.setProfArbol(parametros.getProfArbol());
 			aGenetico.run();
 		}
 	}
@@ -88,7 +89,7 @@ public class Controlador {
 		aGenetico.setTamElite(parametros.getTamElite());
 		aGenetico.setProbCruce(parametros.getProbabilidadCruce());
 		aGenetico.setNumRepeticionesCruce(parametros.getNumRepeticiones());
-
+		aGenetico.setProfArbol(parametros.getProfArbol());
 		// Bucle incrementando la probabilidad.
 		double probCruceActual = parametros.getIntProbCruce_a();		
 		double incremento = parametros.getIntProbCruce_inc();		

@@ -14,8 +14,6 @@ import aGeneticos.logica.arbol.Tipo;
 
 public class Cromosoma {
 	private Arbol<Tipo> cadena; 	/* Genotipo */
-	private double desequilibrio;
-	private int incompatibles;
 	private int tamaño; 				/* Tamaño del cromosoma */
 	private double aptitud; 			/* Función de aptitud */
 	private double probabilidad; 		/* Probabilidad */
@@ -23,11 +21,9 @@ public class Cromosoma {
 	
 	public Cromosoma(){}
 
-	public Cromosoma(Arbol<Tipo> cadena, double desequilibrio, int incompatibles) {
+	public Cromosoma(Arbol<Tipo> cadena) {
 		this.cadena = cadena;
 		this.tamaño = cadena.MAX_INDEX; // Número de nodos
-		this.desequilibrio = desequilibrio;
-		this.incompatibles = incompatibles;
 	}
 
 
@@ -38,14 +34,6 @@ public class Cromosoma {
 
 	public void setTamaño(int tamaño) {
 		this.tamaño = tamaño;
-	}
-	
-	public double getDesequilibrio() {
-		return desequilibrio;
-	}
-	
-	public int getIncompatibles(){
-		return incompatibles;
 	}
 	
 	public double getProbabilidad() {
