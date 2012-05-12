@@ -33,7 +33,6 @@ import javax.swing.SwingWorker;
 
 import aGeneticos.controlador.Controlador;
 import aGeneticos.controlador.PintorBase;
-import aGeneticos.controlador.PintorDistribucionAlumnos;
 import aGeneticos.controlador.PintorIterativo;
 import aGeneticos.gui.parametros.ModoCruzador;
 import aGeneticos.gui.parametros.ModoGenerador;
@@ -493,11 +492,11 @@ public class GUI extends JFrame implements ActionListener, Observer {
 		if (ejecucion) {
 			panelGraficos.removeAll();
 			AGenetico algoritmo = Controlador.getInstance().getAlgoritmo();
-			PintorDistribucionAlumnos pintorSolucion = new PintorDistribucionAlumnos();
-			pintorSolucion.iniciar(algoritmo.getListaAlumnos().getTamGrupo(),
-					algoritmo.getSolucion(), algoritmo.getListaAlumnos());
-			pintorSolucion.dibujarGrafica((Graphics2D) panelGraficos
-					.getGraphics());
+//			PintorDistribucionAlumnos pintorSolucion = new PintorDistribucionAlumnos();
+//			pintorSolucion.iniciar(algoritmo.getListaAlumnos().getTamGrupo(),
+//					algoritmo.getSolucion(), algoritmo.getListaAlumnos());
+//			pintorSolucion.dibujarGrafica((Graphics2D) panelGraficos
+//					.getGraphics());
 		}
 	}
 

@@ -2,14 +2,13 @@ package aGeneticos.logica.arbol;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class Nodo<T> {
 
     private T dato;
     private List<Nodo<T>> hijos;
     private Nodo<T> padre;
+    private int indice;			/* Para realizar la búsqueda de los nodos */
 
     public Nodo() {
         super();
@@ -21,11 +20,23 @@ public class Nodo<T> {
         setDato(dato);
     }
 
-    public Nodo<T> getPadre() {
+    public int getIndice() {
+		return indice;
+	}
+
+	public void setIndice(int indice) {
+		this.indice = indice;
+	}
+
+	public Nodo<T> getPadre() {
         return this.padre;
     }
 
-    public List<Nodo<T>> getHijos() {
+    public void setPadre(Nodo<T> padre) {
+		this.padre = padre;
+	}
+
+	public List<Nodo<T>> getHijos() {
         return this.hijos;
     }
 
@@ -62,6 +73,18 @@ public class Nodo<T> {
     public void eliminaHijoAt(int index) throws IndexOutOfBoundsException {
         hijos.remove(index);
     }
+    
+    public int eliminaHijoByIndex(int indice){
+    	int i = 0; boolean encontrado = false;
+    	while (!encontrado && i < hijos.size()){
+    		encontrado = hijos.get(i).getIndice() == indice;
+    		if (encontrado)
+    			hijos.remove(i);
+    		i++;
+    	}
+    	if (encontrado) return i-1;
+    	else return -1;
+    }
 
     public Nodo<T> getHijoAt(int index) throws IndexOutOfBoundsException {
         return hijos.get(index);
@@ -74,26 +97,48 @@ public class Nodo<T> {
     public void setDato(T dato) {
         this.dato = dato;
     }
-
-    public String toString() {
-        return getDato().toString();
+    
+    public String toString(String ini){
+    	return "\n" + ini + " Nodo " + indice + ":"
+    			+ "\n" + ini + " Dato: " + this.dato + "\n";
+//    			+ "\n Padre: " + this.padre + "\n";
+//    			+ "\n -- Hijos: " + this.hijos;
+    }
+    
+    public String toString(){
+    	return "\n Nodo " + indice + ":"
+    			+ "\n Dato: " + this.dato + "\n";
+    }
+    
+    /**
+     * Clona sólo el nodo actual, pero no los hijos ni el padre
+     */
+    public Nodo<T> clone(){
+    	Nodo<T> clon = new Nodo<T>(this.getDato());
+    	clon.setIndice(this.getIndice());
+    	clon.setPadre(this.getPadre());
+    	clon.setHijo(this.getHijos());
+    	return clon;
     }
 
-    public String toStringVerbose() {
-        String stringRepresentation = getDato().toString() + ":[";
+    /**
+     * Clona todo el contenido de este nodo
+     * @return
+     */
+	public Nodo<T> cloneRaiz() {    	
+    	return cloneRaizAux(this);
+	}
 
-        for (Nodo<T> node : getHijos()) {
-            stringRepresentation += node.getDato().toString() + ", ";
-        }
-
-        //Pattern.DOTALL causes ^ and $ to match. Otherwise it won't. It's retarded.
-        Pattern pattern = Pattern.compile(", $", Pattern.DOTALL);
-        Matcher matcher = pattern.matcher(stringRepresentation);
-
-        stringRepresentation = matcher.replaceFirst("");
-        stringRepresentation += "]";
-
-        return stringRepresentation;
-    }
+	private Nodo<T> cloneRaizAux(Nodo<T> nodo) {
+    	Nodo<T> clon = new Nodo<T>(nodo.getDato());
+    	clon.setIndice(nodo.getIndice());
+    	// Clonamos el padre
+    	clon.setPadre(cloneRaizAux(nodo.getPadre()));
+    	// Clonamos los hijos
+		for (Nodo<T> hijo: nodo.getHijos()){
+			clon.addHijo(cloneRaizAux(hijo));
+		}
+		return clon;
+	}
 }
 

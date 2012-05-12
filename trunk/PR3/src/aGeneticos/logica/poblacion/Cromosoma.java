@@ -1,9 +1,7 @@
 package aGeneticos.logica.poblacion;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import aGeneticos.logica.alumnos.PosById;
+import aGeneticos.logica.arbol.Arbol;
+import aGeneticos.logica.arbol.Tipo;
 
 /**
  * Práctica 2 de Programación Evolutiva
@@ -15,31 +13,33 @@ import aGeneticos.logica.alumnos.PosById;
  */
 
 public class Cromosoma {
-	private ArrayList<PosById> cadena; 	/* Genotipo */
+	private Arbol<Tipo> cadena; 	/* Genotipo */
 	private double desequilibrio;
 	private int incompatibles;
-	private int numAlumnos; 			/* Tamaño del cromosoma */
+	private int tamaño; 				/* Tamaño del cromosoma */
 	private double aptitud; 			/* Función de aptitud */
 	private double probabilidad; 		/* Probabilidad */
 	private double probAcumulada; 		/* Probabilidad acumulada */
+	
+	public Cromosoma(){}
 
-	public Cromosoma(ArrayList<PosById> cadena, double desequilibrio, int incompatibles) {
+	public Cromosoma(Arbol<Tipo> cadena, double desequilibrio, int incompatibles) {
 		this.cadena = cadena;
-		numAlumnos = cadena.size();
+		this.tamaño = cadena.MAX_INDEX; // Número de nodos
 		this.desequilibrio = desequilibrio;
 		this.incompatibles = incompatibles;
 	}
 
-	public Cromosoma(int num) {
-		this.numAlumnos = num;
-
-	}
-
-	public List<PosById> getBits(int ini, int fin) {
-		return cadena.subList(ini, fin);
-	}
 
 	/*------------------- GETTERS Y SETTERS -------------------------*/
+	public int getTamaño() {
+		return tamaño;
+	}
+
+	public void setTamaño(int tamaño) {
+		this.tamaño = tamaño;
+	}
+	
 	public double getDesequilibrio() {
 		return desequilibrio;
 	}
@@ -56,20 +56,12 @@ public class Cromosoma {
 		this.probabilidad = prob;
 	}
 
-	public ArrayList<PosById> getCadena() {
+	public Arbol<Tipo> getCadena() {
 		return cadena;
 	}
 
-	public void setCadena(ArrayList<PosById> cadena) {
+	public void setCadena(Arbol<Tipo> cadena) {
 		this.cadena = cadena;
-	}
-
-	public int getNumBits() {
-		return numAlumnos;
-	}
-
-	public void setNumBits(int numBits) {
-		this.numAlumnos = numBits;
 	}
 
 	public double getAptitud() {
@@ -88,38 +80,19 @@ public class Cromosoma {
 		this.probAcumulada = probAcumulada;
 	}
 
-//	public BitSet getGenotipo(int gen) {
-//		int desplazamiento = 0;
-//
-//		for (int j = 0; j < gen; j++) {
-//			desplazamiento += tamsGen.get(j);
-//		}
-//		return cadena.get(desplazamiento, tamsGen.get(gen) + desplazamiento);
-//	}
-	
-	public void delete(){
-		this.cadena.clear();
-	}
-
 	@Override
 	public String toString() {
 		String aux = "";
-		/*
-		for (int i = 0; i < numAlumnos; i++)
-			aux = cadena.get(i).toString();
-*/
-		aux=cadena.toString();
+		aux = cadena.toString();
 		return "\n\n Cromosoma [cadena = " + aux + ",\n  aptitud = " + aptitud
 				+ ",\n  probabilidad = " + probabilidad + ",\n  probAcumulada = "
 				+ probAcumulada + "]\n";
 	}
 
-	@SuppressWarnings("unchecked")
 	public Cromosoma clone() {
-		Cromosoma clon = new Cromosoma(numAlumnos);
+		Cromosoma clon = new Cromosoma();
 		clon.aptitud = aptitud;
-		clon.cadena = (ArrayList<PosById>) cadena.clone();
-		clon.numAlumnos = numAlumnos;
+		clon.cadena = (Arbol<Tipo>) cadena.clone();
 		clon.probabilidad = probabilidad;
 		clon.probAcumulada = probAcumulada;
 		return clon;

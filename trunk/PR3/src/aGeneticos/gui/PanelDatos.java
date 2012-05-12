@@ -110,7 +110,7 @@ public class PanelDatos extends JPanel implements ActionListener, ItemListener {
 	}
 
 	private JPanel creaPanelMutadores() {
-		JPanel panelMutadores = new JPanel(new GridLayout(1, 3));
+		JPanel panelMutadores = new JPanel(new GridLayout(1, 2));
 
 		// set border and layout
 		Border emptyBorder = BorderFactory.createEmptyBorder(0, 5, 0, 5);
@@ -141,7 +141,7 @@ public class PanelDatos extends JPanel implements ActionListener, ItemListener {
 	}
 
 	private JPanel creaPanelCruces() {
-		JPanel panelCruces = new JPanel(new GridLayout(1, 4));
+		JPanel panelCruces = new JPanel(new GridLayout(1, 1));
 
 		// set border and layout
 		Border emptyBorder = BorderFactory.createEmptyBorder(0, 5, 0, 5);

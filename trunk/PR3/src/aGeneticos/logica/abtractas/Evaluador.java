@@ -2,7 +2,6 @@ package aGeneticos.logica.abtractas;
 
 import java.util.ArrayList;
 
-import aGeneticos.logica.alumnos.ListaAlumnos;
 import aGeneticos.logica.poblacion.Cromosoma;
 
 
@@ -18,7 +17,6 @@ import aGeneticos.logica.poblacion.Cromosoma;
  */
 
 public abstract class Evaluador {
-	protected ListaAlumnos lista;
 	/**
 	 * Indica si se maximiza o minimiza la función de aptitud. 
 	 * Se inicializa en la clase derivada
@@ -183,14 +181,5 @@ public abstract class Evaluador {
 		}else{
 			minimizarGlobal();
 		}
-	}
-
-	public int getTamGrupo() {
-		return lista.getTamGrupo();
-	}
-	
-	public void setListaAlumnos(ListaAlumnos lista){
-		this.lista = lista;
-	}
-	
+	}	
 }
