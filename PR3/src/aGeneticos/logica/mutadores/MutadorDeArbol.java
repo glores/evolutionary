@@ -28,12 +28,18 @@ public class MutadorDeArbol extends Mutador{
 		if (prob < probMutacion){
 			Nodo<Tipo> nodo = c.getCadena().getNodoAleatorio();
 			nodo.eliminaHijos();
-			Nodo<Tipo> subarbol = c.getCadena().generarRamas(nodo, profMax, 2);
-			nodo.getPadre().addHijo(subarbol);
+			int prof = nodo.getProfundidad();
+			// Si el nodo está a profundidad máxima no se generan más hijos
+			if (prof < profMax){
+				c.getCadena().generarRamas(nodo, profMax, profMax - prof);
+			}
+			c.getCadena().calculaProfundidad();
+			Cromosoma[] result = new Cromosoma[1];
+			result[0] = c;
+			return result;
 		}
-		Cromosoma[] result = new Cromosoma[1];
-		result[0] = c;
-		return result;
+		else return null;
+
 	}
 
 }

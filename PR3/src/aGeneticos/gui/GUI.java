@@ -576,10 +576,10 @@ public class GUI extends JFrame implements ActionListener, Observer {
 			mensaje += "Tamaño de grupo no válido. \n";
 		}
 
-		if (panelDatos.getPath() == null) {
-			mensaje += "No ha seleccionado archivo. \n";
-		} else
-			params.setPath(panelDatos.getPath());
+//		if (panelDatos.getPath() == null) {
+//			mensaje += "No ha seleccionado archivo. \n";
+//		} else
+//			params.setPath(panelDatos.getPath());
 
 		if (!params.setAlpha(panelDatos.getAlpha())) {
 			mensaje += "Alpha no válido. \n";

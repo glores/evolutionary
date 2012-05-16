@@ -97,6 +97,7 @@ public class Arbol<T> {
 		} else {
 			for (int i = 0; i < nodo.getNumeroHijos(); i++) {
 				nodo.getHijoAt(i).setIndice(MAX_INDEX);
+				nodo.getHijoAt(i).setProfundidad(profundidad + 1);
 				MAX_INDEX++;
 				calculaProfundidad(nodo.getHijoAt(i), profundidad + 1);
 			}
@@ -192,13 +193,14 @@ public class Arbol<T> {
 	}
 	
 	public Nodo<T> getNodoAleatorio(){
-		int num = Aleatorio.entero(MAX_INDEX);
+		int num = Aleatorio.entero(MAX_INDEX - 1) + 1;
 		return this.busca(num);
 	}
 	
 	public Nodo<T> getFuncionAleatoria(){
-		int num = Aleatorio.entero(MAX_INDEX);
-		Nodo<T> buscado = this.busca(num + 1);
+		int num = Aleatorio.entero(MAX_INDEX - 1) + 1;
+		Nodo<T> buscado = this.busca(num);
+
 		if (isTerminal(buscado)){
 			// Si es un terminal devolvemos el padre
 			return buscado.getPadre();
