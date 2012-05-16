@@ -12,7 +12,7 @@ import java.util.ArrayList;
 public class Funciones {
 	private Tipo funcion;
 	private ArrayList<Tipo> compatibles;
-	private Tipo[] funciones = { Tipo.SIC, Tipo.PROGN2, Tipo.PROGN3 };
+	private static Tipo[] funciones = { Tipo.SIC, Tipo.PROGN2, Tipo.PROGN3 };
 
 	public Funciones() {
 	}
@@ -85,18 +85,18 @@ public class Funciones {
 		return funciones[i - 1];
 	}
 	
-//	public static Tipo getCompatible(Tipo f) {
-//		int aridad = getAridad(f);
-//		// Buscamos un compatible que no sea él mismo
-//		int i = 0;
-//		boolean encontrado = false;
-//		while (!encontrado && i < funciones.length) {
-//			encontrado = funciones[i] != f
-//					&& aridad == getAridad(funciones[i]);
-//			i++;
-//		}
-//		return funciones[i - 1];
-//	}
+	public static Tipo getCompatible(Tipo f) {
+		int aridad = getAridad(f);
+		// Buscamos un compatible que no sea él mismo
+		int i = 0;
+		boolean encontrado = false;
+		while (!encontrado && i < funciones.length) {
+			encontrado = funciones[i] != f
+					&& aridad == getAridad(funciones[i]);
+			i++;
+		}
+		return funciones[i - 1];
+	}
 
 	/**
 	 * Rellena el array de compatibles

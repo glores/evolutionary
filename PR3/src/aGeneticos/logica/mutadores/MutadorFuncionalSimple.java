@@ -1,6 +1,8 @@
 package aGeneticos.logica.mutadores;
 
 import aGeneticos.logica.abtractas.Mutador;
+import aGeneticos.logica.arbol.Funciones;
+import aGeneticos.logica.arbol.Nodo;
 import aGeneticos.logica.arbol.Tipo;
 import aGeneticos.logica.poblacion.Cromosoma;
 import aGeneticos.util.Aleatorio;
@@ -10,18 +12,19 @@ import aGeneticos.util.Aleatorio;
  * @author Gloria Pozuelo
  * @author Sergio Barja
  * 
- * Se selecciona al azar un símbolo terminal dentro del individuo y se sustituye por otro diferente
+ * Se selecciona al azar una función dentro del individuo y se sustituye por otra diferente del conjunto de funciones posibles
+ * con el mismo número de operandos
  */
 
-public class MutadorTerminalSimple extends Mutador{
+public class MutadorFuncionalSimple extends Mutador{
 
 	@Override
 	public Cromosoma[] muta(Cromosoma c, double probMutacion) {
 		double prob = Aleatorio.doble();
 		if (prob < probMutacion){
-			int num = Aleatorio.entero(3);
-			Tipo nuevoTerminal = Tipo.values()[num];
-			c.getCadena().getTerminalAleatorio().setDato(nuevoTerminal);
+			Nodo<Tipo> nodo = c.getCadena().getFuncionAleatoria();
+			Tipo tipo = Funciones.getCompatible(nodo.getDato());
+			nodo.setDato(tipo);
 		}
 		Cromosoma[] result = new Cromosoma[1];
 		result[0] = c;

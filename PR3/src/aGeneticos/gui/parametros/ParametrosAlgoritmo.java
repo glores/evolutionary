@@ -7,6 +7,8 @@ import aGeneticos.logica.abtractas.Funcion;
 import aGeneticos.logica.abtractas.Mutador;
 import aGeneticos.logica.abtractas.Seleccionador;
 import aGeneticos.logica.cruzadores.CruzadorSimple;
+import aGeneticos.logica.mutadores.MutadorDeArbol;
+import aGeneticos.logica.mutadores.MutadorFuncionalSimple;
 import aGeneticos.logica.mutadores.MutadorTerminalSimple;
 import aGeneticos.logica.poblacion.GeneradorPoblaciones;
 import aGeneticos.logica.problemas.FuncionAlumnos;
@@ -45,7 +47,7 @@ public class ParametrosAlgoritmo {
 	public final static int PARAMS_PROF_ARBOL = 3;
 	public final static ModoSeleccionador PARAMS_SELECCIONADOR = ModoSeleccionador.TORNEO_PROB;
 	public final static ModoCruzador PARAMS_CRUZADOR = ModoCruzador.SIMPLE;
-	public final static ModoMutador PARAMS_MUTADOR = ModoMutador.TERMINAL_SIMPLE;
+	public final static ModoMutador PARAMS_MUTADOR = ModoMutador.FUNCIONAL_SIMPLE;
 	public final static ModoGenerador PARAMS_GENERADOR = ModoGenerador.ALEATORIO;
 	public final static Problema PARAMS_PROBLEMA = Problema.FUNCION_1;
 	public final static int PARAMS_N = 2;
@@ -222,6 +224,12 @@ public class ParametrosAlgoritmo {
 		case TERMINAL_SIMPLE:
 			resultado = "Terminal simple";
 			break;		
+		case FUNCIONAL_SIMPLE:
+			resultado = "Funcional simple";
+			break;
+		case DE_ARBOL:
+			resultado = "De árbol";
+			break;
 		default:
 			resultado = "";
 			break;
@@ -234,7 +242,13 @@ public class ParametrosAlgoritmo {
 		switch (modoMutador) {
 		case TERMINAL_SIMPLE:
 			resultado = new MutadorTerminalSimple();
-			break;					
+			break;	
+		case FUNCIONAL_SIMPLE:
+			resultado = new MutadorFuncionalSimple();
+			break;
+		case DE_ARBOL:
+			resultado = new MutadorDeArbol(this.profArbol);
+			break;
 		default:
 			resultado = null;
 			break;
