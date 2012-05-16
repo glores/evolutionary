@@ -9,15 +9,18 @@ public class Nodo<T> {
     private List<Nodo<T>> hijos;
     private Nodo<T> padre;
     private int indice;			/* Para realizar la búsqueda de los nodos */
+    private int profundidad;
 
     public Nodo() {
         super();
         hijos = new ArrayList<Nodo<T>>();
+        profundidad = 0;
     }
 
     public Nodo(T dato) {
         this();
         setDato(dato);
+        profundidad = 0;
     }
 
     public int getIndice() {
@@ -31,8 +34,17 @@ public class Nodo<T> {
 	public Nodo<T> getPadre() {
         return this.padre;
     }
+	
 
-    public void setPadre(Nodo<T> padre) {
+    public int getProfundidad() {
+		return profundidad;
+	}
+
+	public void setProfundidad(int profundidad) {
+		this.profundidad = profundidad;
+	}
+
+	public void setPadre(Nodo<T> padre) {
 		this.padre = padre;
 	}
 
@@ -67,7 +79,7 @@ public class Nodo<T> {
     }
 
     public void eliminaHijos() {
-    	this.hijos.clear();
+    	this.hijos = new ArrayList<Nodo<T>>();
     }
 
     public void eliminaHijoAt(int index) throws IndexOutOfBoundsException {
@@ -100,14 +112,16 @@ public class Nodo<T> {
     
     public String toString(String ini){
     	return "\n" + ini + " Nodo " + indice + ":"
-    			+ "\n" + ini + " Dato: " + this.dato + "\n";
+    			+ "\n" + ini + " Dato: " + this.dato
+    			+ "\n" + ini + " Prof: " + this.profundidad + "\n";
 //    			+ "\n Padre: " + this.padre + "\n";
 //    			+ "\n -- Hijos: " + this.hijos;
     }
     
     public String toString(){
     	return "\n Nodo " + indice + ":"
-    			+ "\n Dato: " + this.dato + "\n";
+    			+ "\n Dato: " + this.dato 
+    			+ "\n Profundidad: " + this.profundidad + "\n";
     }
     
     /**
@@ -118,6 +132,7 @@ public class Nodo<T> {
     	clon.setIndice(this.getIndice());
     	clon.setPadre(this.getPadre());
     	clon.setHijo(this.getHijos());
+    	clon.setProfundidad(this.profundidad);
     	return clon;
     }
     
@@ -137,6 +152,7 @@ public class Nodo<T> {
 	private Nodo<T> cloneRaizAux(Nodo<T> nodo) {
     	Nodo<T> clon = new Nodo<T>(nodo.getDato());
     	clon.setIndice(nodo.getIndice());
+    	clon.setProfundidad(nodo.getProfundidad());
     	// Clonamos los hijos
 		for (Nodo<T> hijo: nodo.getHijos()){
 			clon.addHijo(cloneRaizAux(hijo));

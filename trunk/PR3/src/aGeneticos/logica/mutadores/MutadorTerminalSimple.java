@@ -22,10 +22,11 @@ public class MutadorTerminalSimple extends Mutador{
 			int num = Aleatorio.entero(3);
 			Tipo nuevoTerminal = Tipo.values()[num];
 			c.getCadena().getTerminalAleatorio().setDato(nuevoTerminal);
+			Cromosoma[] result = new Cromosoma[1];
+			result[0] = c;
+			return result;
 		}
-		Cromosoma[] result = new Cromosoma[1];
-		result[0] = c;
-		return result;
+		else return null;
 	}
 
 }

@@ -9,26 +9,31 @@ import aGeneticos.util.Aleatorio;
 
 /**
  * Mutación para árboles
+ * 
  * @author Gloria Pozuelo
  * @author Sergio Barja
  * 
- * Se selecciona al azar una función dentro del individuo y se sustituye por otra diferente del conjunto de funciones posibles
- * con el mismo número de operandos
+ *         Se selecciona al azar una función dentro del individuo y se sustituye
+ *         por otra diferente del conjunto de funciones posibles con el mismo
+ *         número de operandos
  */
 
-public class MutadorFuncionalSimple extends Mutador{
+public class MutadorFuncionalSimple extends Mutador {
 
 	@Override
 	public Cromosoma[] muta(Cromosoma c, double probMutacion) {
 		double prob = Aleatorio.doble();
-		if (prob < probMutacion){
+		// Si el árbol sólo tiene un nodo será terminal, por lo que no puede mutar
+		if (prob < probMutacion && c.getCadena().getNumeroNodos() > 1) {
 			Nodo<Tipo> nodo = c.getCadena().getFuncionAleatoria();
 			Tipo tipo = Funciones.getCompatible(nodo.getDato());
 			nodo.setDato(tipo);
+			Cromosoma[] result = new Cromosoma[1];
+			result[0] = c;
+			return result;
+
 		}
-		Cromosoma[] result = new Cromosoma[1];
-		result[0] = c;
-		return result;
+		else return null;
 	}
 
 }
