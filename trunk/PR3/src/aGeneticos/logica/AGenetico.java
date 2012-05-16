@@ -231,7 +231,8 @@ public class AGenetico extends Observable {
 		Cromosoma[] mejores = null;
 		Cromosoma[] cruzados = null;
 		// Un sólo cruce
-		puntosCruce = Aleatorio.get2PuntosCruce();
+		puntosCruce = Aleatorio.get2PuntosCruce(poblacion.get(selec.get(i)).getCadena().MAX_INDEX,
+				poblacion.get(selec.get(i + 1)).getCadena().MAX_INDEX);
 		// TODO hará falta clone?
 		mejores = cruzador.cruza(poblacion.get(selec.get(i)).clone(), poblacion
 				.get(selec.get(i + 1)).clone(), puntosCruce);
@@ -244,7 +245,8 @@ public class AGenetico extends Observable {
 		// Si está activado el cruce heurístico
 		while (contador < numRepeticionesCruce) {
 			// Otros cruzados
-			puntosCruce = Aleatorio.get2PuntosCruceOrdenados();
+			puntosCruce = Aleatorio.get2PuntosCruce(poblacion.get(selec.get(i)).getCadena().MAX_INDEX,
+					poblacion.get(selec.get(i + 1)).getCadena().MAX_INDEX);
 			cruzados = cruzador.cruza(poblacion.get(selec.get(i)).clone(),
 					poblacion.get(selec.get(i + 1)).clone(), puntosCruce);
 			//Evaluar...
@@ -274,7 +276,8 @@ public class AGenetico extends Observable {
 		Cromosoma[] mutado = null;
 		Cromosoma mejor = null;
 		for (int i = 0; i < poblacion.size(); i++) {
-			mutado = mutador.muta(poblacion.get(i), this.probMutacion);
+			// TODO necesario clone?
+			mutado = mutador.muta(poblacion.get(i).clone(), this.probMutacion);
 
 			if (mutado != null) {
 				numMutados++;

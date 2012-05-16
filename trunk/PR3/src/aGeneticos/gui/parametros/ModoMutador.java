@@ -11,5 +11,5 @@ package aGeneticos.gui.parametros;
  */
 
 public enum ModoMutador {
-	TERMINAL_SIMPLE
+	TERMINAL_SIMPLE, FUNCIONAL_SIMPLE, DE_ARBOL
 }

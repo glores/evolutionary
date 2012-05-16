@@ -67,7 +67,7 @@ public class Nodo<T> {
     }
 
     public void eliminaHijos() {
-        this.hijos = new ArrayList<Nodo<T>>();
+    	this.hijos.clear();
     }
 
     public void eliminaHijoAt(int index) throws IndexOutOfBoundsException {
@@ -120,6 +120,11 @@ public class Nodo<T> {
     	clon.setHijo(this.getHijos());
     	return clon;
     }
+    
+    @Override
+    public boolean equals(Object otro) {
+    	return ((Nodo<T>)otro).getIndice() == this.getIndice() && ((Nodo<T>) otro).getDato() == this.getDato();
+    }
 
     /**
      * Clona todo el contenido de este nodo
@@ -132,8 +137,6 @@ public class Nodo<T> {
 	private Nodo<T> cloneRaizAux(Nodo<T> nodo) {
     	Nodo<T> clon = new Nodo<T>(nodo.getDato());
     	clon.setIndice(nodo.getIndice());
-    	// Clonamos el padre
-    	clon.setPadre(cloneRaizAux(nodo.getPadre()));
     	// Clonamos los hijos
 		for (Nodo<T> hijo: nodo.getHijos()){
 			clon.addHijo(cloneRaizAux(hijo));
