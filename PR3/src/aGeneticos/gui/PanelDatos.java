@@ -50,7 +50,10 @@ public class PanelDatos extends JPanel implements ActionListener, ItemListener {
 		/* Panel de mutadores */
 		add(creaPanelMutadores());
 		add(creaPanelProblema());
+		
 	}
+	
+	
 
 	private Component creaPanelProblema() {
 		JPanel panelProblema = new JPanel(new GridLayout(3, 1));

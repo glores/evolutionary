@@ -20,12 +20,15 @@ import aGeneticos.logica.AGenetico;
 
 public class Controlador {
 	private AGenetico aGenetico;
+	
 	private static Controlador controlador;
 	private static PintorBase pintor;
+	
 	private boolean modoIterativo;
 	private int numIteraciones;
 	private int iteracionActual;
 	
+	private static Mapa mapa;
 
 	public static Controlador getInstance() {
 		if (controlador == null) {
@@ -47,19 +50,26 @@ public class Controlador {
 	public void setAGenetico(AGenetico algoritmo) {
 		aGenetico = algoritmo;
 	}
+	
+	public Mapa getMapa(){
+		return mapa;
+	}
 
 	public void inicia(ParametrosAlgoritmo parametros) {
 		
 		if (parametros.getIntProbCruce_habilitado()) {
-			modoIterativo = true;
-			
-			pintor=new PintorIterativo();			
+			modoIterativo = true;			
+			pintor=new PintorIterativo();	
+			mapa = new Mapa();
+			mapa.cargarMapa(parametros.getPath());
 			modoIntervaloProbCruce(parametros);
 		} else {
 			modoIterativo=false;
 			pintor=new Pintor();
 			((Pintor)pintor).setTamGeneraciones(parametros.getLimIteraciones());
-			pintor.iniciar();
+			pintor.iniciar();			
+			mapa = new Mapa();
+			mapa.cargarMapa(parametros.getPath());			
 			aGenetico.setCruzador(parametros.getCruzador());
 			aGenetico.setEvaluador(parametros.getProblema().getEvaluador());
 			aGenetico.setGeneradorPoblaciones(parametros
@@ -72,7 +82,7 @@ public class Controlador {
 			aGenetico.setSeleccionador(parametros.getSeleccionador());
 			aGenetico.setTamElite(parametros.getTamElite());
 			aGenetico.setNumRepeticionesCruce(parametros.getNumRepeticiones());
-			aGenetico.setProfArbol(parametros.getProfArbol());
+			aGenetico.setProfArbol(parametros.getProfArbol());			
 			aGenetico.run();
 		}
 	}
