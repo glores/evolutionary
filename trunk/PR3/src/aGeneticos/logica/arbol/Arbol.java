@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
+import aGeneticos.logica.problemas.evaluadores.EvaluadorHormiga;
 import aGeneticos.util.Aleatorio;
 
 public class Arbol<T> {
@@ -15,6 +16,10 @@ public class Arbol<T> {
 
 	private Nodo<T> raiz;
 	private List<Nodo<T>> terminales;
+	
+	//Para pintar tabulados
+	String prefijo;
+	String secuencia;
 
 	public Arbol(Nodo<T> raiz) {
 		super();
@@ -28,7 +33,7 @@ public class Arbol<T> {
 		profundidad = 0;
 		terminales = new ArrayList<Nodo<T>>();
 	}
-	
+
 	public List<Nodo<T>> getTerminales() {
 		return terminales;
 	}
@@ -171,15 +176,14 @@ public class Arbol<T> {
 
 		if (result != null) {
 			Nodo<T> padre = result.getPadre();
-			if (padre != null){
+			if (padre != null) {
 				int pos = padre.eliminaHijoByIndex(buscado);
 				if (pos != -1)
 					padre.addHijoAt(pos, nuevoNodo);
 				else {
 					Logger.getLogger("CP").warning("setNodo fallido");
 				}
-			}
-			else{
+			} else {
 				// Sustituimos la raíz
 				raiz.eliminaHijos();
 				this.raiz = nuevoNodo;
@@ -187,28 +191,28 @@ public class Arbol<T> {
 		}
 
 	}
-	
-	private boolean isTerminal(Nodo<T> nodo){
+
+	private boolean isTerminal(Nodo<T> nodo) {
 		return terminales.contains(nodo);
 	}
-	
-	public Nodo<T> getNodoAleatorio(){
+
+	public Nodo<T> getNodoAleatorio() {
 		int num = Aleatorio.entero(MAX_INDEX - 1) + 1;
 		return this.busca(num);
 	}
-	
-	public Nodo<T> getFuncionAleatoria(){
+
+	public Nodo<T> getFuncionAleatoria() {
 		int num = Aleatorio.entero(MAX_INDEX - 1) + 1;
 		Nodo<T> buscado = this.busca(num);
 
-		if (isTerminal(buscado)){
+		if (isTerminal(buscado)) {
 			// Si es un terminal devolvemos el padre
 			return buscado.getPadre();
-		}
-		else return buscado;
+		} else
+			return buscado;
 	}
-	
-	public Nodo<T> getTerminalAleatorio(){
+
+	public Nodo<T> getTerminalAleatorio() {
 		int num = Aleatorio.entero(terminales.size());
 		return terminales.get(num);
 	}
@@ -225,75 +229,105 @@ public class Arbol<T> {
 	}
 
 	public Nodo<Tipo> generarRamas(Nodo<Tipo> nodo, int profMax, int profMin) {
-		Nodo<Tipo> nuevo = null; Tipo tipo;
-		if (profMin > 0){ //no puede ser hoja
+		Nodo<Tipo> nuevo = null;
+		Tipo tipo;
+		if (profMin > 0) { // no puede ser hoja
 			// Random entre 3 funciones + 3 por la situación de los terminales
 			tipo = Tipo.values()[(Aleatorio.entero(3) + 3)];
 			nodo.setDato(tipo);
 			// Comprobamos la aridad del nodo
-			if (Funciones.isFuncion(nodo.getDato())){
+			if (Funciones.isFuncion(nodo.getDato())) {
 				int aridad = Funciones.getAridad(nodo.getDato());
-				
+
 				// Generamos los hijos del nodo
-				for (int i = 0; i < aridad; i++){
+				for (int i = 0; i < aridad; i++) {
 					nuevo = new Nodo<Tipo>();
-					nodo.addHijo(generarRamas(nuevo, profMax-1, profMin-1));
+					nodo.addHijo(generarRamas(nuevo, profMax - 1, profMin - 1));
 				}
 			}
 		}
 		// ProfMin = 0
-		else if (profMax == 0){ // Sólo puede ser hoja
+		else if (profMax == 0) { // Sólo puede ser hoja
 			// Terminal
 			tipo = Tipo.values()[Aleatorio.entero(3)];
 			nodo.setDato(tipo);
-		}
-		else{
+		} else {
 			// se decide aleatoriamente terminal o función
 			tipo = Tipo.values()[Aleatorio.entero(Tipo.values().length)];
 			nodo.setDato(tipo);
-			if (Funciones.isFuncion(tipo)){
+			if (Funciones.isFuncion(tipo)) {
 				int aridad = Funciones.getAridad(nodo.getDato());
-				
+
 				// Generamos los hijos del nodo
-				for (int i = 0; i < aridad; i++){
+				for (int i = 0; i < aridad; i++) {
 					nuevo = new Nodo<Tipo>();
-					nodo.addHijo(generarRamas(nuevo, profMax-1, profMin-1));
+					nodo.addHijo(generarRamas(nuevo, profMax - 1, profMin - 1));
 				}
 			}
 		}
 		return nodo;
 	}
 
-	/**
-	 * Ejemplo de creación de árbol y cruce.
-	 * 
-	 * @param args
-	 */
-//	public static void main(String args[]) {
-//		Arbol<Tipo> arbol = new Arbol<Tipo>();
-//		Arbol<Tipo> arbol2 = new Arbol<Tipo>();
-//
-//		Nodo<Tipo> raiz = arbol.generarRamas(new Nodo<Tipo>(), 3, 2);
-//		arbol.setRaiz(raiz);
-//		arbol.calculaProfundidad();
-//		System.out.print(arbol.toString());
-//
-//		Nodo<Tipo> raiz2 = new Nodo<Tipo>();
-//		arbol2.setRaiz(raiz2);
-//		arbol2.calculaProfundidad();
-//		System.out.print(arbol2.toString());
+	public String instruccionesTabuladas() {
+		prefijo = "";
+		secuencia = "";
+		instruccionesRecursivo(getRaiz());
+		return secuencia;
+	}
 
-//		int index1 = Aleatorio.entero(arbol.MAX_INDEX);
-//		int index2 = Aleatorio.entero(arbol2.MAX_INDEX);
+	private void instruccionesRecursivo(Nodo<T> nodo) {
+		// mientras no se haya acabado el tiempo ni la comida		
+			prefijo+=(" ");
+			secuencia+=( prefijo + nodo.getDato().toString() + "\n");
+			if (nodo.getDato().equals(Tipo.PROGN3)) {
+				instruccionesRecursivo(nodo.getHijoAt(0));
+				instruccionesRecursivo(nodo.getHijoAt(1));
+				instruccionesRecursivo(nodo.getHijoAt(2));
+			} else if (nodo.getDato().equals(Tipo.PROGN2)) {
+				instruccionesRecursivo(nodo.getHijoAt(0));
+				instruccionesRecursivo(nodo.getHijoAt(1));
+			} else if (nodo.getDato().equals(Tipo.SIC)) {
+				// Hay comida delante
+				instruccionesRecursivo(nodo.getHijoAt(0));
+				// No hay comida delante
+				instruccionesRecursivo(nodo.getHijoAt(1));
+			}
+			prefijo = prefijo.substring(1);
+		}
+	}
+
+
+
+/**
+ * Ejemplo de creación de árbol y cruce.
+ * 
+ * @param args
+ */
+// public static void main(String args[]) {
+// Arbol<Tipo> arbol = new Arbol<Tipo>();
+// Arbol<Tipo> arbol2 = new Arbol<Tipo>();
 //
-//		Nodo<Tipo> nodo1 = arbol.busca(index1).clone();
-//		Nodo<Tipo> nodo2 = arbol2.busca(index2).clone();
+// Nodo<Tipo> raiz = arbol.generarRamas(new Nodo<Tipo>(), 3, 2);
+// arbol.setRaiz(raiz);
+// arbol.calculaProfundidad();
+// System.out.print(arbol.toString());
 //
-//		arbol.setNodo(nodo2, index1);
-//		arbol2.setNodo(nodo1, index2);
-//		arbol.calculaProfundidad();
-//		System.out.print(arbol.toString());
-//		arbol2.calculaProfundidad();
-//		System.out.print(arbol2.toString());
-//	}
-}
+// Nodo<Tipo> raiz2 = new Nodo<Tipo>();
+// arbol2.setRaiz(raiz2);
+// arbol2.calculaProfundidad();
+// System.out.print(arbol2.toString());
+
+// int index1 = Aleatorio.entero(arbol.MAX_INDEX);
+// int index2 = Aleatorio.entero(arbol2.MAX_INDEX);
+//
+// Nodo<Tipo> nodo1 = arbol.busca(index1).clone();
+// Nodo<Tipo> nodo2 = arbol2.busca(index2).clone();
+//
+// arbol.setNodo(nodo2, index1);
+// arbol2.setNodo(nodo1, index2);
+// arbol.calculaProfundidad();
+// System.out.print(arbol.toString());
+// arbol2.calculaProfundidad();
+// System.out.print(arbol2.toString());
+// }
+

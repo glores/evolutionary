@@ -11,7 +11,7 @@ import aGeneticos.logica.mutadores.MutadorDeArbol;
 import aGeneticos.logica.mutadores.MutadorFuncionalSimple;
 import aGeneticos.logica.mutadores.MutadorTerminalSimple;
 import aGeneticos.logica.poblacion.GeneradorPoblaciones;
-import aGeneticos.logica.problemas.FuncionAlumnos;
+import aGeneticos.logica.problemas.FuncionHormiga;
 import aGeneticos.logica.seleccionadores.Ranking;
 import aGeneticos.logica.seleccionadores.Ruleta;
 import aGeneticos.logica.seleccionadores.SeleccionadorPropio;
@@ -301,7 +301,7 @@ public class ParametrosAlgoritmo {
 		Funcion resultado;
 		switch (problema) {
 		case FUNCION_1:
-			resultado = new FuncionAlumnos(alpha);
+			resultado = new FuncionHormiga();
 			break;
 		default:
 			resultado = null;

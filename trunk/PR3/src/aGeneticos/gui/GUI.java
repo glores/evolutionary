@@ -58,12 +58,17 @@ public class GUI extends JFrame implements ActionListener, Observer {
 	private final static int DOUBLE = 1;
 
 	private JSplitPane panelPrincipal;
-	private JPanel panelGraficos;
+	private PanelGraficos panelGraficos;
 	private PanelDatos panelDatos;
-	private JTextField tamPob, maxIt, probCruce, probMut, probCruceIntInc, profArbol;
+	private PanelMapa panelMapa;
+	
+	private boolean estaElDeGraficos;
+
+	private JTextField tamPob, maxIt, probCruce, probMut, probCruceIntInc,
+			profArbol;
 	private JCheckBox intervaloProbCruce;
 	private JTextField probCruceIntA, probCruceIntB;
-	private JButton btnOk, btnActualizar, btnVerSolucion;
+	private JButton btnOk, btnActualizar, btnVerMapa;
 	private PintorBase pintor;
 
 	private JCheckBoxMenuItem chckbxmntmElitismo;
@@ -81,20 +86,20 @@ public class GUI extends JFrame implements ActionListener, Observer {
 		 */
 		@Override
 		public Void doInBackground() {
-			try{
-			log.info("[GUI] Ejecutar algoritmo");
-			ParametrosAlgoritmo params = componerParametros();
-			if (params != null) {
-				log.info("[GUI] Parametros correctos");
-				log.info(params.toString());
-				panelGraficos.removeAll();
-				Controlador.getInstance().inicia(params);
+			try {
+				log.info("[GUI] Ejecutar algoritmo");
+				ParametrosAlgoritmo params = componerParametros();
+				if (params != null) {
+					log.info("[GUI] Parametros correctos");
+					log.info(params.toString());
+					panelGraficos.removeAll();					
+					Controlador.getInstance().inicia(params);
 
-			}
-			}catch(Exception e){
+				}
+			} catch (Exception e) {
 				log.severe("Excepción capturada ");
 				e.printStackTrace(System.err);
-				
+
 			}
 			return null;
 		}
@@ -141,11 +146,13 @@ public class GUI extends JFrame implements ActionListener, Observer {
 		log.fine("[GUI] Creado");
 		log.fine("[GUI] Creando panel de graficos...");
 		// Panel de gráficos
+		pintor = Controlador.getInstance().getPintor();
 		panelGraficos = crearPanelGraficos();
+		panelMapa = crearPanelMapa();
 		log.fine("[GUI] Creado");
 		panelPrincipal.setLeftComponent(panelParams);
 		panelPrincipal.setRightComponent(panelGraficos);
-
+		estaElDeGraficos=true;
 		panelDatos = new PanelDatos();
 		contentPane.addTab("Principal", panelPrincipal);
 		contentPane.addTab("Datos", panelDatos);
@@ -160,16 +167,19 @@ public class GUI extends JFrame implements ActionListener, Observer {
 		this.pack();
 		this.setVisible(true);
 		this.setResizable(true);
-		pintor = Controlador.getInstance().getPintor();
+		
 	}
 
-
-
-	private JPanel crearPanelGraficos() {
-		JPanel panelGraficos = new JPanel();
+	private PanelGraficos crearPanelGraficos() {
+		PanelGraficos panelGraficos = new PanelGraficos();
 		panelGraficos.setPreferredSize(new Dimension(590, 400));
 		return panelGraficos;
+	}
 
+	private PanelMapa crearPanelMapa() {
+		PanelMapa panelGraficos = new PanelMapa();
+		panelGraficos.setPreferredSize(new Dimension(590, 400));
+		return panelGraficos;
 	}
 
 	private void crearBoton(JPanel panelParams) {
@@ -185,9 +195,9 @@ public class GUI extends JFrame implements ActionListener, Observer {
 		btnActualizar.addActionListener(this);
 		panel.add(btnActualizar);
 
-		btnVerSolucion = new JButton("Ver solución");
-		btnVerSolucion.addActionListener(this);
-		panel.add(btnVerSolucion);
+		btnVerMapa = new JButton("Ver mapa");
+		btnVerMapa.addActionListener(this);
+		panel.add(btnVerMapa);
 
 		panelBoton.add(panel);
 
@@ -210,7 +220,7 @@ public class GUI extends JFrame implements ActionListener, Observer {
 				.toString(ParametrosAlgoritmo.PARAMS_PROBMUTACION));
 		panelProbMut.add(probMut);
 	}
-	
+
 	private void parametroProfundidadArbol(JPanel panelParams) {
 		JPanel panelProf = new JPanel();
 		panelParams.add(panelProf);
@@ -221,7 +231,8 @@ public class GUI extends JFrame implements ActionListener, Observer {
 
 		profArbol = new JTextField();
 		profArbol.setColumns(10);
-		profArbol.setText(Integer.toString(ParametrosAlgoritmo.PARAMS_PROF_ARBOL));
+		profArbol.setText(Integer
+				.toString(ParametrosAlgoritmo.PARAMS_PROF_ARBOL));
 		panelProf.add(profArbol);
 	}
 
@@ -440,8 +451,8 @@ public class GUI extends JFrame implements ActionListener, Observer {
 		} else if (e.getSource() == btnActualizar) {
 			actualizar();
 		}
-		if (e.getSource() == btnVerSolucion) {
-			pintarSolucion();
+		if (e.getSource() == btnVerMapa) {
+			pintarMapa();
 		} else {
 			actionEventLog(e);
 		}
@@ -481,22 +492,26 @@ public class GUI extends JFrame implements ActionListener, Observer {
 
 	private void actualizar() {
 		// Si ya se ha ejecutado alguna vez, actualiza el panel de gráficos
-		if (ejecucion) {
-			// pintor.dibujarGrafica((Graphics2D) panelGraficos.getGraphics());
-			panelGraficos.removeAll();
-			pintor.actualizar((Graphics2D) panelGraficos.getGraphics());
+		if (ejecucion) {			
+			if(!estaElDeGraficos){
+				panelPrincipal.remove(panelMapa);
+				panelPrincipal.setRightComponent(panelGraficos);	
+				estaElDeGraficos=true;				
+			}		
+			panelGraficos.setPintor(Controlador.getInstance().getPintor());
+			panelGraficos.actualizarGrafica();
+			panelGraficos.repaint();
 		}
 	}
 
-	private void pintarSolucion() {
-		if (ejecucion) {
-			panelGraficos.removeAll();
-			AGenetico algoritmo = Controlador.getInstance().getAlgoritmo();
-//			PintorDistribucionAlumnos pintorSolucion = new PintorDistribucionAlumnos();
-//			pintorSolucion.iniciar(algoritmo.getListaAlumnos().getTamGrupo(),
-//					algoritmo.getSolucion(), algoritmo.getListaAlumnos());
-//			pintorSolucion.dibujarGrafica((Graphics2D) panelGraficos
-//					.getGraphics());
+	private void pintarMapa() {
+		if (Controlador.getInstance().getMapa() != null) {		
+			if(estaElDeGraficos){
+				panelPrincipal.remove(panelGraficos);
+				panelPrincipal.setRightComponent(panelMapa);	
+				estaElDeGraficos=false;			
+			}											
+			panelMapa.dibujarTablero();
 		}
 	}
 
@@ -565,8 +580,8 @@ public class GUI extends JFrame implements ActionListener, Observer {
 				mensaje += "Parámetro Beta no válido. \n";
 			}
 		}
-		
-		if (modoSelec.equals(ModoSeleccionador.PROPIO)){
+
+		if (modoSelec.equals(ModoSeleccionador.PROPIO)) {
 			if (!params.setParamPropio(panelDatos.getParamPropio())) {
 				mensaje += "Probabilidad seleccionador no válido. \n";
 			}
@@ -576,10 +591,10 @@ public class GUI extends JFrame implements ActionListener, Observer {
 			mensaje += "Tamaño de grupo no válido. \n";
 		}
 
-//		if (panelDatos.getPath() == null) {
-//			mensaje += "No ha seleccionado archivo. \n";
-//		} else
-//			params.setPath(panelDatos.getPath());
+		if (panelDatos.getPath() == null) {
+			mensaje += "No ha seleccionado archivo. \n";
+		} else
+			params.setPath(panelDatos.getPath());
 
 		if (!params.setAlpha(panelDatos.getAlpha())) {
 			mensaje += "Alpha no válido. \n";
@@ -592,14 +607,14 @@ public class GUI extends JFrame implements ActionListener, Observer {
 			mensaje += "Tamaño de población no válido.\n";
 		}
 
-		if (panelDatos.isHeuristico()){
-			if (!params.setNumRepeticiones(panelDatos.getTamHeuristico())){
+		if (panelDatos.isHeuristico()) {
+			if (!params.setNumRepeticiones(panelDatos.getTamHeuristico())) {
 				mensaje += "Número de repeticiones no válido.\n";
 			}
 		}
 		params.setCruzador(modoCruzador);
 		params.setMutador(modoMutador);
-		
+
 		if (!params.setProfArbol(profArbol.getText())) {
 			mensaje += "Profundidad de árbol no válido. \n";
 		}
@@ -651,7 +666,16 @@ public class GUI extends JFrame implements ActionListener, Observer {
 				}
 			} else {
 				pintor.setTitulo("Visión global");
-				pintor.dibujarGrafica((Graphics2D) panelGraficos.getGraphics());
+				if(!estaElDeGraficos){
+					estaElDeGraficos=true;
+					panelPrincipal.remove(panelMapa);
+					panelPrincipal.setRightComponent(panelGraficos);
+					pack();
+				}
+				panelGraficos.setPintor(pintor);
+				panelGraficos.dibujarGrafica();			
+				panelMapa.cargarMapa(Controlador.getInstance().getMapa());
+				panelMapa.cargarSolucion(algoritmo.getSolucion());
 				btnOk.setEnabled(true);
 			}
 
