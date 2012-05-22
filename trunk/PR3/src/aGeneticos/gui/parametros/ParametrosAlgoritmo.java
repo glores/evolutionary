@@ -45,9 +45,10 @@ public class ParametrosAlgoritmo {
 	public final static boolean PARAMS_ELITISMO = Boolean.FALSE; 
 	public final static int PARAMS_TAMELITE = 0;
 	public final static int PARAMS_PROF_ARBOL = 3;
+	public final static int PARAMS_PROF_MIN_ARBOL = 2;
 	public final static ModoSeleccionador PARAMS_SELECCIONADOR = ModoSeleccionador.TORNEO_PROB;
 	public final static ModoCruzador PARAMS_CRUZADOR = ModoCruzador.SIMPLE;
-	public final static ModoMutador PARAMS_MUTADOR = ModoMutador.FUNCIONAL_SIMPLE;
+	public final static ModoMutador PARAMS_MUTADOR = ModoMutador.DE_ARBOL;
 	public final static ModoGenerador PARAMS_GENERADOR = ModoGenerador.ALEATORIO;
 	public final static Problema PARAMS_PROBLEMA = Problema.FUNCION_1;
 	public final static int PARAMS_N = 2;
@@ -79,6 +80,10 @@ public class ParametrosAlgoritmo {
 	 */
 	private int profArbol;	
 	/**
+	 * Profundidad mínima del árbol
+	 */
+	private int profMinArbol;
+	/**
 	 * Probabilidad de cruce de dos indivíduos.
 	 */
 	private double probabilidadCruce;
@@ -107,14 +112,13 @@ public class ParametrosAlgoritmo {
 	/**
 	 * Parámetro para la función de evaluación y para la selección por ranking
 	 */
-	private double alpha, beta, paramPropio;
+	private double beta, paramPropio;
 	
 	/**
 	 * Parámetro para la selección por torneo
 	 */
 	private int tamTorneo;
 	private double probTorneoProbabilista;
-	private int tamGrupo;
 
 	Logger log;
 	
@@ -138,14 +142,14 @@ public class ParametrosAlgoritmo {
 		setElitismo(PARAMS_ELITISMO);
 		setTamElite(PARAMS_TAMELITE);
 		setProfArbol(PARAMS_PROF_ARBOL);
+		setProfMinArbol(PARAMS_PROF_MIN_ARBOL);
 		
 		setSeleccionador(PARAMS_SELECCIONADOR);
 		setCruzador(PARAMS_CRUZADOR);
 		setMutador(PARAMS_MUTADOR);
 		setGeneradorPoblaciones(PARAMS_GENERADOR);
 		setProblema(PARAMS_PROBLEMA);
-		setAlpha(PARAMS_N);
-		}
+	}
 	
 
 
@@ -458,26 +462,6 @@ public class ParametrosAlgoritmo {
 		}
 	}
 	
-
-	
-	public double getAlpha() {
-		return alpha;
-	}
-
-	public void setAlpha(double n) {
-		this.alpha = n;
-	}
-
-	public boolean setAlpha(String n) {
-		try {
-			this.alpha = Double.parseDouble(n);
-			return true;
-		} catch (NumberFormatException e) {
-			log.warning("[PARAM] " + n + " no es un entero.");
-			return false;
-		}
-	}
-	
 	/*----------- Tamaño para el torneo ------------------*/
 	
 	public int getTamTorneo() {
@@ -589,26 +573,6 @@ public class ParametrosAlgoritmo {
 		}
 	}
 	
-	/*-------------- Tamaño grupo alumnos -----------------------------------*/
-	
-	public int getTamGrupo() {
-		return tamGrupo;
-	}
-
-	public void setTamGrupo(int tam) {
-		this.tamGrupo = tam;
-	}
-
-	public boolean setTamGrupo(String tam) {
-		try {
-			this.tamGrupo = Integer.parseInt(tam);
-			return true;
-		} catch (NumberFormatException e) {
-			log.warning("[PARAM] " + tam + " no es un entero.");
-			return false;
-		}
-	}
-	
 	/*-------------- Ruta del archivo lista alumnos -----------------------------------*/
 	
 	public String getPath() {
@@ -693,6 +657,26 @@ public class ParametrosAlgoritmo {
 	public boolean setProfArbol(String prof) {
 		try {
 			this.profArbol = Integer.parseInt(prof);
+			return true;
+		} catch (NumberFormatException e) {
+			log.warning("[PARAM] " + prof + " no es un entero.");
+			return false;
+		}
+	}
+	
+	/*----------- Profundidad mínima del árbol ------------------*/
+
+	public int getProfMinArbol() {
+		return profMinArbol;
+	}
+
+	public void setProfMinArbol(int prof) {
+		this.profMinArbol = prof;
+	}
+
+	public boolean setProfMinArbol(String prof) {
+		try {
+			this.profMinArbol = Integer.parseInt(prof);
 			return true;
 		} catch (NumberFormatException e) {
 			log.warning("[PARAM] " + prof + " no es un entero.");

@@ -38,7 +38,7 @@ public class AGenetico extends Observable {
 	private Mutador mutador;
 	private Seleccionador seleccionador;
 	private int tamPoblacion;
-	private int profArbol;
+	private int profArbol, profMinArbol;
 	private int tamElite;
 	private int numMaxGen;
 	private double probCruce;
@@ -132,7 +132,7 @@ public class AGenetico extends Observable {
 		// Inicializamos los parámetros de evaluación
 		evaluador.inicioEvaluacionGlobal();
 		// Generamos la población inicial
-		poblacion = generadorPoblaciones.generar(tamPoblacion, profArbol, evaluador);
+		poblacion = generadorPoblaciones.generar(tamPoblacion, profArbol, profMinArbol, evaluador);
 
 		if (tamElite > 0)
 			elite();
@@ -410,6 +410,10 @@ public class AGenetico extends Observable {
 	/*------------------- SETTERS --------------------------------*/
 	public void setProfArbol(int prof) {
 		this.profArbol = prof;
+	}	
+	
+	public void setProfMinArbol(int prof) {
+		this.profMinArbol = prof;
 	}	
 
 	public void setPoblacion(ArrayList<Cromosoma> poblacion) {

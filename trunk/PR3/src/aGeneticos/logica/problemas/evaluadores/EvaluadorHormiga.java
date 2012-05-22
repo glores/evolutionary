@@ -13,7 +13,7 @@ import aGeneticos.util.Hormiga;
 
 public class EvaluadorHormiga extends Evaluador {
 	private int bocados;
-	public static int maxPasos=400;
+	public static int maxPasos = 400;
 	private int pasos;
 	private Mapa mapa;
 	private Hormiga hormiga;
@@ -21,28 +21,32 @@ public class EvaluadorHormiga extends Evaluador {
 
 	public EvaluadorHormiga() {
 		this.maximizar = true;
-		log=Logger.getLogger("CP");
+		log = Logger.getLogger("CP");
 	}
 
 	@Override
 	public void fitness(Cromosoma c) {
-		log.finest("Evaluando nuevo cromosoma");		
+		log.finest("Evaluando nuevo cromosoma");
 		bocados = 0;
 		pasos = 0;
 		mapa = (Mapa) Controlador.getInstance().getMapa().clone();
-		hormiga = new Hormiga();		
+		hormiga = new Hormiga();
 		while (pasos < maxPasos) {
 			log.finest("Nueva ejecución del programa");
-			ejecutarArbol(c.getCadena().getRaiz());
+			try {
+				ejecutarArbol(c.getCadena().getRaiz());
+			} catch (Exception e) {
+				this.log.severe("Cromosoma erróneo: \n" + c.getCadena().toString());
+				pasos++;
+			}
 		}
-		
+
 		c.setAptitud(bocados);
-		log.finest("FIN Evaluando nuevo cromosoma. APTITUD="+bocados);
+		log.finest("FIN Evaluando nuevo cromosoma. APTITUD=" + bocados);
 	}
-	
-	
+
 	private void ejecutarArbol(Nodo<Tipo> nodo) {
-		log.finest("Instrucción: "+nodo.getDato().toString());
+		log.finest("Instrucción: " + nodo.getDato().toString());
 		// mientras no se haya acabado el tiempo ni la comida
 		if (pasos < maxPasos) {
 			// si estamos encima de comida comemos
@@ -59,7 +63,7 @@ public class EvaluadorHormiga extends Evaluador {
 				ejecutarArbol(nodo.getHijoAt(1));
 			} else if (nodo.getDato().equals(Tipo.SIC)) {
 				int[] sigPos = hormiga.getSigPos();
-				if (hormiga.puedeAvanzar( mapa.getNumFilas(),mapa.getNumCols())
+				if (hormiga.puedeAvanzar(mapa.getNumFilas(), mapa.getNumCols())
 						&& (mapa.getCasilla(sigPos[0], sigPos[1]))) {
 					// Hay comida delante
 					ejecutarArbol(nodo.getHijoAt(0));
@@ -68,8 +72,8 @@ public class EvaluadorHormiga extends Evaluador {
 					ejecutarArbol(nodo.getHijoAt(1));
 				}
 			} else if (nodo.getDato().equals(Tipo.AVANZA)) {
-				if (hormiga.puedeAvanzar( mapa.getNumFilas(),mapa.getNumCols())) {
-					hormiga.Avanzar();					
+				if (hormiga.puedeAvanzar(mapa.getNumFilas(), mapa.getNumCols())) {
+					hormiga.Avanzar();
 				}
 				pasos++;
 			} else if (nodo.getDato().equals(Tipo.GIRA_DERECHA)) {

@@ -22,14 +22,14 @@ public class GeneradorPoblaciones {
 		
 	}
 	
-	public ArrayList<Cromosoma> generar(int tamPoblacion, int profArbol , Evaluador evaluador) {
+	public ArrayList<Cromosoma> generar(int tamPoblacion, int profArbol, int profMinArbol , Evaluador evaluador) {
 		ArrayList<Cromosoma> nuevaPoblacion = new ArrayList<Cromosoma>();
 
 		for (int i = 0; i < tamPoblacion; i++){
 			// Creamos la raíz de tipo función para que el árbol no tenga un único nodo 
 			Nodo<Tipo> nodo = new Nodo<Tipo>();
 			Arbol<Tipo> arbol = new Arbol<Tipo>();
-			Nodo<Tipo> raiz = arbol.generarRamas(nodo, profArbol, 2);
+			Nodo<Tipo> raiz = arbol.generarRamas(nodo, profArbol, profMinArbol);
 			arbol.setRaiz(raiz);
 
 			arbol.calculaProfundidad();
