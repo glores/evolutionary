@@ -27,13 +27,13 @@ public class MutadorDeArbol extends Mutador{
 		double prob = Aleatorio.doble();
 		if (prob < probMutacion){
 			Nodo<Tipo> nodo = c.getCadena().getNodoAleatorio();
-			nodo.eliminaHijos();
 			int prof = nodo.getProfundidad();
-			// Si el nodo está a profundidad máxima no se generan más hijos
+			// Si el nodo está a profundidad máxima no puede mutar
 			if (prof < profMax){
+				nodo.eliminaHijos();
 				c.getCadena().generarRamas(nodo, profMax, profMax - prof);
+				c.getCadena().calculaProfundidad();
 			}
-			c.getCadena().calculaProfundidad();
 			Cromosoma[] result = new Cromosoma[1];
 			result[0] = c;
 			return result;

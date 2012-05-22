@@ -65,7 +65,7 @@ public class GUI extends JFrame implements ActionListener, Observer {
 	private boolean estaElDeGraficos;
 
 	private JTextField tamPob, maxIt, probCruce, probMut, probCruceIntInc,
-			profArbol;
+			profArbol, profMinArbol;
 	private JCheckBox intervaloProbCruce;
 	private JTextField probCruceIntA, probCruceIntB;
 	private JButton btnOk, btnActualizar, btnVerMapa;
@@ -156,7 +156,7 @@ public class GUI extends JFrame implements ActionListener, Observer {
 		panelDatos = new PanelDatos();
 		contentPane.addTab("Principal", panelPrincipal);
 		contentPane.addTab("Datos", panelDatos);
-		this.setPreferredSize(new Dimension(950, 600));
+		this.setPreferredSize(new Dimension(950, 630));
 		int x = (int) (Toolkit.getDefaultToolkit().getScreenSize().width / 2 - this
 				.getPreferredSize().width / 2);
 		int y = (int) (Toolkit.getDefaultToolkit().getScreenSize().height / 2 - this
@@ -215,7 +215,7 @@ public class GUI extends JFrame implements ActionListener, Observer {
 		panelProbMut.add(lblProbMutacin);
 
 		probMut = new JTextField();
-		probMut.setColumns(10);
+		probMut.setColumns(5);
 		probMut.setText(Double
 				.toString(ParametrosAlgoritmo.PARAMS_PROBMUTACION));
 		panelProbMut.add(probMut);
@@ -226,14 +226,26 @@ public class GUI extends JFrame implements ActionListener, Observer {
 		panelParams.add(panelProf);
 		panelProf.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
 
-		JLabel lblProf = new JLabel("Profundidad árbol");
+		JLabel lblProf = new JLabel("Profundidad máx. árbol");
 		panelProf.add(lblProf);
 
 		profArbol = new JTextField();
-		profArbol.setColumns(10);
+		profArbol.setColumns(5);
 		profArbol.setText(Integer
 				.toString(ParametrosAlgoritmo.PARAMS_PROF_ARBOL));
 		panelProf.add(profArbol);
+		
+		JPanel panelMinProf = new JPanel();
+		panelParams.add(panelMinProf);
+		panelMinProf.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
+		
+		JLabel minProf = new JLabel("Profundidad min. árbol");
+		panelMinProf.add(minProf);
+
+		profMinArbol = new JTextField();
+		profMinArbol.setColumns(5);
+		profMinArbol.setText(Integer.toString(ParametrosAlgoritmo.PARAMS_PROF_MIN_ARBOL));
+		panelMinProf.add(profMinArbol);
 	}
 
 	private void parametroProbabilidadCruce(JPanel panelParams) {
@@ -244,7 +256,7 @@ public class GUI extends JFrame implements ActionListener, Observer {
 		panelProbCruce.add(lblProbCruce);
 
 		probCruce = new JTextField();
-		probCruce.setColumns(10);
+		probCruce.setColumns(5);
 		probCruce.setLayout(new FlowLayout(FlowLayout.LEFT, 0, 0));
 		probCruce
 				.setText(Double.toString(ParametrosAlgoritmo.PARAMS_PROBCRUCE));
@@ -260,7 +272,7 @@ public class GUI extends JFrame implements ActionListener, Observer {
 		panelMaxIt.add(lblMxIteraciones);
 
 		maxIt = new JTextField();
-		maxIt.setColumns(10);
+		maxIt.setColumns(5);
 		maxIt.setText(Integer
 				.toString(ParametrosAlgoritmo.PARAMS_LIMITERACIONES));
 		panelMaxIt.add(maxIt);
@@ -275,7 +287,7 @@ public class GUI extends JFrame implements ActionListener, Observer {
 		panelTamPob.add(lblTamPob);
 
 		tamPob = new JTextField();
-		tamPob.setColumns(10);
+		tamPob.setColumns(5);
 		tamPob.setText(Integer
 				.toString(ParametrosAlgoritmo.PARAMS_TAMPOBLACION));
 		panelTamPob.add(tamPob);
@@ -330,7 +342,7 @@ public class GUI extends JFrame implements ActionListener, Observer {
 	private JPanel crearPanelParams() {
 		JPanel panelParams = new JPanel();
 		panelParams.setPreferredSize(new Dimension(300, 500));
-		GridLayout gl_panelParams = new GridLayout(8, 1);
+		GridLayout gl_panelParams = new GridLayout(9, 1);
 		gl_panelParams.setVgap(10);
 		gl_panelParams.setHgap(10);
 		panelParams.setLayout(gl_panelParams);
@@ -587,18 +599,11 @@ public class GUI extends JFrame implements ActionListener, Observer {
 			}
 		}
 
-		if (!params.setTamGrupo(panelDatos.getTamGrupo())) {
-			mensaje += "Tamaño de grupo no válido. \n";
-		}
-
 		if (panelDatos.getPath() == null) {
 			mensaje += "No ha seleccionado archivo. \n";
 		} else
 			params.setPath(panelDatos.getPath());
 
-		if (!params.setAlpha(panelDatos.getAlpha())) {
-			mensaje += "Alpha no válido. \n";
-		}
 		params.setGeneradorPoblaciones(ModoGenerador.ALEATORIO);
 		params.setProblema(problema);
 
@@ -617,6 +622,10 @@ public class GUI extends JFrame implements ActionListener, Observer {
 
 		if (!params.setProfArbol(profArbol.getText())) {
 			mensaje += "Profundidad de árbol no válido. \n";
+		}
+		
+		if (!params.setProfMinArbol(profMinArbol.getText())) {
+			mensaje += "Profundidad mínima de árbol no válida. \n";
 		}
 
 		if (!mensaje.equals("")) {

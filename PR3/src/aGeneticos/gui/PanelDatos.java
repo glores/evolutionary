@@ -33,7 +33,7 @@ public class PanelDatos extends JPanel implements ActionListener, ItemListener {
 	private static final String DEFAULT = "No hay archivo cargado";
 	private JFileChooser fileChooser;
 	private JButton botonCargar;
-	private JTextField labelNombreFichero, tamGrupo, textFieldTamTorneo, alpha,
+	private JTextField labelNombreFichero, textFieldTamTorneo, 
 			textFieldBeta, paramPropio, textFieldHeuristico;
 	private JRadioButton[] selecciones, cruzadores, mutadores, problemas;
 	private JComboBox comboProbTorneo;
@@ -67,7 +67,7 @@ public class PanelDatos extends JPanel implements ActionListener, ItemListener {
 				emptyBorder);
 		panelProblema.setBorder(compoundBorder);
 
-		JPanel paneles[] = new JPanel[3];
+		JPanel paneles[] = new JPanel[2];
 		for (int i = 0; i < paneles.length; i++) {
 			paneles[i] = new JPanel();
 			panelProblema.add(paneles[i]);
@@ -80,29 +80,18 @@ public class PanelDatos extends JPanel implements ActionListener, ItemListener {
 		labelNombreFichero = new JTextField(DEFAULT);
 		labelNombreFichero.setHorizontalAlignment(JTextField.CENTER);
 		paneles[0].add(labelNombreFichero);
-
-		JLabel m = new JLabel("Tamaño grupo: ");
-		tamGrupo = new JTextField(10);
-		tamGrupo.setText("3");
-
-		paneles[1].add(m);
-		paneles[1].add(tamGrupo);
-
+		
 		ButtonGroup grupo = new ButtonGroup();
 		Problema[] problema = Problema.values();
 		problemas = new JRadioButton[problema.length];
-		alpha = new JTextField(10);
-		alpha.setText("0.2");
+
 		int i = 0;
 		for (Problema p : problema) {
 			problemas[i] = new JRadioButton(
 					ParametrosAlgoritmo.getTextoProblema((p)));
 			problemas[i].addActionListener(this);
 			grupo.add(problemas[i]);
-			paneles[2].add(problemas[i]);
-			if (p == Problema.FUNCION_1) {
-				paneles[2].add(alpha);
-			}
+			paneles[1].add(problemas[i]);
 			if (p == ParametrosAlgoritmo.PARAMS_PROBLEMA) {
 				problemas[i].setSelected(true);
 			}
@@ -270,10 +259,6 @@ public class PanelDatos extends JPanel implements ActionListener, ItemListener {
 		return textFieldTamTorneo.getText();
 	}
 
-	public String getTamGrupo() {
-		return tamGrupo.getText();
-	}
-
 	public String getBeta() {
 		return textFieldBeta.getText();
 	}
@@ -282,9 +267,6 @@ public class PanelDatos extends JPanel implements ActionListener, ItemListener {
 		return paramPropio.getText();
 	}
 
-	public String getAlpha() {
-		return alpha.getText();
-	}
 
 	public String getPath() {
 		if (labelNombreFichero.getText().equals(DEFAULT)) {
@@ -403,9 +385,6 @@ public class PanelDatos extends JPanel implements ActionListener, ItemListener {
 			comboProbTorneo.setEnabled(false);
 			textFieldBeta.setEnabled(true);
 			paramPropio.setEnabled(false);
-		} else if (e.getActionCommand().equals(
-				ParametrosAlgoritmo.getTextoProblema(Problema.FUNCION_1))) {
-			alpha.setEnabled(true);
 		}
 	}
 
