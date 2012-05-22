@@ -54,14 +54,13 @@ import aGeneticos.logica.AGenetico;
 public class GUI extends JFrame implements ActionListener, Observer {
 
 	private static final long serialVersionUID = 1L;
-
 	private final static int DOUBLE = 1;
 
 	private JSplitPane panelPrincipal;
 	private PanelGraficos panelGraficos;
 	private PanelDatos panelDatos;
 	private PanelMapa panelMapa;
-	
+
 	private boolean estaElDeGraficos;
 
 	private JTextField tamPob, maxIt, probCruce, probMut, probCruceIntInc,
@@ -92,7 +91,7 @@ public class GUI extends JFrame implements ActionListener, Observer {
 				if (params != null) {
 					log.info("[GUI] Parametros correctos");
 					log.info(params.toString());
-					panelGraficos.removeAll();					
+					panelGraficos.removeAll();
 					Controlador.getInstance().inicia(params);
 
 				}
@@ -139,7 +138,8 @@ public class GUI extends JFrame implements ActionListener, Observer {
 		parametroPoblacion(panelParams);
 		parametroMaximoIteraciones(panelParams);
 		parametroProbabilidadCruce(panelParams);
-		parametroIntervaloProbCruce(panelParams);
+		//De momento deshabilitado
+		//parametroIntervaloProbCruce(panelParams);
 		parametroProbabilidadMutacion(panelParams);
 		parametroProfundidadArbol(panelParams);
 		crearBoton(panelParams);
@@ -152,7 +152,7 @@ public class GUI extends JFrame implements ActionListener, Observer {
 		log.fine("[GUI] Creado");
 		panelPrincipal.setLeftComponent(panelParams);
 		panelPrincipal.setRightComponent(panelGraficos);
-		estaElDeGraficos=true;
+		estaElDeGraficos = true;
 		panelDatos = new PanelDatos();
 		contentPane.addTab("Principal", panelPrincipal);
 		contentPane.addTab("Datos", panelDatos);
@@ -167,7 +167,7 @@ public class GUI extends JFrame implements ActionListener, Observer {
 		this.pack();
 		this.setVisible(true);
 		this.setResizable(true);
-		
+
 	}
 
 	private PanelGraficos crearPanelGraficos() {
@@ -234,17 +234,18 @@ public class GUI extends JFrame implements ActionListener, Observer {
 		profArbol.setText(Integer
 				.toString(ParametrosAlgoritmo.PARAMS_PROF_ARBOL));
 		panelProf.add(profArbol);
-		
+
 		JPanel panelMinProf = new JPanel();
 		panelParams.add(panelMinProf);
 		panelMinProf.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
-		
+
 		JLabel minProf = new JLabel("Profundidad min. árbol");
 		panelMinProf.add(minProf);
 
 		profMinArbol = new JTextField();
 		profMinArbol.setColumns(5);
-		profMinArbol.setText(Integer.toString(ParametrosAlgoritmo.PARAMS_PROF_MIN_ARBOL));
+		profMinArbol.setText(Integer
+				.toString(ParametrosAlgoritmo.PARAMS_PROF_MIN_ARBOL));
 		panelMinProf.add(profMinArbol);
 	}
 
@@ -447,16 +448,7 @@ public class GUI extends JFrame implements ActionListener, Observer {
 		if (e.getActionCommand().equals("Salir")) {
 			System.exit(0);
 		} else if (e.getSource() == btnOk) {
-			// log.info("[GUI] Ejecutar algoritmo");
-			// ParametrosAlgoritmo params = componerParametros();
-			// if (params != null) {
-			// log.info("[GUI] Parametros correctos");
-			// log.info(params.toString());
-			// panelGraficos.removeAll();
-			// Controlador.getInstance().inicia(params);
-			//
-			// }
-
+			ponerPanelGraficos();
 			task = new Task();
 			task.execute();
 
@@ -504,12 +496,8 @@ public class GUI extends JFrame implements ActionListener, Observer {
 
 	private void actualizar() {
 		// Si ya se ha ejecutado alguna vez, actualiza el panel de gráficos
-		if (ejecucion) {			
-			if(!estaElDeGraficos){
-				panelPrincipal.remove(panelMapa);
-				panelPrincipal.setRightComponent(panelGraficos);	
-				estaElDeGraficos=true;				
-			}		
+		if (ejecucion) {
+			ponerPanelGraficos();
 			panelGraficos.setPintor(Controlador.getInstance().getPintor());
 			panelGraficos.actualizarGrafica();
 			panelGraficos.repaint();
@@ -517,13 +505,25 @@ public class GUI extends JFrame implements ActionListener, Observer {
 	}
 
 	private void pintarMapa() {
-		if (Controlador.getInstance().getMapa() != null) {		
-			if(estaElDeGraficos){
-				panelPrincipal.remove(panelGraficos);
-				panelPrincipal.setRightComponent(panelMapa);	
-				estaElDeGraficos=false;			
-			}											
+		if (Controlador.getInstance().getMapa() != null) {
+			ponerPanelMapa();
 			panelMapa.dibujarTablero();
+		}
+	}
+
+	private void ponerPanelGraficos() {
+		if (!estaElDeGraficos) {
+			panelPrincipal.remove(panelMapa);
+			panelPrincipal.setRightComponent(panelGraficos);
+			estaElDeGraficos = true;
+		}
+	}
+
+	private void ponerPanelMapa() {
+		if (estaElDeGraficos) {
+			panelPrincipal.remove(panelGraficos);
+			panelPrincipal.setRightComponent(panelMapa);
+			estaElDeGraficos = false;
 		}
 	}
 
@@ -558,6 +558,8 @@ public class GUI extends JFrame implements ActionListener, Observer {
 					"Introduzca un tamaño de élite (%): ", DOUBLE);
 			params.setTamElite(porcentajeElite);
 		}
+		//Deshabilitado
+		/*
 		if (intervaloProbCruce.isSelected()) {
 
 			if (!params.setIntProbCruce_a(probCruceIntA.getText())) {
@@ -573,6 +575,7 @@ public class GUI extends JFrame implements ActionListener, Observer {
 				mensaje += "Revise los ajustes del intervalo. (¿ a<b ?)\n";
 			}
 		}
+		*/
 
 		if (modoSelec.equals(ModoSeleccionador.TORNEO_DET)
 				|| modoSelec.equals(ModoSeleccionador.TORNEO_PROB)) {
@@ -623,7 +626,7 @@ public class GUI extends JFrame implements ActionListener, Observer {
 		if (!params.setProfArbol(profArbol.getText())) {
 			mensaje += "Profundidad de árbol no válido. \n";
 		}
-		
+
 		if (!params.setProfMinArbol(profMinArbol.getText())) {
 			mensaje += "Profundidad mínima de árbol no válida. \n";
 		}
@@ -646,6 +649,7 @@ public class GUI extends JFrame implements ActionListener, Observer {
 		String evento = (String) arg1;
 		AGenetico algoritmo = (AGenetico) arg0;
 		if (evento.equals("inicial")) {
+
 			barraProgreso.setMinimum(0);
 			barraProgreso.setMaximum(algoritmo.getNumIteraciones());
 			barraProgreso.setValue(0);
@@ -675,14 +679,14 @@ public class GUI extends JFrame implements ActionListener, Observer {
 				}
 			} else {
 				pintor.setTitulo("Visión global");
-				if(!estaElDeGraficos){
-					estaElDeGraficos=true;
+				if (!estaElDeGraficos) {
+					estaElDeGraficos = true;
 					panelPrincipal.remove(panelMapa);
 					panelPrincipal.setRightComponent(panelGraficos);
 					pack();
 				}
 				panelGraficos.setPintor(pintor);
-				panelGraficos.dibujarGrafica();			
+				panelGraficos.dibujarGrafica();
 				panelMapa.cargarMapa(Controlador.getInstance().getMapa());
 				panelMapa.cargarSolucion(algoritmo.getSolucion());
 				btnOk.setEnabled(true);
