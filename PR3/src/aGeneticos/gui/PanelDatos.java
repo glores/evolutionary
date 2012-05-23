@@ -98,6 +98,8 @@ public class PanelDatos extends JPanel implements ActionListener, ItemListener {
 			i++;
 		}
 
+			
+		
 		return panelProblema;
 	}
 
