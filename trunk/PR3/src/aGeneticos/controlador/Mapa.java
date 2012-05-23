@@ -9,12 +9,13 @@ import java.util.logging.Logger;
 public class Mapa {
 	private boolean casillas[][];
 	private int filas, cols;
+	private int numComida;
 	public Mapa(){
 		
 	}
-	
+
 	public void cargarMapa(String ruta){
-		try {
+		try {			
 			BufferedReader lector=new BufferedReader(new FileReader(ruta));
 			//Filas
 			String linea=lector.readLine();
@@ -23,6 +24,7 @@ public class Mapa {
 			linea=lector.readLine();
 			cols=Integer.parseInt(linea);
 			//Mapa
+			numComida=0;
 			casillas=new boolean[filas][cols];	
 			String []lineaPartida;
 			for(int i=0;i<filas;i++){
@@ -30,6 +32,9 @@ public class Mapa {
 				lineaPartida=linea.split(" ");
 				for(int j=0;j<cols;j++){
 					casillas[i][j]=parsear(lineaPartida[j]);
+					if(casillas[i][j]){
+						numComida++;
+					}
 				}
 			}
 			
@@ -46,6 +51,10 @@ public class Mapa {
 	
 	public boolean getCasilla(int x, int y){
 		return casillas[x][y];
+	}
+	
+	public int getNumComida(){
+		return numComida;
 	}
 	
 	public int getNumFilas(){

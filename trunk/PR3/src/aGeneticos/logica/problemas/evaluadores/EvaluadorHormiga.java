@@ -12,12 +12,12 @@ import aGeneticos.logica.poblacion.Cromosoma;
 import aGeneticos.util.Hormiga;
 
 public class EvaluadorHormiga extends Evaluador {
-	private int bocados;
+	protected int bocados;
 	public static int maxPasos = 400;
-	private int pasos;
-	private Mapa mapa;
-	private Hormiga hormiga;
-	private Logger log;
+	protected int pasos;
+	protected Mapa mapa;
+	protected Hormiga hormiga;
+	protected Logger log;
 
 	public EvaluadorHormiga() {
 		this.maximizar = true;
@@ -45,7 +45,7 @@ public class EvaluadorHormiga extends Evaluador {
 		log.finest("FIN Evaluando nuevo cromosoma. APTITUD=" + bocados);
 	}
 
-	private void ejecutarArbol(Nodo<Tipo> nodo) {
+	protected void ejecutarArbol(Nodo<Tipo> nodo) {
 		log.finest("Instrucción: " + nodo.getDato().toString());
 		// mientras no se haya acabado el tiempo ni la comida
 		if (pasos < maxPasos) {

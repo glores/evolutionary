@@ -11,6 +11,7 @@ import aGeneticos.logica.mutadores.MutadorDeArbol;
 import aGeneticos.logica.mutadores.MutadorFuncionalSimple;
 import aGeneticos.logica.mutadores.MutadorTerminalSimple;
 import aGeneticos.logica.poblacion.GeneradorPoblaciones;
+import aGeneticos.logica.problemas.FuncionHPenalizaGrandes;
 import aGeneticos.logica.problemas.FuncionHormiga;
 import aGeneticos.logica.seleccionadores.Ranking;
 import aGeneticos.logica.seleccionadores.Ruleta;
@@ -50,7 +51,7 @@ public class ParametrosAlgoritmo {
 	public final static ModoCruzador PARAMS_CRUZADOR = ModoCruzador.SIMPLE;
 	public final static ModoMutador PARAMS_MUTADOR = ModoMutador.DE_ARBOL;
 	public final static ModoGenerador PARAMS_GENERADOR = ModoGenerador.ALEATORIO;
-	public final static Problema PARAMS_PROBLEMA = Problema.FUNCION_1;
+	public final static Problema PARAMS_PROBLEMA = Problema.BOCADOS;
 	public final static int PARAMS_N = 2;
 
 	/**
@@ -291,8 +292,11 @@ public class ParametrosAlgoritmo {
 	public static String getTextoProblema(Problema problema) {
 		String resultado;
 		switch (problema) {
-		case FUNCION_1:
-			resultado = "Función 1";
+		case BOCADOS:
+			resultado = "Bocados";
+			break;
+		case PENALIZA_GRANDES:
+			resultado = "Penaliza grandes";
 			break;
 		default:
 			resultado = "";
@@ -304,8 +308,12 @@ public class ParametrosAlgoritmo {
 	public Funcion getProblema() {
 		Funcion resultado;
 		switch (problema) {
-		case FUNCION_1:
+		case BOCADOS:
 			resultado = new FuncionHormiga();
+			break;
+		case PENALIZA_GRANDES:
+			//resultado = new FuncionHPenalizaGrandes(this.profMinArbol,this.profArbol);
+			resultado = new FuncionHPenalizaGrandes(12,300);
 			break;
 		default:
 			resultado = null;
