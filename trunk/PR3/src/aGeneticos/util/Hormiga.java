@@ -14,7 +14,7 @@ public class Hormiga {
 		direccion = Direccion.Oeste;
 	}
 
-	public void Avanzar() {
+	public void avanzar() {
 		switch (direccion) {
 		case Norte:
 			posX--;
@@ -74,7 +74,7 @@ public class Hormiga {
 		return new int[] { x, y };
 	}
 
-	public void GirarIzq() {
+	public void girarIzq() {
 		int aux = direccion.ordinal();
 		if(aux==0){
 			aux=3;
@@ -84,7 +84,7 @@ public class Hormiga {
 		direccion = Direccion.values()[aux];
 	}
 
-	public void GirarDer() {
+	public void girarDer() {
 		int aux = direccion.ordinal();
 		if(aux==3){
 			aux=0;

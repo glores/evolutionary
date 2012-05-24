@@ -4,12 +4,14 @@ import aGeneticos.logica.abtractas.Funcion;
 import aGeneticos.logica.problemas.evaluadores.EvaluadorHormiga;
 
 public class FuncionHormiga extends Funcion {
+	private int maxPasos;
 	
-	public FuncionHormiga(){	
+	public FuncionHormiga(int maxPasos){	
 		evaluador = null;
+		this.maxPasos = maxPasos;
 	}
 	
 	public void preparar(){		
-		evaluador = new EvaluadorHormiga();
+		evaluador = new EvaluadorHormiga(maxPasos);
 	}
 }

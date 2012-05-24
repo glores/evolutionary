@@ -124,6 +124,10 @@ public class Nodo<T> {
     			+ "\n Profundidad: " + this.profundidad + "\n";
     }
     
+    public String toStringDato(String ini){
+    	return "\n" + ini+ this.dato;
+    }
+    
     /**
      * Clona sólo el nodo actual, pero no los hijos ni el padre
      */
