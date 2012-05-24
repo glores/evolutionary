@@ -4,6 +4,7 @@ import java.awt.Color;
 
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTextArea;
 
@@ -88,11 +89,13 @@ public class PanelMapa extends JSplitPane {
 	 */
 	public PanelMapa() {
 		super();
-		setDividerSize(1);
+		setDividerSize(3);
+		this.
 		panel = new JPanel();
+		JScrollPane p = new JScrollPane(panel);
 		panelTablero = new JPanel();
 		panel.setBackground(Color.white);
-		setLeftComponent(panel);
+		setLeftComponent(p);
 		setRightComponent(panelTablero);
 	}
 
@@ -125,12 +128,15 @@ public class PanelMapa extends JSplitPane {
 		this.solucion = solucion;
 		bocados = 0;
 		hormiga = new Hormiga();
-		while (pasos < EvaluadorHormiga.maxPasos) {
+		while (pasos < EvaluadorHormiga.getMaxPasos()) {
 			ejecutarArbol(solucion.getCadena().getRaiz());			
 		}
-		JTextArea textin = new JTextArea("Bocados: "+bocados+"\n"+solucion.getCadena().instruccionesTabuladas());
-		textin.setLineWrap(true);
-		textin.setWrapStyleWord(true);
+		JTextArea textin = new JTextArea("Bocados: "+ bocados+ "" +
+				"\n Profundidad: " + solucion.getCadena().getProfundidad() +
+				"\n Núm nodos: " + solucion.getCadena().getNumeroNodos() +
+				"\n\n" + solucion.getCadena().toStringDato());
+
+		textin.setEditable(false);
 		panel.add(textin);
 		
 
@@ -139,7 +145,7 @@ public class PanelMapa extends JSplitPane {
 	// Copiado del evaluador
 	private void ejecutarArbol(Nodo<Tipo> nodo) {
 		// mientras no se haya acabado el tiempo ni la comida
-		if (pasos < EvaluadorHormiga.maxPasos) {
+		if (pasos < EvaluadorHormiga.getMaxPasos()) {
 			// Marcar el paso
 			casillas[hormiga.getX()][hormiga.getY()].pasaLaHormiga();
 			// si estamos encima de comida comemos
@@ -166,14 +172,14 @@ public class PanelMapa extends JSplitPane {
 				}
 			} else if (nodo.getDato().equals(Tipo.AVANZA)) {
 				if (hormiga.puedeAvanzar(mapa.getNumFilas(), mapa.getNumCols())) {
-					hormiga.Avanzar();
+					hormiga.avanzar();
 				}
 				pasos++;
 			} else if (nodo.getDato().equals(Tipo.GIRA_DERECHA)) {
-				hormiga.GirarDer();
+				hormiga.girarDer();
 				pasos++;
 			} else if (nodo.getDato().equals(Tipo.GIRA_IZQUIERDA)) {
-				hormiga.GirarIzq();
+				hormiga.girarIzq();
 				pasos++;
 			}
 			

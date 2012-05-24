@@ -33,11 +33,13 @@ public class PanelDatos extends JPanel implements ActionListener, ItemListener {
 	private static final String DEFAULT = "No hay archivo cargado";
 	private JFileChooser fileChooser;
 	private JButton botonCargar;
-	private JTextField labelNombreFichero, textFieldTamTorneo, 
-			textFieldBeta, paramPropio, textFieldHeuristico;
+	private JTextField labelNombreFichero, textFieldTamTorneo, textFieldBeta,
+			paramPropio, textFieldHeuristico;
 	private JRadioButton[] selecciones, cruzadores, mutadores, problemas;
 	private JComboBox comboProbTorneo;
 	private JCheckBox checkHeuristico;
+	private JTextField k;
+	private JTextField profMaxEst;
 
 	public PanelDatos() {
 		BoxLayout box = new BoxLayout(this, BoxLayout.Y_AXIS);
@@ -50,10 +52,8 @@ public class PanelDatos extends JPanel implements ActionListener, ItemListener {
 		/* Panel de mutadores */
 		add(creaPanelMutadores());
 		add(creaPanelProblema());
-		
+
 	}
-	
-	
 
 	private Component creaPanelProblema() {
 		JPanel panelProblema = new JPanel(new GridLayout(3, 1));
@@ -67,7 +67,7 @@ public class PanelDatos extends JPanel implements ActionListener, ItemListener {
 				emptyBorder);
 		panelProblema.setBorder(compoundBorder);
 
-		JPanel paneles[] = new JPanel[2];
+		JPanel paneles[] = new JPanel[3];
 		for (int i = 0; i < paneles.length; i++) {
 			paneles[i] = new JPanel();
 			panelProblema.add(paneles[i]);
@@ -80,7 +80,7 @@ public class PanelDatos extends JPanel implements ActionListener, ItemListener {
 		labelNombreFichero = new JTextField(DEFAULT);
 		labelNombreFichero.setHorizontalAlignment(JTextField.CENTER);
 		paneles[0].add(labelNombreFichero);
-		
+
 		ButtonGroup grupo = new ButtonGroup();
 		Problema[] problema = Problema.values();
 		problemas = new JRadioButton[problema.length];
@@ -98,8 +98,19 @@ public class PanelDatos extends JPanel implements ActionListener, ItemListener {
 			i++;
 		}
 
-			
-		
+		JLabel labelk = new JLabel("Parámetro k ");
+		JLabel labelMaxProfEst = new JLabel("Profundidad máx. estimada ");
+		k = new JTextField(5);
+		k.setText("0.2");
+		profMaxEst = new JTextField(5);
+		profMaxEst.setText("50");
+		paneles[2].add(labelk);
+		paneles[2].add(k);
+		paneles[2].add(labelMaxProfEst);
+		paneles[2].add(profMaxEst);
+		profMaxEst.setEnabled(false);
+		k.setEnabled(false);
+
 		return panelProblema;
 	}
 
@@ -161,7 +172,7 @@ public class PanelDatos extends JPanel implements ActionListener, ItemListener {
 			}
 			i++;
 		}
-		
+
 		// TextField para el tamaño de torneo
 		checkHeuristico = new JCheckBox("Heurístico ");
 		checkHeuristico.setSelected(false);
@@ -248,13 +259,13 @@ public class PanelDatos extends JPanel implements ActionListener, ItemListener {
 	public boolean isTorneo() {
 		return textFieldTamTorneo.isEditable();
 	}
-	
+
 	public boolean isHeuristico() {
 		return checkHeuristico.isSelected();
 	}
-	
-	public String getTamHeuristico() {	
-		return textFieldHeuristico.getText();		
+
+	public String getTamHeuristico() {
+		return textFieldHeuristico.getText();
 	}
 
 	public String getTamTorneo() {
@@ -269,6 +280,13 @@ public class PanelDatos extends JPanel implements ActionListener, ItemListener {
 		return paramPropio.getText();
 	}
 
+	public String getProfMaxEst() {
+		return profMaxEst.getText();
+	}
+
+	public String getK() {
+		return k.getText();
+	}
 
 	public String getPath() {
 		if (labelNombreFichero.getText().equals(DEFAULT)) {
@@ -330,12 +348,12 @@ public class PanelDatos extends JPanel implements ActionListener, ItemListener {
 	}
 
 	/*--------------------------------------------------------------*/
-	
+
 	public void itemStateChanged(ItemEvent e) {
-	    if (e.getStateChange() == ItemEvent.DESELECTED) {
-	        textFieldHeuristico.setEnabled(false);
-	    } 
-	    else textFieldHeuristico.setEnabled(true);
+		if (e.getStateChange() == ItemEvent.DESELECTED) {
+			textFieldHeuristico.setEnabled(false);
+		} else
+			textFieldHeuristico.setEnabled(true);
 	}
 
 	@Override
@@ -387,7 +405,15 @@ public class PanelDatos extends JPanel implements ActionListener, ItemListener {
 			comboProbTorneo.setEnabled(false);
 			textFieldBeta.setEnabled(true);
 			paramPropio.setEnabled(false);
+		} else if (e.getActionCommand()
+				.equals(ParametrosAlgoritmo
+						.getTextoProblema(Problema.PENALIZA_GRANDES))) {
+			k.setEnabled(true);
+			profMaxEst.setEnabled(true);
+		} else if (e.getActionCommand().equals(
+				ParametrosAlgoritmo.getTextoProblema(Problema.BOCADOS))) {
+			k.setEnabled(false);
+			profMaxEst.setEnabled(false);
 		}
 	}
-
 }

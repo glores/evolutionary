@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
-import aGeneticos.logica.problemas.evaluadores.EvaluadorHormiga;
 import aGeneticos.util.Aleatorio;
 
 public class Arbol<T> {
@@ -16,8 +15,8 @@ public class Arbol<T> {
 
 	private Nodo<T> raiz;
 	private List<Nodo<T>> terminales;
-	
-	//Para pintar tabulados
+
+	// Para pintar tabulados
 	String prefijo;
 	String secuencia;
 
@@ -118,6 +117,22 @@ public class Arbol<T> {
 		String cadena = "";
 		return "------------- ÁRBOL ----------------\n"
 				+ this.imprimeNodo(raiz, ini, cadena);
+	}
+
+	public String toStringDato() {
+		String ini = "";
+		String cadena = "";
+		return "------------- ÁRBOL ----------------\n"
+				+ this.imprimeNodoDato(raiz, ini, cadena);
+	}
+
+	private String imprimeNodoDato(Nodo<T> nodo, String ini, String cadena) {
+		cadena += nodo.toStringDato(ini);
+		ini += "-- ";
+		for (Nodo<T> hijo : nodo.getHijos()) {
+			cadena = imprimeNodoDato(hijo, ini, cadena);
+		}
+		return cadena;
 	}
 
 	private String imprimeNodo(Nodo<T> nodo, String ini, String cadena) {
@@ -276,58 +291,55 @@ public class Arbol<T> {
 	}
 
 	private void instruccionesRecursivo(Nodo<T> nodo) {
-		// mientras no se haya acabado el tiempo ni la comida		
-			prefijo+=(" ");
-			secuencia+=( prefijo + nodo.getDato().toString() + "\n");
-			if (nodo.getDato().equals(Tipo.PROGN3)) {
-				instruccionesRecursivo(nodo.getHijoAt(0));
-				instruccionesRecursivo(nodo.getHijoAt(1));
-				instruccionesRecursivo(nodo.getHijoAt(2));
-			} else if (nodo.getDato().equals(Tipo.PROGN2)) {
-				instruccionesRecursivo(nodo.getHijoAt(0));
-				instruccionesRecursivo(nodo.getHijoAt(1));
-			} else if (nodo.getDato().equals(Tipo.SIC)) {
-				// Hay comida delante
-				instruccionesRecursivo(nodo.getHijoAt(0));
-				// No hay comida delante
-				instruccionesRecursivo(nodo.getHijoAt(1));
-			}
-			prefijo = prefijo.substring(1);
+		// mientras no se haya acabado el tiempo ni la comida
+		prefijo += (" ");
+		secuencia += (prefijo + nodo.getDato().toString() + "\n");
+		if (nodo.getDato().equals(Tipo.PROGN3)) {
+			instruccionesRecursivo(nodo.getHijoAt(0));
+			instruccionesRecursivo(nodo.getHijoAt(1));
+			instruccionesRecursivo(nodo.getHijoAt(2));
+		} else if (nodo.getDato().equals(Tipo.PROGN2)) {
+			instruccionesRecursivo(nodo.getHijoAt(0));
+			instruccionesRecursivo(nodo.getHijoAt(1));
+		} else if (nodo.getDato().equals(Tipo.SIC)) {
+			// Hay comida delante
+			instruccionesRecursivo(nodo.getHijoAt(0));
+			// No hay comida delante
+			instruccionesRecursivo(nodo.getHijoAt(1));
 		}
+		prefijo = prefijo.substring(1);
 	}
 
-
-
-/**
- * Ejemplo de creación de árbol y cruce.
- * 
- * @param args
- */
-// public static void main(String args[]) {
-// Arbol<Tipo> arbol = new Arbol<Tipo>();
-// Arbol<Tipo> arbol2 = new Arbol<Tipo>();
+	/**
+	 * Ejemplo de creación de árbol y cruce.
+	 * 
+	 * @param args
+	 */
+//	public static void main(String args[]) {
+//		Arbol<Tipo> arbol = new Arbol<Tipo>();
+//		Arbol<Tipo> arbol2 = new Arbol<Tipo>();
 //
-// Nodo<Tipo> raiz = arbol.generarRamas(new Nodo<Tipo>(), 3, 2);
-// arbol.setRaiz(raiz);
-// arbol.calculaProfundidad();
-// System.out.print(arbol.toString());
+//		Nodo<Tipo> raiz = arbol.generarRamas(new Nodo<Tipo>(), 3, 2);
+//		arbol.setRaiz(raiz);
+//		arbol.calculaProfundidad();
+//		System.out.print(arbol.toString());
 //
-// Nodo<Tipo> raiz2 = new Nodo<Tipo>();
-// arbol2.setRaiz(raiz2);
-// arbol2.calculaProfundidad();
-// System.out.print(arbol2.toString());
-
-// int index1 = Aleatorio.entero(arbol.MAX_INDEX);
-// int index2 = Aleatorio.entero(arbol2.MAX_INDEX);
+//		Nodo<Tipo> raiz2 = new Nodo<Tipo>();
+//		arbol2.setRaiz(raiz2);
+//		arbol2.calculaProfundidad();
+//		System.out.print(arbol2.toString());
 //
-// Nodo<Tipo> nodo1 = arbol.busca(index1).clone();
-// Nodo<Tipo> nodo2 = arbol2.busca(index2).clone();
+//		int index1 = Aleatorio.entero(arbol.MAX_INDEX);
+//		int index2 = Aleatorio.entero(arbol2.MAX_INDEX);
 //
-// arbol.setNodo(nodo2, index1);
-// arbol2.setNodo(nodo1, index2);
-// arbol.calculaProfundidad();
-// System.out.print(arbol.toString());
-// arbol2.calculaProfundidad();
-// System.out.print(arbol2.toString());
-// }
-
+//		Nodo<Tipo> nodo1 = arbol.busca(index1).clone();
+//		Nodo<Tipo> nodo2 = arbol2.busca(index2).clone();
+//
+//		arbol.setNodo(nodo2, index1);
+//		arbol2.setNodo(nodo1, index2);
+//		arbol.calculaProfundidad();
+//		System.out.print(arbol.toString());
+//		arbol2.calculaProfundidad();
+//		System.out.print(arbol2.toString());
+//	}
+}

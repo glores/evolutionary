@@ -53,6 +53,8 @@ public class ParametrosAlgoritmo {
 	public final static ModoGenerador PARAMS_GENERADOR = ModoGenerador.ALEATORIO;
 	public final static Problema PARAMS_PROBLEMA = Problema.BOCADOS;
 	public final static int PARAMS_N = 2;
+	public final static int NUMPASOS = 400;
+	
 
 	/**
 	 * Seleccionador
@@ -129,6 +131,10 @@ public class ParametrosAlgoritmo {
 	private boolean intProbCruce_habilitado;
 	private String path;
 	private int numRepeticiones = -1;
+	private int maxPasos;
+	// Parámetros para la función de HP
+	private double k;
+	private int maxProfEst;
 	
 
 	/**
@@ -309,11 +315,11 @@ public class ParametrosAlgoritmo {
 		Funcion resultado;
 		switch (problema) {
 		case BOCADOS:
-			resultado = new FuncionHormiga();
+			resultado = new FuncionHormiga(maxPasos);
 			break;
 		case PENALIZA_GRANDES:
 			//resultado = new FuncionHPenalizaGrandes(this.profMinArbol,this.profArbol);
-			resultado = new FuncionHPenalizaGrandes(12,300);
+			resultado = new FuncionHPenalizaGrandes(profMinArbol,maxProfEst, maxPasos, k);
 			break;
 		default:
 			resultado = null;
@@ -690,6 +696,37 @@ public class ParametrosAlgoritmo {
 			log.warning("[PARAM] " + prof + " no es un entero.");
 			return false;
 		}
+	}
+	
+	/*----------- Número de pasos máximo ------------------*/
+	public boolean setMaxPasos(String pasos) {
+		try {
+			this.maxPasos = Integer.parseInt(pasos);
+			return true;
+		} catch (NumberFormatException e) {
+			log.warning("[PARAM] " + pasos + " no es un entero.");
+			return false;
+		} 
+	}
+	/*----------- Parámetro k para la función HP ------------------*/
+	public boolean setK(String k) {
+		try {
+			this.k = Double.parseDouble(k);
+			return true;
+		} catch (NumberFormatException e) {
+			log.warning("[PARAM] " + k + " no es un real.");
+			return false;
+		} 
+	}	
+	/*----------- Parámetro profundidad máx estimada ------------------*/
+	public boolean setProfMaxEst(String prof) {
+		try {
+			this.maxProfEst = Integer.parseInt(prof);
+			return true;
+		} catch (NumberFormatException e) {
+			log.warning("[PARAM] " + prof + " no es un entero.");
+			return false;
+		} 
 	}
 	
 

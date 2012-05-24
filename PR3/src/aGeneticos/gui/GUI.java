@@ -78,6 +78,7 @@ public class GUI extends JFrame implements ActionListener, Observer {
 	private boolean ejecucion = false;
 
 	private Task task;
+	private JTextField maxPasos;
 
 	class Task extends SwingWorker<Void, Void> {
 		/*
@@ -135,6 +136,7 @@ public class GUI extends JFrame implements ActionListener, Observer {
 		log.fine("[GUI] Creando panel de parametros...");
 		// Panel de parámetros
 		JPanel panelParams = crearPanelParams();
+		parametroMaxPasos(panelParams);
 		parametroPoblacion(panelParams);
 		parametroMaximoIteraciones(panelParams);
 		parametroProbabilidadCruce(panelParams);
@@ -278,6 +280,20 @@ public class GUI extends JFrame implements ActionListener, Observer {
 				.toString(ParametrosAlgoritmo.PARAMS_LIMITERACIONES));
 		panelMaxIt.add(maxIt);
 	}
+	
+	private void parametroMaxPasos(JPanel panelParams) {
+		JPanel panelMaxPasos = new JPanel();
+		panelParams.add(panelMaxPasos);
+		panelMaxPasos.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
+
+		JLabel lblTamPob = new JLabel("Número pasos ");
+		panelMaxPasos.add(lblTamPob);
+
+		maxPasos = new JTextField();
+		maxPasos.setColumns(5);
+		maxPasos.setText(Integer.toString(ParametrosAlgoritmo.NUMPASOS));
+		panelMaxPasos.add(maxPasos);
+	}
 
 	private void parametroPoblacion(JPanel panelParams) {
 		JPanel panelTamPob = new JPanel();
@@ -343,7 +359,7 @@ public class GUI extends JFrame implements ActionListener, Observer {
 	private JPanel crearPanelParams() {
 		JPanel panelParams = new JPanel();
 		panelParams.setPreferredSize(new Dimension(300, 500));
-		GridLayout gl_panelParams = new GridLayout(9, 1);
+		GridLayout gl_panelParams = new GridLayout(8, 1);
 		gl_panelParams.setVgap(10);
 		gl_panelParams.setHgap(10);
 		panelParams.setLayout(gl_panelParams);
@@ -629,6 +645,20 @@ public class GUI extends JFrame implements ActionListener, Observer {
 
 		if (!params.setProfMinArbol(profMinArbol.getText())) {
 			mensaje += "Profundidad mínima de árbol no válida. \n";
+		}
+		
+		if (!params.setMaxPasos(maxPasos.getText())) {
+			mensaje += "Número máximo de pasos no válido.\n";
+		}
+		
+		if (panelDatos.getProblema().equals(Problema.PENALIZA_GRANDES)) {
+			if (!params.setK(panelDatos.getK())) {
+				mensaje += "Parámetro k no válido.\n";
+			}
+			
+			if (!params.setProfMaxEst(panelDatos.getProfMaxEst())) {
+				mensaje += "Número de profundidad máx estimada no válido.\n";
+			}
 		}
 
 		if (!mensaje.equals("")) {

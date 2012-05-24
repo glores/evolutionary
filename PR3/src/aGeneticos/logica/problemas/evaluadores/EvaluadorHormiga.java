@@ -5,7 +5,6 @@ import java.util.logging.Logger;
 import aGeneticos.controlador.Controlador;
 import aGeneticos.controlador.Mapa;
 import aGeneticos.logica.abtractas.Evaluador;
-import aGeneticos.logica.arbol.Arbol;
 import aGeneticos.logica.arbol.Nodo;
 import aGeneticos.logica.arbol.Tipo;
 import aGeneticos.logica.poblacion.Cromosoma;
@@ -13,15 +12,16 @@ import aGeneticos.util.Hormiga;
 
 public class EvaluadorHormiga extends Evaluador {
 	protected int bocados;
-	public static int maxPasos = 400;
+	protected static int maxPasos;
 	protected int pasos;
 	protected Mapa mapa;
 	protected Hormiga hormiga;
 	protected Logger log;
 
-	public EvaluadorHormiga() {
+	public EvaluadorHormiga(int max) {
 		this.maximizar = true;
 		log = Logger.getLogger("CP");
+		maxPasos = max;
 	}
 
 	@Override
@@ -73,16 +73,20 @@ public class EvaluadorHormiga extends Evaluador {
 				}
 			} else if (nodo.getDato().equals(Tipo.AVANZA)) {
 				if (hormiga.puedeAvanzar(mapa.getNumFilas(), mapa.getNumCols())) {
-					hormiga.Avanzar();
+					hormiga.avanzar();
 				}
 				pasos++;
 			} else if (nodo.getDato().equals(Tipo.GIRA_DERECHA)) {
-				hormiga.GirarDer();
+				hormiga.girarDer();
 				pasos++;
 			} else if (nodo.getDato().equals(Tipo.GIRA_IZQUIERDA)) {
-				hormiga.GirarIzq();
+				hormiga.girarIzq();
 				pasos++;
 			}
 		}
+	}
+	
+	public static int getMaxPasos() {
+		return maxPasos;
 	}
 }
