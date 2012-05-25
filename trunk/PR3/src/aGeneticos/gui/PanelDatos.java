@@ -30,7 +30,7 @@ import aGeneticos.gui.parametros.Problema;
 
 public class PanelDatos extends JPanel implements ActionListener, ItemListener {
 	private static final long serialVersionUID = 1L;
-	private static final String DEFAULT = "No hay archivo cargado";
+	private static final String DEFAULT = "archivos/mapa.txt";
 	private JFileChooser fileChooser;
 	private JButton botonCargar;
 	private JTextField labelNombreFichero, textFieldTamTorneo, textFieldBeta,
@@ -289,10 +289,7 @@ public class PanelDatos extends JPanel implements ActionListener, ItemListener {
 	}
 
 	public String getPath() {
-		if (labelNombreFichero.getText().equals(DEFAULT)) {
-			return null;
-		} else
-			return labelNombreFichero.getText();
+		return labelNombreFichero.getText();
 	}
 
 	public String getProbTorneo() {

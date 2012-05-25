@@ -45,8 +45,8 @@ public class ParametrosAlgoritmo {
 	public final static double PARAMS_PROBMUTACION = 0.3;
 	public final static boolean PARAMS_ELITISMO = Boolean.FALSE; 
 	public final static int PARAMS_TAMELITE = 0;
-	public final static int PARAMS_PROF_ARBOL = 3;
-	public final static int PARAMS_PROF_MIN_ARBOL = 2;
+	public final static int PARAMS_PROF_ARBOL = 4;
+	public final static int PARAMS_PROF_MIN_ARBOL = 3;
 	public final static ModoSeleccionador PARAMS_SELECCIONADOR = ModoSeleccionador.TORNEO_PROB;
 	public final static ModoCruzador PARAMS_CRUZADOR = ModoCruzador.SIMPLE;
 	public final static ModoMutador PARAMS_MUTADOR = ModoMutador.DE_ARBOL;
