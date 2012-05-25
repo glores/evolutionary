@@ -316,55 +316,6 @@ public class AGenetico extends Observable {
 
 	}
 
-	/**
-	 * Cargamos los datos de los alumnos desde un fichero
-	 * 
-	 * @param file
-	 *            Nombre del fichero
-	 * @return Devuelve la lista de alumnos
-	 */
-//	private static ListaAlumnos cargarDatos(String file) {
-//		Logger log = Logger.getLogger("CP");
-//		int numAlumnos, numRestricciones, id, odia;
-//		double nota;
-//		ListaAlumnos lista = new ListaAlumnos();
-//		try {
-//			BufferedReader bf = new BufferedReader(new FileReader(file));
-//			// Leemos la primera linea que contiene el número de alumnos y el
-//			// número de restricciones
-//			String line = bf.readLine();
-//			numAlumnos = Integer.parseInt(line.split(" ")[0]);
-//			numRestricciones = Integer.parseInt(line.split(" ")[1]);
-//
-//			// Leemos los alumnos y sus notas
-//			int i = 0;
-//			while ((line = bf.readLine()) != null && i < numAlumnos) {
-//				id = Integer.parseInt(line.split(" ")[0]);
-//				nota = Double.parseDouble(line.split(" ")[1]);
-//				lista.addAlumno(new Alumno(id, nota));
-//				log.finest(line);
-//				i++;
-//			}
-//
-//			// Leemos las incompatibilidades de cada alumno
-//			i = 0;
-//			while ((line = bf.readLine()) != null && i < numRestricciones) {
-//				id = Integer.parseInt(line.split(" ")[0]);
-//				odia = Integer.parseInt(line.split(" ")[1]);
-//				lista.addIncompatibleAlumno(id, odia);
-//				log.finest(line);
-//				i++;
-//			}
-//
-//			bf.close();
-//		} catch (FileNotFoundException e) {
-//			log.severe(e.getMessage());
-//		} catch (IOException e) {
-//			log.severe(e.getMessage());
-//		}
-//		return lista;
-//	}
-
 	/*------------------- GETTERS --------------------------------*/
 
 	public ArrayList<Cromosoma> getPoblacion() {
