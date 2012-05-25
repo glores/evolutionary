@@ -22,6 +22,9 @@ public class EvaluadorHormiga extends Evaluador {
 		this.maximizar = true;
 		log = Logger.getLogger("CP");
 		maxPasos = max;
+		Hormiga.setTamTablero(
+				Controlador.getInstance().getMapa().getNumCols(), Controlador
+						.getInstance().getMapa().getNumFilas());
 	}
 
 	@Override
@@ -31,12 +34,13 @@ public class EvaluadorHormiga extends Evaluador {
 		pasos = 0;
 		mapa = (Mapa) Controlador.getInstance().getMapa().clone();
 		hormiga = new Hormiga();
-		while (pasos < maxPasos) {
+		while (pasos < maxPasos && bocados<=mapa.getNumComida()) {
 			log.finest("Nueva ejecución del programa");
 			try {
 				ejecutarArbol(c.getCadena().getRaiz());
 			} catch (Exception e) {
-				this.log.severe("Cromosoma erróneo: \n" + c.getCadena().toString());
+				this.log.severe("Cromosoma erróneo: \n"
+						+ c.getCadena().toString());
 				pasos++;
 			}
 		}
@@ -48,7 +52,7 @@ public class EvaluadorHormiga extends Evaluador {
 	protected void ejecutarArbol(Nodo<Tipo> nodo) {
 		log.finest("Instrucción: " + nodo.getDato().toString());
 		// mientras no se haya acabado el tiempo ni la comida
-		if (pasos < maxPasos) {
+		if ((pasos < maxPasos)&&(bocados<mapa.getNumComida())) {
 			// si estamos encima de comida comemos
 			if (mapa.getCasilla(hormiga.getX(), hormiga.getY())) {
 				mapa.comer(hormiga.getX(), hormiga.getY());
@@ -63,8 +67,7 @@ public class EvaluadorHormiga extends Evaluador {
 				ejecutarArbol(nodo.getHijoAt(1));
 			} else if (nodo.getDato().equals(Tipo.SIC)) {
 				int[] sigPos = hormiga.getSigPos();
-				if (hormiga.puedeAvanzar(mapa.getNumFilas(), mapa.getNumCols())
-						&& (mapa.getCasilla(sigPos[0], sigPos[1]))) {
+				if (mapa.getCasilla(sigPos[0], sigPos[1])) {
 					// Hay comida delante
 					ejecutarArbol(nodo.getHijoAt(0));
 				} else {
@@ -72,9 +75,7 @@ public class EvaluadorHormiga extends Evaluador {
 					ejecutarArbol(nodo.getHijoAt(1));
 				}
 			} else if (nodo.getDato().equals(Tipo.AVANZA)) {
-				if (hormiga.puedeAvanzar(mapa.getNumFilas(), mapa.getNumCols())) {
-					hormiga.avanzar();
-				}
+				hormiga.avanzar();
 				pasos++;
 			} else if (nodo.getDato().equals(Tipo.GIRA_DERECHA)) {
 				hormiga.girarDer();
@@ -85,7 +86,7 @@ public class EvaluadorHormiga extends Evaluador {
 			}
 		}
 	}
-	
+
 	public static int getMaxPasos() {
 		return maxPasos;
 	}

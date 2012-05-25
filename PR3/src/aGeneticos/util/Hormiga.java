@@ -1,6 +1,7 @@
 package aGeneticos.util;
 
 public class Hormiga {
+	private static int tamX,tamY;
 	public enum Direccion {
 		Norte, Este, Sur, Oeste
 	};
@@ -13,45 +14,55 @@ public class Hormiga {
 		posX = posY = 0;
 		direccion = Direccion.Oeste;
 	}
+	
+	public static void setTamTablero(int x,int y){
+		tamX=x;
+		tamY=y;
+	}
 
 	public void avanzar() {
 		switch (direccion) {
 		case Norte:
 			posX--;
+			posX=toroideX(posX);
 			break;
 		case Este:
-			posY--;
+			posY++;
+			posY=toroideY(posY);
 			break;
 		case Sur:
 			posX++;
+			posX=toroideX(posX);
 			break;
 		case Oeste:
-			posY++;
+			posY--;
+			posY=toroideY(posY);
 			break;
 		}
+		
 	}
-
-	public boolean puedeAvanzar(int tamX, int tamY) {
-		boolean resultado;
-		switch (direccion) {
-		case Norte:
-			resultado = (posX > 0);
-			break;
-		case Este:
-			resultado = (posY > 0);
-			break;
-		case Sur:
-			resultado = (posX < tamX - 1);
-			break;
-		case Oeste:
-			resultado = (posY < tamY - 1);
-			break;
-		default:
-			resultado = false;
-			break;
+	
+	private int toroideX(int pos){	
+		int res=pos;
+		if(pos==-1){
+			res=tamX-1;
+		}else if (pos==tamX){
+			res=0;
 		}
-
-		return resultado;
+		return res;
+	}
+	private int toroideY(int pos){	
+		int res=pos;
+		if(pos==-1){
+			res=tamY-1;
+		}else if (pos==tamY){
+			res=0;
+		}
+		return res;
+	}
+	
+	public Direccion getDir(){
+		return direccion;
 	}
 
 	public int[] getSigPos() {
@@ -59,16 +70,20 @@ public class Hormiga {
 		int y = posY;
 		switch (direccion) {
 		case Norte:
-			x--;
+			x--;	
+			x=toroideX(x);
 			break;
 		case Este:
-			y--;
+			y++;
+			y=toroideY(y);
 			break;
 		case Sur:
 			x++;
+			x=toroideX(x);
 			break;
 		case Oeste:
-			y++;
+			y--;
+			y=toroideY(y);
 			break;
 		}
 		return new int[] { x, y };
