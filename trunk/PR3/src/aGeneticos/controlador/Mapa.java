@@ -75,6 +75,7 @@ public class Mapa {
 		}
 		clon.cols=this.cols;
 		clon.filas=this.filas;
+		clon.numComida=this.numComida;
 		return clon;
 	}
 	

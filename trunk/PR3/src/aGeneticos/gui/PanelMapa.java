@@ -1,6 +1,7 @@
 package aGeneticos.gui;
 
 import java.awt.Color;
+import java.awt.Font;
 
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;
@@ -14,6 +15,7 @@ import aGeneticos.logica.arbol.Tipo;
 import aGeneticos.logica.poblacion.Cromosoma;
 import aGeneticos.logica.problemas.evaluadores.EvaluadorHormiga;
 import aGeneticos.util.Hormiga;
+import aGeneticos.util.Hormiga.Direccion;
 
 /**
  * Panel que contiene el mapa visual.
@@ -46,7 +48,11 @@ public class PanelMapa extends JSplitPane {
 
 		public Casilla(boolean tieneComida) {
 			setBorder(BorderFactory.createLineBorder(Color.GRAY, 1));
-			this.setEnabled(false);
+			this.setEditable(false);
+			setForeground(Color.BLACK);			
+			setFont(new Font("Monospace",Font.BOLD,10));
+			setAlignmentX(CENTER_ALIGNMENT);
+			setAlignmentY(CENTER_ALIGNMENT);
 			this.tieneComida = tieneComida;
 			haPasado = false;
 			cargarFondo();
@@ -77,9 +83,27 @@ public class PanelMapa extends JSplitPane {
 			}
 		}
 
-		public void pasaLaHormiga() {
-			this.haPasado = true;
+		public void pasaLaHormiga(Hormiga hormiga) {
+			this.haPasado = true;	
+			cargarTexto(hormiga.getDir());			
 			cargarFondo();
+		}
+
+		private void cargarTexto(Direccion dir) {
+			switch(dir){
+			case Norte:
+				setText("\u2191");
+				break;
+			case Sur:
+				setText("\u2193");
+				break;
+			case Este:
+				setText("\u2192");
+				break;
+			case Oeste:				
+				setText("\u2190");
+				break;
+			}
 		}
 
 	}
@@ -90,8 +114,7 @@ public class PanelMapa extends JSplitPane {
 	public PanelMapa() {
 		super();
 		setDividerSize(3);
-		this.
-		panel = new JPanel();
+		this.panel = new JPanel();
 		JScrollPane p = new JScrollPane(panel);
 		panelTablero = new JPanel();
 		panel.setBackground(Color.white);
@@ -129,16 +152,15 @@ public class PanelMapa extends JSplitPane {
 		bocados = 0;
 		hormiga = new Hormiga();
 		while (pasos < EvaluadorHormiga.getMaxPasos()) {
-			ejecutarArbol(solucion.getCadena().getRaiz());			
+			ejecutarArbol(solucion.getCadena().getRaiz());
 		}
-		JTextArea textin = new JTextArea("Bocados: "+ bocados+ "" +
-				"\n Profundidad: " + solucion.getCadena().getProfundidad() +
-				"\n Núm nodos: " + solucion.getCadena().getNumeroNodos() +
-				"\n\n" + solucion.getCadena().toStringDato());
+		JTextArea textin = new JTextArea("Bocados: " + bocados + ""
+				+ "\n Profundidad: " + solucion.getCadena().getProfundidad()
+				+ "\n Núm nodos: " + solucion.getCadena().getNumeroNodos()
+				+ "\n\n" + solucion.getCadena().toStringDato());
 
 		textin.setEditable(false);
 		panel.add(textin);
-		
 
 	}
 
@@ -147,7 +169,7 @@ public class PanelMapa extends JSplitPane {
 		// mientras no se haya acabado el tiempo ni la comida
 		if (pasos < EvaluadorHormiga.getMaxPasos()) {
 			// Marcar el paso
-			casillas[hormiga.getX()][hormiga.getY()].pasaLaHormiga();
+			casillas[hormiga.getX()][hormiga.getY()].pasaLaHormiga(hormiga);
 			// si estamos encima de comida comemos
 			if (mapa.getCasilla(hormiga.getX(), hormiga.getY())) {
 				mapa.comer(hormiga.getX(), hormiga.getY());
@@ -162,8 +184,7 @@ public class PanelMapa extends JSplitPane {
 				ejecutarArbol(nodo.getHijoAt(1));
 			} else if (nodo.getDato().equals(Tipo.SIC)) {
 				int[] sigPos = hormiga.getSigPos();
-				if (hormiga.puedeAvanzar(mapa.getNumFilas(), mapa.getNumCols())
-						&& (mapa.getCasilla(sigPos[0], sigPos[1]))) {
+				if (mapa.getCasilla(sigPos[0], sigPos[1])) {
 					// Hay comida delante
 					ejecutarArbol(nodo.getHijoAt(0));
 				} else {
@@ -171,9 +192,7 @@ public class PanelMapa extends JSplitPane {
 					ejecutarArbol(nodo.getHijoAt(1));
 				}
 			} else if (nodo.getDato().equals(Tipo.AVANZA)) {
-				if (hormiga.puedeAvanzar(mapa.getNumFilas(), mapa.getNumCols())) {
-					hormiga.avanzar();
-				}
+				hormiga.avanzar();
 				pasos++;
 			} else if (nodo.getDato().equals(Tipo.GIRA_DERECHA)) {
 				hormiga.girarDer();
@@ -182,7 +201,7 @@ public class PanelMapa extends JSplitPane {
 				hormiga.girarIzq();
 				pasos++;
 			}
-			
+
 		}
 	}
 

@@ -111,6 +111,8 @@ public class GUI extends JFrame implements ActionListener, Observer {
 		public void done() {
 			Toolkit.getDefaultToolkit().beep();
 			btnOk.setEnabled(true);
+			btnActualizar.setEnabled(true);
+			btnVerMapa.setEnabled(true);
 			setCursor(null);
 		}
 	}
@@ -463,11 +465,10 @@ public class GUI extends JFrame implements ActionListener, Observer {
 	public void actionPerformed(ActionEvent e) {
 		if (e.getActionCommand().equals("Salir")) {
 			System.exit(0);
-		} else if (e.getSource() == btnOk) {
-			ponerPanelGraficos();
+		} else if (e.getSource() == btnOk) {			
+			ponerPanelGraficos();			
 			task = new Task();
 			task.execute();
-
 		} else if (e.getSource() == btnActualizar) {
 			actualizar();
 		}
@@ -666,8 +667,10 @@ public class GUI extends JFrame implements ActionListener, Observer {
 					"Se han producido los siguientes errores: \n" + mensaje,
 					"Error", JOptionPane.ERROR_MESSAGE);
 			return null;
-		} else {
+		} else {		
 			btnOk.setEnabled(false);
+			btnActualizar.setEnabled(false);
+			btnVerMapa.setEnabled(false);
 			setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 			return params;
 		}
