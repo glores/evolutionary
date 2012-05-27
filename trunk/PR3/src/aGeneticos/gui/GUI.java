@@ -661,6 +661,17 @@ public class GUI extends JFrame implements ActionListener, Observer {
 				mensaje += "Número de profundidad máx estimada no válido.\n";
 			}
 		}
+		if (panelDatos.getProblema().equals(Problema.TARPEIAN)) {
+			try{
+				Integer.parseInt(panelDatos.getK());
+				if (!params.setK(panelDatos.getK())) {
+					mensaje += "Parámetro k no válido.\n";
+				}
+			}catch(NumberFormatException e)  {
+				mensaje += "K debe ser entero para TARPEIAN\n";
+			}			
+			
+		}
 
 		if (!mensaje.equals("")) {
 			JOptionPane.showMessageDialog(this,

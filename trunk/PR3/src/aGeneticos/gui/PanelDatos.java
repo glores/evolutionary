@@ -407,7 +407,12 @@ public class PanelDatos extends JPanel implements ActionListener, ItemListener {
 						.getTextoProblema(Problema.PENALIZA_GRANDES))) {
 			k.setEnabled(true);
 			profMaxEst.setEnabled(true);
-		} else if (e.getActionCommand().equals(
+		} else if (e.getActionCommand()
+				.equals(ParametrosAlgoritmo
+						.getTextoProblema(Problema.TARPEIAN))) {
+			k.setEnabled(true);
+			profMaxEst.setEnabled(false);
+		}else if (e.getActionCommand().equals(
 				ParametrosAlgoritmo.getTextoProblema(Problema.BOCADOS))) {
 			k.setEnabled(false);
 			profMaxEst.setEnabled(false);
