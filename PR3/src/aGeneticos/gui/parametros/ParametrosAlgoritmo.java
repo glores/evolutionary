@@ -13,6 +13,7 @@ import aGeneticos.logica.mutadores.MutadorTerminalSimple;
 import aGeneticos.logica.poblacion.GeneradorPoblaciones;
 import aGeneticos.logica.problemas.FuncionHPenalizaGrandes;
 import aGeneticos.logica.problemas.FuncionHormiga;
+import aGeneticos.logica.problemas.FuncionTarpeian;
 import aGeneticos.logica.seleccionadores.Ranking;
 import aGeneticos.logica.seleccionadores.Ruleta;
 import aGeneticos.logica.seleccionadores.SeleccionadorPropio;
@@ -304,6 +305,9 @@ public class ParametrosAlgoritmo {
 		case PENALIZA_GRANDES:
 			resultado = "Penaliza grandes";
 			break;
+		case TARPEIAN:
+			resultado = "Bocados + Tarpeian";
+			break;			
 		default:
 			resultado = "";
 			break;
@@ -320,6 +324,9 @@ public class ParametrosAlgoritmo {
 		case PENALIZA_GRANDES:
 			//resultado = new FuncionHPenalizaGrandes(this.profMinArbol,this.profArbol);
 			resultado = new FuncionHPenalizaGrandes(profMinArbol,maxProfEst, maxPasos, k);
+			break;
+		case TARPEIAN:
+			resultado=new FuncionTarpeian(maxPasos, (int)k);
 			break;
 		default:
 			resultado = null;

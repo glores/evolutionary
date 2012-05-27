@@ -10,5 +10,5 @@ package aGeneticos.gui.parametros;
  */
 
 public enum Problema {
-	BOCADOS, PENALIZA_GRANDES
+	BOCADOS, PENALIZA_GRANDES, TARPEIAN
 }
