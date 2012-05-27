@@ -133,7 +133,9 @@ public class AGenetico extends Observable {
 		evaluador.inicioEvaluacionGlobal();
 		// Generamos la población inicial
 		poblacion = generadorPoblaciones.generar(tamPoblacion, profArbol, profMinArbol, evaluador);
-
+		for(int i=0;i<poblacion.size();i++){
+			evaluador.evaluar(poblacion.get(i));
+		}
 		if (tamElite > 0)
 			elite();
 
@@ -342,6 +344,14 @@ public class AGenetico extends Observable {
 		return evaluador.getMedia();
 	}
 
+	public double getProfMedia() {
+		return evaluador.getProfMedia();
+	}
+	
+	public double getNumNodosMedio() {
+		return evaluador.getNumNodosMedio();
+	}
+	
 	public double getMejorGeneracion() {
 		return evaluador.getMejorLocal().getAptitud();
 	}

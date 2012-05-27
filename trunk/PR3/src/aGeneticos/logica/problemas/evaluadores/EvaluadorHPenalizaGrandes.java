@@ -35,7 +35,7 @@ public class EvaluadorHPenalizaGrandes extends EvaluadorHormiga{
 			}
 		}
 		
-		int prof=c.getCadena().getProfundidad();
+		int prof=c.getCadena().getNumeroNodos();
 		double bocadosEscalados=(100/comida)*bocados;
 		double profundidadEscalada=(100/anchoProfundidad)*(prof-minProf);
 		double aptitud=bocadosEscalados*(1-k)+(100-profundidadEscalada)*k;

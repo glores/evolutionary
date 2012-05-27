@@ -690,11 +690,15 @@ public class GUI extends JFrame implements ActionListener, Observer {
 			pintor.addMejorGlobal(algoritmo.getMejorAptitud());
 			pintor.addMejor(algoritmo.getMejorGeneracion());
 			pintor.addMedia(algoritmo.getMedia());
+			pintor.addMediaNodos(algoritmo.getNumNodosMedio());
+			pintor.addMediaProf(algoritmo.getProfMedia());
 			pintor.siguienteGeneracion();
 		} else if (evento.equals("generacion")) {
 			pintor.addMejorGlobal(algoritmo.getMejorAptitud());
 			pintor.addMejor(algoritmo.getMejorGeneracion());
 			pintor.addMedia(algoritmo.getMedia());
+			pintor.addMediaNodos(algoritmo.getNumNodosMedio());
+			pintor.addMediaProf(algoritmo.getProfMedia());
 			pintor.siguienteGeneracion();
 			barraProgreso.setValue(barraProgreso.getValue() + 1);
 		} else if (evento.equals("fin")) {
