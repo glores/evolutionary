@@ -55,6 +55,10 @@ public abstract class PintorBase {
 	public abstract void addMedia(double valor);
 
 	public abstract void addMejorGlobal(double valor);
+	
+	public abstract void addMediaProf(double valor);
+	
+	public abstract void addMediaNodos(double valor);
 
 	public void setTitulo(String titulo) {
 		this.titulo = titulo;

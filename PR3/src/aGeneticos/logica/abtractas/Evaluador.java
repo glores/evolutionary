@@ -4,22 +4,21 @@ import java.util.ArrayList;
 
 import aGeneticos.logica.poblacion.Cromosoma;
 
-
 /**
  * Práctica 1 de Programación Evolutiva
  * 
  * @author Gloria Esther Pozuelo Fernández
  * @author Sergio Barja Valdés
- *
- * En la evaluación se revisan los contadores de aptitud relativa y puntuación
- * acumulada de los individuos de la población. Además se calcula la posición
- * del mejor individuo
+ * 
+ *         En la evaluación se revisan los contadores de aptitud relativa y
+ *         puntuación acumulada de los individuos de la población. Además se
+ *         calcula la posición del mejor individuo
  */
 
 public abstract class Evaluador {
 	/**
-	 * Indica si se maximiza o minimiza la función de aptitud. 
-	 * Se inicializa en la clase derivada
+	 * Indica si se maximiza o minimiza la función de aptitud. Se inicializa en
+	 * la clase derivada
 	 */
 	protected boolean maximizar = true;
 	/**
@@ -42,18 +41,26 @@ public abstract class Evaluador {
 	 * Media de la población (local)
 	 */
 	protected double mediaPoblacion = 0;
-	
-	
 	/**
-	 * Función de fitness. Se debe implementar en la clase derivada. 
-	 * Debe asignar un valor a la aptitud del cromosoma.
+	 * Número medio de nodos de la población
+	 */
+	protected double numNodosMedioPob = 0;
+	/**
+	 * Profundidad media de la población
+	 */
+	protected double profMediaPob = 0;
+
+	/**
+	 * Función de fitness. Se debe implementar en la clase derivada. Debe
+	 * asignar un valor a la aptitud del cromosoma.
+	 * 
 	 * @param c
 	 */
 	public abstract void fitness(Cromosoma c);
 
-	public Evaluador(){}
+	public Evaluador() {
+	}
 
-	
 	/**
 	 * Evalua el cromosoma dado por parámetro
 	 * 
@@ -67,13 +74,15 @@ public abstract class Evaluador {
 		sumAptitud = 0;
 		probAcumulada = 0;
 		mediaPoblacion = 0;
+		numNodosMedioPob = 0;
+		profMediaPob = 0;
 		mejorLocal = null;
 	}
 
 	public void inicioEvaluacionGlobal() {
 		mejorGlobal = null;
 	}
-	
+
 	/**
 	 * Evalua la población y devuelve la posición del mejor Cromosoma
 	 * 
@@ -92,26 +101,34 @@ public abstract class Evaluador {
 				maximizarLocal(c);
 			else
 				minimizarLocal(c);
-		}		
+		}
 		actualizarDatosGlobales(poblacion);
 	}
-
 
 	public double getMedia() {
 		return mediaPoblacion;
 	}
 
-	public Cromosoma getMejorLocal(){
-		return mejorLocal;		
+	public double getNumNodosMedio() {
+		return numNodosMedioPob;
 	}
-	
-	public Cromosoma getMejorGlobal(){
+
+	public double getProfMedia() {
+		return profMediaPob;
+	}
+
+	public Cromosoma getMejorLocal() {
+		return mejorLocal;
+	}
+
+	public Cromosoma getMejorGlobal() {
 		return mejorGlobal;
 	}
-	
+
 	/**
-	 * Devuelve cierto si es una función de maximización
-	 * Necesario para la élite.
+	 * Devuelve cierto si es una función de maximización Necesario para la
+	 * élite.
+	 * 
 	 * @return
 	 */
 	public boolean isMaximizar() {
@@ -129,9 +146,10 @@ public abstract class Evaluador {
 			mejorLocal = (Cromosoma) c.clone();
 		}
 	}
+
 	private void maximizarGlobal() {
 		if (getMejorAptitudLocal() > getMejorAptitudGlobal()) {
-			mejorGlobal =  (Cromosoma) mejorLocal.clone();
+			mejorGlobal = (Cromosoma) mejorLocal.clone();
 
 		}
 	}
@@ -141,7 +159,7 @@ public abstract class Evaluador {
 			mejorGlobal = (Cromosoma) mejorLocal.clone();
 		}
 	}
-	
+
 	private double getMejorAptitudLocal() {
 		if (mejorLocal != null) {
 			return mejorLocal.getAptitud();
@@ -153,6 +171,7 @@ public abstract class Evaluador {
 			}
 		}
 	}
+
 	private double getMejorAptitudGlobal() {
 		if (mejorGlobal != null) {
 			return mejorGlobal.getAptitud();
@@ -167,6 +186,8 @@ public abstract class Evaluador {
 
 	private void actualizarDatosGlobales(ArrayList<Cromosoma> poblacion) {
 		Cromosoma c;
+		int totalNodos = 0;
+		int totalProf = 0;
 		// Actualizamos las probabilidades y la probabilidad acumulada de cada
 		// individuo
 		for (int i = 0; i < poblacion.size(); i++) {
@@ -174,12 +195,16 @@ public abstract class Evaluador {
 			c.setProbabilidad(c.getAptitud() / sumAptitud);
 			c.setProbAcumulada(c.getProbabilidad() + probAcumulada);
 			probAcumulada += c.getProbabilidad();
+			totalNodos += c.getCadena().getNumeroNodos();
+			totalProf += c.getCadena().getProfundidad();
 		}
 		mediaPoblacion = sumAptitud / poblacion.size();
-		if(maximizar){
+		numNodosMedioPob = totalNodos / poblacion.size();
+		profMediaPob = totalProf / poblacion.size();
+		if (maximizar) {
 			maximizarGlobal();
-		}else{
+		} else {
 			minimizarGlobal();
 		}
-	}	
+	}
 }

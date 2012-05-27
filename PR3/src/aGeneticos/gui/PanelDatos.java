@@ -99,11 +99,11 @@ public class PanelDatos extends JPanel implements ActionListener, ItemListener {
 		}
 
 		JLabel labelk = new JLabel("Parámetro k ");
-		JLabel labelMaxProfEst = new JLabel("Profundidad máx. estimada ");
+		JLabel labelMaxProfEst = new JLabel("Nodos max. estimado ");
 		k = new JTextField(5);
 		k.setText("0.2");
 		profMaxEst = new JTextField(5);
-		profMaxEst.setText("50");
+		profMaxEst.setText("300");
 		paneles[2].add(labelk);
 		paneles[2].add(k);
 		paneles[2].add(labelMaxProfEst);

@@ -81,7 +81,10 @@ public class PintorIterativo extends PintorBase {
 	public void addMejorGlobal(double valor) {
 		mejoresGlobales[iteracionActual][generacionActual] = valor;
 	}
-
+	public void addMediaProf(double valor) {
+	}
+	public void addMediaNodos(double valor) {
+	}
 	
 
 	protected AxisChart crearGraficoLineas() throws ChartDataException {

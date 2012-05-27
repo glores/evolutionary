@@ -33,6 +33,8 @@ public class Pintor extends PintorBase {
 	private double[] mejores;
 	private double[] mejoresGlobales;
 	private double[] medias;
+	private double[] mediasProfundidad;
+	private double[] mediasNodos;
 	private int tamGeneraciones;
 	
 	public Pintor(){
@@ -45,9 +47,10 @@ public class Pintor extends PintorBase {
 	public void iniciar(){
 		log = Logger.getLogger("CP");
 		mejores = new double[tamGeneraciones + 1];
-		mejoresGlobales = new double[tamGeneraciones + 1];
-		
+		mejoresGlobales = new double[tamGeneraciones + 1];		
 		medias = new double[tamGeneraciones + 1];
+		mediasProfundidad=new double [tamGeneraciones+1];
+		mediasNodos=new double [tamGeneraciones+1];
 		generacionActual = 0;
 		titulo = "";
 	}
@@ -63,12 +66,18 @@ public class Pintor extends PintorBase {
 	public void addMejorGlobal(double valor) {
 		mejoresGlobales[generacionActual] = valor;
 	}
+	public void addMediaProf(double valor) {
+		mediasProfundidad[generacionActual] = valor;
+	}
+	public void addMediaNodos(double valor) {
+		mediasNodos[generacionActual] = valor;
+	}
 	
 	
 	protected AxisChart crearGraficoLineas() throws ChartDataException {
 		String[] xAxisLabels = cargarEtiquetasX();
 		double[][] data = cargarValoresY();
-		String[] legendLabels = { "El mejor", "Media", "Mejor global" };
+		String[] legendLabels = { "El mejor", "Media", "Mejor global", "Profundidad media", "Num. Nodos medio" };
 		String xAxisTitle = "Generaciones";
 		String yAxisTitle = "Puntos";
 
@@ -77,13 +86,23 @@ public class Pintor extends PintorBase {
 		dataSeries = new DataSeries(xAxisLabels, xAxisTitle,
 				yAxisTitle, titulo);
 		
-		Paint[] paints = TestDataGenerator.getRandomPaints(3);
+		Paint[] paints = {Color.green.brighter(), Color.orange, Color.green.darker(),
+				Color.blue.brighter(), Color.yellow};
+		
 		Stroke[] strokes = { 
 				LineChartProperties.DEFAULT_LINE_STROKE ,
 				new BasicStroke(3.5f, BasicStroke.CAP_ROUND,
 						BasicStroke.JOIN_ROUND, 5f, new float[] { 5f, 5f, 10f, 5f }, 4f) ,
-				LineChartProperties.DEFAULT_LINE_STROKE};
+				LineChartProperties.DEFAULT_LINE_STROKE,
+				new BasicStroke(3.5f, BasicStroke.CAP_ROUND,
+						BasicStroke.JOIN_ROUND, 5f, new float[] { 5f, 5f, 10f, 5f }, 4f) ,
+				
+				new BasicStroke(3.5f, BasicStroke.CAP_ROUND,
+						BasicStroke.JOIN_ROUND, 5f, new float[] { 5f, 5f, 10f, 5f }, 4f) ,
+				};
 		Shape[] shapes = {null,
+				null,
+				null,
 				null,
 				null};
 		LineChartProperties lineChartProperties = new LineChartProperties(
@@ -115,10 +134,12 @@ public class Pintor extends PintorBase {
 	}
 
 	private double[][] cargarValoresY() {
-		double[][] data = new double[3][mejores.length];		
+		double[][] data = new double[5][mejores.length];		
 		data[0]=mejores;
 		data[1]=medias;
 		data[2]=mejoresGlobales;
+		data[3]=mediasProfundidad;
+		data[4]=mediasNodos;
 		return data;
 	}
 
